@@ -3,10 +3,11 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useGoalSetter } from '@/lib/context/GoalSetterContext';
+import { DeepModeCategory } from '@/lib/types';
 
 export default function Summary() {
   const router = useRouter();
-  const { name, mode, quickModeData, email, setEmail } = useGoalSetter();
+  const { name, mode, quickModeData, deepModeData, email, setEmail } = useGoalSetter();
   const [localEmail, setLocalEmail] = useState(email || '');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
@@ -99,11 +100,11 @@ export default function Summary() {
     );
   }
 
-  // Format goals for display
-  const goals = mode === 'quick' ? quickModeData.topGoals : [];
-  const placesArray = quickModeData.placesToVisit?.split('\n').filter(p => p.trim()) || [];
-  const booksArray = quickModeData.booksToRead?.split('\n').filter(b => b.trim()) || [];
-  const experiencesArray = quickModeData.experiencesToHave?.split('\n').filter(e => e.trim()) || [];
+  // Parse life balance data
+  const data = mode === 'quick' ? quickModeData : deepModeData;
+  const placesArray = data.placesToVisit?.split('\n').filter(p => p.trim()) || [];
+  const booksArray = data.booksToRead?.split('\n').filter(b => b.trim()) || [];
+  const experiencesArray = data.experiencesToHave?.split('\n').filter(e => e.trim()) || [];
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 py-12 px-4">
@@ -116,63 +117,116 @@ export default function Summary() {
           <p className="text-xl text-gray-600">
             Here&apos;s everything you want to achieve this year, {name}!
           </p>
+          <p className="text-sm text-gray-500 mt-2">
+            Mode: <span className="font-semibold capitalize">{mode}</span>
+          </p>
         </div>
 
         {/* Goals Summary */}
         <div className="bg-white rounded-2xl shadow-2xl p-8 md:p-12 mb-8">
-          {/* Top 3 Goals */}
-          <section className="mb-10">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center">
-              <span className="text-3xl mr-3">🎯</span> TOP 3 GOALS
-            </h2>
-            <ul className="space-y-3">
-              {goals?.map((goal, i) => (
-                <li key={i} className="flex items-start">
-                  <span className="bg-indigo-100 text-indigo-700 rounded-full w-8 h-8 flex items-center justify-center font-bold mr-3 flex-shrink-0">
-                    {i + 1}
-                  </span>
-                  <span className="text-lg text-gray-800 pt-1">{goal}</span>
-                </li>
-              ))}
-            </ul>
-          </section>
+          {mode === 'quick' ? (
+            // Quick Mode Display
+            <>
+              {/* Top 3 Goals */}
+              <section className="mb-10">
+                <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center">
+                  <span className="text-3xl mr-3">🎯</span> TOP 3 GOALS
+                </h2>
+                <ul className="space-y-3">
+                  {quickModeData.topGoals?.map((goal, i) => (
+                    <li key={i} className="flex items-start">
+                      <span className="bg-indigo-100 text-indigo-700 rounded-full w-8 h-8 flex items-center justify-center font-bold mr-3 flex-shrink-0">
+                        {i + 1}
+                      </span>
+                      <span className="text-lg text-gray-800 pt-1">{goal}</span>
+                    </li>
+                  ))}
+                </ul>
+              </section>
 
-          {/* Habits */}
-          <div className="grid md:grid-cols-2 gap-8 mb-10">
-            <section>
-              <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center">
-                <span className="text-3xl mr-3">✅</span> HABIT TO BUILD
-              </h2>
-              <p className="text-lg text-gray-800 bg-green-50 p-4 rounded-xl">
-                {quickModeData.habitToBuild}
-              </p>
-            </section>
+              {/* Habits */}
+              <div className="grid md:grid-cols-2 gap-8 mb-10">
+                <section>
+                  <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center">
+                    <span className="text-3xl mr-3">✅</span> HABIT TO BUILD
+                  </h2>
+                  <p className="text-lg text-gray-800 bg-green-50 p-4 rounded-xl">
+                    {quickModeData.habitToBuild}
+                  </p>
+                </section>
 
-            <section>
-              <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center">
-                <span className="text-3xl mr-3">❌</span> HABIT TO BREAK
-              </h2>
-              <p className="text-lg text-gray-800 bg-red-50 p-4 rounded-xl">
-                {quickModeData.habitToBreak}
-              </p>
-            </section>
-          </div>
+                <section>
+                  <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center">
+                    <span className="text-3xl mr-3">❌</span> HABIT TO BREAK
+                  </h2>
+                  <p className="text-lg text-gray-800 bg-red-50 p-4 rounded-xl">
+                    {quickModeData.habitToBreak}
+                  </p>
+                </section>
+              </div>
 
-          {/* Theme */}
-          <section className="mb-10">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center">
-              <span className="text-3xl mr-3">💡</span> THEME FOR 2026
-            </h2>
-            <div className="bg-gradient-to-r from-indigo-50 to-purple-50 p-6 rounded-xl">
-              <p className="text-2xl font-semibold text-center text-indigo-900">
-                &quot;{quickModeData.mainTheme}&quot;
-              </p>
+              {/* Theme */}
+              <section className="mb-10">
+                <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center">
+                  <span className="text-3xl mr-3">💡</span> THEME FOR 2026
+                </h2>
+                <div className="bg-gradient-to-r from-indigo-50 to-purple-50 p-6 rounded-xl">
+                  <p className="text-2xl font-semibold text-center text-indigo-900">
+                    &quot;{quickModeData.mainTheme}&quot;
+                  </p>
+                </div>
+              </section>
+            </>
+          ) : (
+            // Deep Mode Display
+            <div className="space-y-8">
+              {[
+                { id: 'health', name: 'Health & Fitness', icon: '💪', color: 'red' },
+                { id: 'career', name: 'Career & Work', icon: '💼', color: 'blue' },
+                { id: 'wealth', name: 'Wealth & Finance', icon: '💰', color: 'green' },
+                { id: 'relationships', name: 'Relationships & Family', icon: '❤️', color: 'pink' },
+                { id: 'growth', name: 'Personal Growth & Learning', icon: '📚', color: 'purple' },
+                { id: 'impact', name: 'Contribution & Impact', icon: '🌟', color: 'yellow' },
+              ].map((category) => {
+                const categoryData = deepModeData[category.id as keyof typeof deepModeData] as DeepModeCategory | undefined;
+                if (!categoryData?.goal) return null;
+
+                return (
+                  <section key={category.id} className="border-b pb-8 last:border-b-0">
+                    <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center">
+                      <span className="text-3xl mr-3">{category.icon}</span> {category.name}
+                    </h2>
+
+                    <div className="space-y-4 ml-12">
+                      <div>
+                        <h3 className="font-semibold text-gray-700 mb-2">🎯 Goal:</h3>
+                        <p className="text-gray-800 bg-gray-50 p-3 rounded-lg">{categoryData.goal}</p>
+                      </div>
+
+                      <div>
+                        <h3 className="font-semibold text-gray-700 mb-2">✅ Habits to Build:</h3>
+                        <p className="text-gray-800 bg-green-50 p-3 rounded-lg whitespace-pre-line">{categoryData.habitsBuild}</p>
+                      </div>
+
+                      <div>
+                        <h3 className="font-semibold text-gray-700 mb-2">❌ Habits to Break:</h3>
+                        <p className="text-gray-800 bg-red-50 p-3 rounded-lg whitespace-pre-line">{categoryData.habitsBreak}</p>
+                      </div>
+
+                      <div>
+                        <h3 className="font-semibold text-gray-700 mb-2">💡 Why This Matters:</h3>
+                        <p className="text-gray-800 bg-blue-50 p-3 rounded-lg italic">{categoryData.why}</p>
+                      </div>
+                    </div>
+                  </section>
+                );
+              })}
             </div>
-          </section>
+          )}
 
-          {/* Life Balance */}
+          {/* Life Balance (Both Modes) */}
           {(placesArray.length > 0 || booksArray.length > 0 || experiencesArray.length > 0) && (
-            <section className="border-t pt-10">
+            <section className="border-t pt-10 mt-10">
               <h2 className="text-3xl font-bold text-gray-900 mb-6 text-center">
                 Life Balance & Fun Stuff
               </h2>
