@@ -4,6 +4,8 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useGoalSetter } from '@/lib/context/GoalSetterContext';
 import { DeepModeCategory } from '@/lib/types';
+import { pdf } from '@react-pdf/renderer';
+import { GoalsPDF } from '@/lib/pdf/GoalsPDF';
 
 export default function Summary() {
   const router = useRouter();
@@ -11,6 +13,7 @@ export default function Summary() {
   const [localEmail, setLocalEmail] = useState(email || '');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
 
   if (!name || !mode) {
     router.push('/');
@@ -27,6 +30,34 @@ export default function Summary() {
       setSubmitted(true);
       setIsSubmitting(false);
     }, 1000);
+  };
+
+  const handleDownloadPDF = async () => {
+    setIsGeneratingPDF(true);
+    try {
+      const blob = await pdf(
+        <GoalsPDF
+          name={name}
+          mode={mode}
+          quickModeData={quickModeData}
+          deepModeData={deepModeData}
+        />
+      ).toBlob();
+
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `${name.replace(/\s+/g, '_')}_2026_Goals.pdf`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error('Error generating PDF:', error);
+      alert('Failed to generate PDF. Please try again.');
+    } finally {
+      setIsGeneratingPDF(false);
+    }
   };
 
   if (submitted) {
@@ -74,10 +105,11 @@ export default function Summary() {
 
             <div className="space-y-3">
               <button
-                onClick={() => window.print()}
-                className="w-full bg-indigo-600 text-white py-4 rounded-xl font-semibold text-lg hover:bg-indigo-700 transition-all"
+                onClick={handleDownloadPDF}
+                disabled={isGeneratingPDF}
+                className="w-full bg-indigo-600 text-white py-4 rounded-xl font-semibold text-lg hover:bg-indigo-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                📄 Print My Goals
+                {isGeneratingPDF ? '⏳ Generating PDF...' : '📄 Download PDF'}
               </button>
 
               <button
@@ -273,6 +305,29 @@ export default function Summary() {
               </div>
             </section>
           )}
+        </div>
+
+        {/* Download PDF Button */}
+        <div className="text-center mb-8">
+          <button
+            onClick={handleDownloadPDF}
+            disabled={isGeneratingPDF}
+            className="bg-white text-indigo-600 px-8 py-4 rounded-xl font-semibold text-lg hover:bg-gray-50 transition-all shadow-lg disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center gap-2"
+          >
+            {isGeneratingPDF ? (
+              <>
+                <span className="animate-spin">⏳</span>
+                Generating PDF...
+              </>
+            ) : (
+              <>
+                📄 Download as PDF
+              </>
+            )}
+          </button>
+          <p className="mt-3 text-sm text-gray-500">
+            Save your goals as a beautiful PDF document
+          </p>
         </div>
 
         {/* Email Capture */}
