@@ -1,0 +1,51 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model GoalSetterResponse {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  name      String
+  mode      String   // 'quick' | 'deep'
+
+  // Quick Mode Fields
+  topGoals         String[]  // Array of 3 goals
+  habitToBuild     String?
+  habitToBreak     String?
+  mainTheme        String?
+
+  // Deep Mode Fields (JSONB for flexibility)
+  deepModeData     Json?
+  // Structure: {
+  //   "health": { "goal": "...", "habitsBuild": "...", "habitsBreak": "...", "why": "..." },
+  //   "career": { ... },
+  //   "wealth": { ... },
+  //   "relationships": { ... },
+  //   "growth": { ... },
+  //   "impact": { ... }
+  // }
+
+  // Life Balance (same for both modes)
+  placesToVisit     String[]
+  booksToRead       String[]
+  experiencesToHave String[]
+
+  // Metadata
+  completedAt            DateTime  @default(now())
+  journalCode            String?   @unique
+  journalAccessGranted   Boolean   @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([email])
+  @@map("goal_setter_responses")
+}
