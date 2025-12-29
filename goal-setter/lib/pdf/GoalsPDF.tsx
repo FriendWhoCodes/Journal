@@ -138,8 +138,8 @@ const styles = StyleSheet.create({
 interface GoalsPDFProps {
   name: string;
   mode: 'quick' | 'deep';
-  quickModeData?: QuickModeData;
-  deepModeData?: DeepModeData;
+  quickModeData?: Partial<QuickModeData>;
+  deepModeData?: Partial<DeepModeData>;
 }
 
 export const GoalsPDF = ({ name, mode, quickModeData, deepModeData }: GoalsPDFProps) => {
@@ -204,7 +204,9 @@ export const GoalsPDF = ({ name, mode, quickModeData, deepModeData }: GoalsPDFPr
               { id: 'growth', name: 'Personal Growth & Learning', icon: '📚' },
               { id: 'impact', name: 'Contribution & Impact', icon: '🌟' },
             ].map((category) => {
-              const categoryData = deepModeData[category.id as keyof typeof deepModeData] as DeepModeCategory | undefined;
+              const data = deepModeData?.[category.id as keyof DeepModeData];
+              // Type guard to ensure we have a DeepModeCategory object
+              const categoryData = data && typeof data === 'object' && 'goal' in data ? data : undefined;
               if (!categoryData?.goal) return null;
 
               return (
