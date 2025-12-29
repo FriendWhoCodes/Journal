@@ -220,7 +220,9 @@ export default function Summary() {
                 { id: 'growth', name: 'Personal Growth & Learning', icon: '📚', color: 'purple' },
                 { id: 'impact', name: 'Contribution & Impact', icon: '🌟', color: 'yellow' },
               ].map((category) => {
-                const categoryData = deepModeData[category.id as keyof typeof deepModeData] as DeepModeCategory | undefined;
+                const data = deepModeData[category.id as keyof typeof deepModeData];
+                // Type guard to ensure we have a DeepModeCategory object
+                const categoryData = data && typeof data === 'object' && 'goal' in data ? data : undefined;
                 if (!categoryData?.goal) return null;
 
                 return (
