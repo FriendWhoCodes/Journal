@@ -20,12 +20,24 @@ export default function DeepMode() {
   const [step, setStep] = useState(1);
   const totalSteps = categories.length + 1; // 6 categories + life balance
 
+  // Helper function to safely get category data
+  const getCategoryData = (categoryId: string | null): DeepModeCategory | undefined => {
+    if (!categoryId) return undefined;
+    const data = deepModeData[categoryId as keyof typeof deepModeData];
+    // Only return if it's a DeepModeCategory object (not a string)
+    if (typeof data === 'object' && data !== null) {
+      return data as DeepModeCategory;
+    }
+    return undefined;
+  };
+
   // Current category data
   const currentCategoryId = step <= categories.length ? categories[step - 1].id : null;
-  const [goal, setGoal] = useState(deepModeData[currentCategoryId as keyof typeof deepModeData]?.goal || '');
-  const [habitsBuild, setHabitsBuild] = useState(deepModeData[currentCategoryId as keyof typeof deepModeData]?.habitsBuild || '');
-  const [habitsBreak, setHabitsBreak] = useState(deepModeData[currentCategoryId as keyof typeof deepModeData]?.habitsBreak || '');
-  const [why, setWhy] = useState(deepModeData[currentCategoryId as keyof typeof deepModeData]?.why || '');
+  const currentData = getCategoryData(currentCategoryId);
+  const [goal, setGoal] = useState(currentData?.goal || '');
+  const [habitsBuild, setHabitsBuild] = useState(currentData?.habitsBuild || '');
+  const [habitsBreak, setHabitsBreak] = useState(currentData?.habitsBreak || '');
+  const [why, setWhy] = useState(currentData?.why || '');
 
   // Life balance data
   const [placesToVisit, setPlacesToVisit] = useState(deepModeData.placesToVisit || '');
@@ -58,7 +70,7 @@ export default function DeepMode() {
       // Load next category data if available
       if (step < categories.length) {
         const nextCategoryId = categories[step].id;
-        const nextData = deepModeData[nextCategoryId as keyof typeof deepModeData] as DeepModeCategory | undefined;
+        const nextData = getCategoryData(nextCategoryId);
         setGoal(nextData?.goal || '');
         setHabitsBuild(nextData?.habitsBuild || '');
         setHabitsBreak(nextData?.habitsBreak || '');
@@ -83,7 +95,7 @@ export default function DeepMode() {
       // Load previous category data
       if (step <= categories.length) {
         const prevCategoryId = categories[step - 2].id;
-        const prevData = deepModeData[prevCategoryId as keyof typeof deepModeData] as DeepModeCategory | undefined;
+        const prevData = getCategoryData(prevCategoryId);
         setGoal(prevData?.goal || '');
         setHabitsBuild(prevData?.habitsBuild || '');
         setHabitsBreak(prevData?.habitsBreak || '');
