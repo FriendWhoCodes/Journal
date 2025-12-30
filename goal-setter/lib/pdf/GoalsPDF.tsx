@@ -149,7 +149,6 @@ export const GoalsPDF = ({ name, mode, quickModeData, deepModeData }: GoalsPDFPr
   const experiencesArray = data?.experiencesToHave?.split('\n').filter(e => e.trim()) || [];
 
   return (
-    // @ts-expect-error - React 19 type compatibility issue with @react-pdf/renderer
     <Document>
       <Page size="A4" style={styles.page}>
         {/* Header */}
