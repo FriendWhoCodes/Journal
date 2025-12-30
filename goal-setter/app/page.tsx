@@ -138,23 +138,23 @@ export default function Home() {
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-amber-50 flex items-center justify-center px-4">
       <div className="max-w-2xl w-full">
         {/* Hero Section */}
-        <div className="text-center mb-12">
-          <h1 className="text-6xl md:text-7xl font-bold text-gray-900 mb-6">
+        <div className="text-center mb-10">
+          <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-5">
             Plan Your <span className="text-transparent bg-clip-text bg-gradient-to-r from-slate-700 to-amber-600">2026</span>
           </h1>
-          <p className="text-2xl text-gray-800 mb-4">
+          <p className="text-xl text-gray-800 mb-3">
             Set your goals in 5 minutes
           </p>
-          <p className="text-lg text-gray-700">
+          <p className="text-base text-gray-700">
             and unlock <strong className="text-amber-700">1 month free</strong> access to Man of Wisdom Journal
           </p>
         </div>
 
         {/* Name & Email Entry Form */}
-        <div className="bg-white rounded-2xl shadow-2xl p-8 md:p-12">
+        <div className="bg-white rounded-2xl shadow-2xl p-6 md:p-10">
           <form onSubmit={handleNameSubmit}>
-            <div className="mb-6">
-              <label htmlFor="name" className="block text-xl font-semibold text-gray-800 mb-3">
+            <div className="mb-5">
+              <label htmlFor="name" className="block text-lg font-semibold text-gray-800 mb-2">
                 What&apos;s your name?
               </label>
               <input
@@ -163,14 +163,14 @@ export default function Home() {
                 value={localName}
                 onChange={(e) => setLocalName(e.target.value)}
                 placeholder="Alok"
-                className="w-full px-6 py-4 text-xl text-gray-900 placeholder-gray-400 border-2 border-gray-300 rounded-xl focus:border-amber-500 focus:outline-none transition-colors"
+                className="w-full px-4 py-3 text-lg text-gray-900 placeholder-gray-400 border-2 border-gray-300 rounded-xl focus:border-amber-500 focus:outline-none transition-colors"
                 autoFocus
                 required
               />
             </div>
 
-            <div className="mb-6">
-              <label htmlFor="email" className="block text-xl font-semibold text-gray-800 mb-3">
+            <div className="mb-5">
+              <label htmlFor="email" className="block text-lg font-semibold text-gray-800 mb-2">
                 Your email
               </label>
               <input
@@ -179,18 +179,18 @@ export default function Home() {
                 value={localEmail}
                 onChange={(e) => setLocalEmail(e.target.value)}
                 placeholder="alok@example.com"
-                className="w-full px-6 py-4 text-xl text-gray-900 placeholder-gray-400 border-2 border-gray-300 rounded-xl focus:border-amber-500 focus:outline-none transition-colors"
+                className="w-full px-4 py-3 text-lg text-gray-900 placeholder-gray-400 border-2 border-gray-300 rounded-xl focus:border-amber-500 focus:outline-none transition-colors"
                 required
               />
             </div>
 
-            <p className="text-sm text-gray-600 mb-6 leading-relaxed">
+            <p className="text-sm text-gray-600 mb-5 leading-relaxed">
               By continuing, you agree to receive your goals PDF and updates about the journal launch. Unsubscribe anytime.
             </p>
 
             <button
               type="submit"
-              className="w-full bg-gradient-to-r from-slate-700 to-amber-600 text-white py-4 rounded-xl font-semibold text-lg hover:from-slate-800 hover:to-amber-700 transition-all transform hover:scale-[1.02] shadow-lg"
+              className="w-full bg-gradient-to-r from-slate-700 to-amber-600 text-white py-3 rounded-xl font-semibold text-lg hover:from-slate-800 hover:to-amber-700 transition-all transform hover:scale-[1.02] shadow-lg"
             >
               Continue →
             </button>
@@ -198,20 +198,20 @@ export default function Home() {
         </div>
 
         {/* Trust Indicators */}
-        <div className="mt-12 text-center">
-          <p className="text-gray-700 mb-4 font-medium">Trusted by 10,000+ Man of Wisdom followers</p>
+        <div className="mt-10 text-center">
+          <p className="text-gray-700 mb-4 font-medium text-sm">Trusted by 10,000+ Man of Wisdom followers</p>
           <div className="flex justify-center items-center space-x-8">
             <div className="text-center">
-              <div className="text-3xl font-bold text-amber-600">5 min</div>
-              <div className="text-sm text-gray-600">Quick Setup</div>
+              <div className="text-2xl font-bold text-amber-600">5 min</div>
+              <div className="text-xs text-gray-600">Quick Setup</div>
             </div>
             <div className="text-center">
-              <div className="text-3xl font-bold text-slate-700">Free</div>
-              <div className="text-sm text-gray-600">1 Month Journal</div>
+              <div className="text-2xl font-bold text-slate-700">Free</div>
+              <div className="text-xs text-gray-600">1 Month Journal</div>
             </div>
             <div className="text-center">
-              <div className="text-3xl font-bold text-emerald-600">Jan 5</div>
-              <div className="text-sm text-gray-600">Launch Date</div>
+              <div className="text-2xl font-bold text-emerald-600">Jan 5</div>
+              <div className="text-xs text-gray-600">Launch Date</div>
             </div>
           </div>
         </div>
