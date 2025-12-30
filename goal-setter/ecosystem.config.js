@@ -3,12 +3,12 @@ module.exports = {
     name: 'goal-setter',
     script: 'npm',
     args: 'start',
-    cwd: '/var/www/goal-setter',
-    instances: 2, // Or use 'max' for all CPU cores
-    exec_mode: 'cluster',
+    cwd: '/root/var/www/goal-setter/goal-setter',
+    instances: 1,
+    exec_mode: 'fork',
     env: {
       NODE_ENV: 'production',
-      PORT: 3001, // Different from main journal app
+      PORT: 3002,
     },
     error_file: '/var/log/pm2/goal-setter-error.log',
     out_file: '/var/log/pm2/goal-setter-out.log',
