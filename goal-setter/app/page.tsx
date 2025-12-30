@@ -6,14 +6,16 @@ import { useGoalSetter } from '@/lib/context/GoalSetterContext';
 
 export default function Home() {
   const router = useRouter();
-  const { name, setName, setMode } = useGoalSetter();
+  const { name, setName, email, setEmail, setMode } = useGoalSetter();
   const [localName, setLocalName] = useState(name || '');
-  const [showModeSelection, setShowModeSelection] = useState(!!name);
+  const [localEmail, setLocalEmail] = useState(email || '');
+  const [showModeSelection, setShowModeSelection] = useState(!!name && !!email);
 
   const handleNameSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (localName.trim()) {
+    if (localName.trim() && localEmail.trim()) {
       setName(localName.trim());
+      setEmail(localEmail.trim());
       setShowModeSelection(true);
     }
   };
@@ -148,25 +150,47 @@ export default function Home() {
           </p>
         </div>
 
-        {/* Name Entry Form */}
+        {/* Name & Email Entry Form */}
         <div className="bg-white rounded-2xl shadow-2xl p-8 md:p-12">
           <form onSubmit={handleNameSubmit}>
-            <label htmlFor="name" className="block text-xl font-semibold text-gray-800 mb-3">
-              What&apos;s your name?
-            </label>
-            <input
-              id="name"
-              type="text"
-              value={localName}
-              onChange={(e) => setLocalName(e.target.value)}
-              placeholder="Alok"
-              className="w-full px-6 py-4 text-xl text-gray-900 placeholder-gray-400 border-2 border-gray-300 rounded-xl focus:border-amber-500 focus:outline-none transition-colors"
-              autoFocus
-              required
-            />
+            <div className="mb-6">
+              <label htmlFor="name" className="block text-xl font-semibold text-gray-800 mb-3">
+                What&apos;s your name?
+              </label>
+              <input
+                id="name"
+                type="text"
+                value={localName}
+                onChange={(e) => setLocalName(e.target.value)}
+                placeholder="Alok"
+                className="w-full px-6 py-4 text-xl text-gray-900 placeholder-gray-400 border-2 border-gray-300 rounded-xl focus:border-amber-500 focus:outline-none transition-colors"
+                autoFocus
+                required
+              />
+            </div>
+
+            <div className="mb-6">
+              <label htmlFor="email" className="block text-xl font-semibold text-gray-800 mb-3">
+                Your email
+              </label>
+              <input
+                id="email"
+                type="email"
+                value={localEmail}
+                onChange={(e) => setLocalEmail(e.target.value)}
+                placeholder="alok@example.com"
+                className="w-full px-6 py-4 text-xl text-gray-900 placeholder-gray-400 border-2 border-gray-300 rounded-xl focus:border-amber-500 focus:outline-none transition-colors"
+                required
+              />
+            </div>
+
+            <p className="text-sm text-gray-600 mb-6 leading-relaxed">
+              By continuing, you agree to receive your goals PDF and updates about the journal launch. Unsubscribe anytime.
+            </p>
+
             <button
               type="submit"
-              className="w-full mt-6 bg-gradient-to-r from-slate-700 to-amber-600 text-white py-4 rounded-xl font-semibold text-lg hover:from-slate-800 hover:to-amber-700 transition-all transform hover:scale-[1.02] shadow-lg"
+              className="w-full bg-gradient-to-r from-slate-700 to-amber-600 text-white py-4 rounded-xl font-semibold text-lg hover:from-slate-800 hover:to-amber-700 transition-all transform hover:scale-[1.02] shadow-lg"
             >
               Continue →
             </button>
@@ -186,7 +210,7 @@ export default function Home() {
               <div className="text-sm text-gray-600">1 Month Journal</div>
             </div>
             <div className="text-center">
-              <div className="text-3xl font-bold text-emerald-600">Jan 1</div>
+              <div className="text-3xl font-bold text-emerald-600">Jan 5</div>
               <div className="text-sm text-gray-600">Launch Date</div>
             </div>
           </div>
