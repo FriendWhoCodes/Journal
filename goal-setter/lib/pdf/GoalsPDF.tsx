@@ -154,7 +154,7 @@ export const GoalsPDF = ({ name, mode, quickModeData, deepModeData }: GoalsPDFPr
         {/* Header */}
         <View style={styles.header}>
           <Text style={styles.title}>MY 2026 BLUEPRINT</Text>
-          <Text style={styles.subtitle}>{name}&apos;s Goals for 2026</Text>
+          <Text style={styles.subtitle}>{name} - Goals for 2026</Text>
           <Text style={styles.subtitle}>Mode: {mode === 'quick' ? 'Quick Setup' : 'Deep Planning'}</Text>
         </View>
 
@@ -163,7 +163,7 @@ export const GoalsPDF = ({ name, mode, quickModeData, deepModeData }: GoalsPDFPr
           <>
             {/* Top 3 Goals */}
             <View style={styles.section}>
-              <Text style={styles.sectionTitle}>🎯 TOP 3 GOALS</Text>
+              <Text style={styles.sectionTitle}>TOP 3 GOALS</Text>
               {quickModeData.topGoals?.map((goal, i) => (
                 <Text key={i} style={styles.goal}>
                   <Text style={styles.goalNumber}>{i + 1}. </Text>
@@ -174,7 +174,7 @@ export const GoalsPDF = ({ name, mode, quickModeData, deepModeData }: GoalsPDFPr
 
             {/* Habits */}
             <View style={styles.section}>
-              <Text style={styles.sectionTitle}>✅ HABITS</Text>
+              <Text style={styles.sectionTitle}>HABITS</Text>
               <View style={styles.habitBox}>
                 <Text style={styles.habitTitle}>Habit to Build:</Text>
                 <Text style={styles.habitText}>{quickModeData.habitToBuild}</Text>
@@ -187,7 +187,7 @@ export const GoalsPDF = ({ name, mode, quickModeData, deepModeData }: GoalsPDFPr
 
             {/* Theme */}
             <View style={styles.section}>
-              <Text style={styles.sectionTitle}>💡 MY THEME FOR 2026</Text>
+              <Text style={styles.sectionTitle}>MY THEME FOR 2026</Text>
               <View style={styles.themeBox}>
                 <Text style={styles.themeText}>&quot;{quickModeData.mainTheme}&quot;</Text>
               </View>
@@ -197,12 +197,12 @@ export const GoalsPDF = ({ name, mode, quickModeData, deepModeData }: GoalsPDFPr
           // Deep Mode Content
           <>
             {[
-              { id: 'health', name: 'Health & Fitness', icon: '💪' },
-              { id: 'career', name: 'Career & Work', icon: '💼' },
-              { id: 'wealth', name: 'Wealth & Finance', icon: '💰' },
-              { id: 'relationships', name: 'Relationships & Family', icon: '❤️' },
-              { id: 'growth', name: 'Personal Growth & Learning', icon: '📚' },
-              { id: 'impact', name: 'Contribution & Impact', icon: '🌟' },
+              { id: 'health', name: 'Health & Fitness' },
+              { id: 'career', name: 'Career & Work' },
+              { id: 'wealth', name: 'Wealth & Finance' },
+              { id: 'relationships', name: 'Relationships & Family' },
+              { id: 'growth', name: 'Personal Growth & Learning' },
+              { id: 'impact', name: 'Contribution & Impact' },
             ].map((category) => {
               const data = deepModeData?.[category.id as keyof DeepModeData];
               // Type guard to ensure we have a DeepModeCategory object
@@ -212,7 +212,7 @@ export const GoalsPDF = ({ name, mode, quickModeData, deepModeData }: GoalsPDFPr
               return (
                 <View key={category.id} style={styles.categorySection}>
                   <Text style={styles.categoryHeader}>
-                    {category.icon} {category.name}
+                    {category.name.toUpperCase()}
                   </Text>
 
                   <View style={styles.categoryItem}>
@@ -243,11 +243,11 @@ export const GoalsPDF = ({ name, mode, quickModeData, deepModeData }: GoalsPDFPr
         {/* Life Balance */}
         {(placesArray.length > 0 || booksArray.length > 0 || experiencesArray.length > 0) && (
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>✨ LIFE BALANCE & FUN</Text>
+            <Text style={styles.sectionTitle}>LIFE BALANCE & FUN</Text>
             <View style={styles.lifeBalanceGrid}>
               {placesArray.length > 0 && (
                 <View style={styles.lifeBalanceColumn}>
-                  <Text style={styles.lifeBalanceTitle}>🌍 Places to Visit</Text>
+                  <Text style={styles.lifeBalanceTitle}>Places to Visit</Text>
                   {placesArray.slice(0, 5).map((place, i) => (
                     <Text key={i} style={styles.lifeBalanceItem}>• {place}</Text>
                   ))}
@@ -256,7 +256,7 @@ export const GoalsPDF = ({ name, mode, quickModeData, deepModeData }: GoalsPDFPr
 
               {booksArray.length > 0 && (
                 <View style={styles.lifeBalanceColumn}>
-                  <Text style={styles.lifeBalanceTitle}>📚 Books to Read</Text>
+                  <Text style={styles.lifeBalanceTitle}>Books to Read</Text>
                   {booksArray.slice(0, 5).map((book, i) => (
                     <Text key={i} style={styles.lifeBalanceItem}>• {book}</Text>
                   ))}
@@ -265,7 +265,7 @@ export const GoalsPDF = ({ name, mode, quickModeData, deepModeData }: GoalsPDFPr
 
               {experiencesArray.length > 0 && (
                 <View style={styles.lifeBalanceColumn}>
-                  <Text style={styles.lifeBalanceTitle}>✨ Experiences</Text>
+                  <Text style={styles.lifeBalanceTitle}>Experiences</Text>
                   {experiencesArray.slice(0, 5).map((exp, i) => (
                     <Text key={i} style={styles.lifeBalanceItem}>• {exp}</Text>
                   ))}
@@ -277,7 +277,7 @@ export const GoalsPDF = ({ name, mode, quickModeData, deepModeData }: GoalsPDFPr
 
         {/* Footer */}
         <View style={styles.footer}>
-          <Text>Created with Man of Wisdom Goal Setter • manofwisdom.co</Text>
+          <Text>Created with Man of Wisdom Goal Setter</Text>
           <Text>Track your goals with the Man of Wisdom Journal starting January 1, 2026</Text>
         </View>
       </Page>
