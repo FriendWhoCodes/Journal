@@ -210,7 +210,7 @@ export default function Home() {
               <div className="text-xs text-gray-600">1 Month Journal</div>
             </div>
             <div className="text-center">
-              <div className="text-2xl font-bold text-emerald-600">Jan 5</div>
+              <div className="text-2xl font-bold text-emerald-600">Jan 11</div>
               <div className="text-xs text-gray-600">Launch Date</div>
             </div>
           </div>

@@ -9,28 +9,13 @@ import { GoalsPDF } from '@/lib/pdf/GoalsPDF';
 
 export default function Summary() {
   const router = useRouter();
-  const { name, mode, quickModeData, deepModeData, email, setEmail } = useGoalSetter();
-  const [localEmail, setLocalEmail] = useState(email || '');
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
+  const { name, mode, quickModeData, deepModeData } = useGoalSetter();
   const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
 
   if (!name || !mode) {
     router.push('/');
     return null;
   }
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-
-    // Simulate API call - in production, this would save to database
-    setTimeout(() => {
-      setEmail(localEmail);
-      setSubmitted(true);
-      setIsSubmitting(false);
-    }, 1000);
-  };
 
   const handleDownloadPDF = async () => {
     setIsGeneratingPDF(true);
@@ -59,78 +44,6 @@ export default function Summary() {
       setIsGeneratingPDF(false);
     }
   };
-
-  if (submitted) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-emerald-50 flex items-center justify-center px-4">
-        <div className="max-w-2xl w-full text-center">
-          <div className="bg-white rounded-2xl shadow-2xl p-12">
-            <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
-              <svg className="w-10 h-10 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-              </svg>
-            </div>
-
-            <h1 className="text-4xl font-bold text-gray-900 mb-4">
-              Your 2026 Goals Are Saved! 🎉
-            </h1>
-
-            <p className="text-lg text-gray-600 mb-8">
-              We&apos;ve sent a confirmation email to <strong>{localEmail}</strong>
-            </p>
-
-            <div className="bg-slate-50 rounded-xl p-6 mb-8">
-              <h2 className="text-xl font-bold text-slate-900 mb-3">
-                What happens next?
-              </h2>
-              <ul className="text-left space-y-2 text-gray-700">
-                <li className="flex items-start">
-                  <span className="text-slate-700 mr-2">✓</span>
-                  <span>Your goals are securely saved</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-slate-700 mr-2">✓</span>
-                  <span>We&apos;ll email you on <strong>January 1st</strong> when the journal launches</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-slate-700 mr-2">✓</span>
-                  <span>You&apos;ll get <strong>1 month FREE</strong> Pro access</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-slate-700 mr-2">✓</span>
-                  <span>All your goals will be pre-loaded in the journal</span>
-                </li>
-              </ul>
-            </div>
-
-            <div className="space-y-3">
-              <button
-                onClick={handleDownloadPDF}
-                disabled={isGeneratingPDF}
-                className="w-full bg-slate-700 text-white py-4 rounded-xl font-semibold text-lg hover:bg-slate-800 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {isGeneratingPDF ? '⏳ Generating PDF...' : '📄 Download PDF'}
-              </button>
-
-              <button
-                onClick={() => {
-                  setSubmitted(false);
-                  router.push('/');
-                }}
-                className="w-full bg-gray-200 text-gray-700 py-4 rounded-xl font-semibold text-lg hover:bg-gray-300 transition-all"
-              >
-                Edit My Goals
-              </button>
-            </div>
-
-            <p className="mt-8 text-sm text-gray-500">
-              Didn&apos;t receive the email? Check your spam folder or contact us.
-            </p>
-          </div>
-        </div>
-      </div>
-    );
-  }
 
   // Parse life balance data
   const data = mode === 'quick' ? quickModeData : deepModeData;
@@ -332,41 +245,47 @@ export default function Summary() {
           </p>
         </div>
 
-        {/* Email Capture */}
+        {/* Journal Launch CTA */}
         <div className="bg-gradient-to-r from-slate-700 to-amber-600 rounded-2xl shadow-2xl p-8 md:p-12 text-white">
           <div className="text-center mb-8">
+            <div className="inline-block bg-white/20 backdrop-blur-sm rounded-full px-6 py-2 mb-6">
+              <p className="text-sm font-semibold text-white">✨ Your Goals Are Saved</p>
+            </div>
+
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              Unlock Your Free Journal Access
+              Get Ready for the Man of Wisdom Journal
             </h2>
-            <p className="text-xl text-amber-100">
-              Track these goals daily starting January 1st with <strong>1 month FREE</strong> Pro access
+            <p className="text-xl text-amber-100 mb-6">
+              Track these goals daily starting <strong>January 11th</strong> with <strong>1 month FREE</strong> Pro access
             </p>
           </div>
 
-          <form onSubmit={handleSubmit} className="max-w-md mx-auto">
-            <label htmlFor="email" className="block text-lg font-semibold mb-3">
-              Enter your email to claim your free access:
-            </label>
-            <input
-              id="email"
-              type="email"
-              value={localEmail}
-              onChange={(e) => setLocalEmail(e.target.value)}
-              placeholder="your@email.com"
-              className="w-full px-6 py-4 text-lg text-gray-900 rounded-xl focus:outline-none focus:ring-4 focus:ring-white/50 mb-4"
-              required
-            />
-            <button
-              type="submit"
-              disabled={isSubmitting}
-              className="w-full bg-white text-slate-700 py-4 rounded-xl font-bold text-lg hover:bg-slate-50 transition-all shadow-lg disabled:opacity-50"
-            >
-              {isSubmitting ? 'Saving...' : 'Claim My Free Journal Access →'}
-            </button>
-          </form>
+          <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 mb-8 max-w-2xl mx-auto">
+            <h3 className="text-xl font-bold mb-4 text-center">What happens next?</h3>
+            <ul className="space-y-3 text-amber-50">
+              <li className="flex items-start">
+                <span className="text-emerald-300 mr-3 text-xl flex-shrink-0">✓</span>
+                <span>We&apos;ll email you on <strong className="text-white">January 11th</strong> when the journal launches</span>
+              </li>
+              <li className="flex items-start">
+                <span className="text-emerald-300 mr-3 text-xl flex-shrink-0">✓</span>
+                <span>All your goals will be <strong className="text-white">pre-loaded</strong> in your journal</span>
+              </li>
+              <li className="flex items-start">
+                <span className="text-emerald-300 mr-3 text-xl flex-shrink-0">✓</span>
+                <span>Start tracking, build habits, and achieve your 2026 vision</span>
+              </li>
+              <li className="flex items-start">
+                <span className="text-emerald-300 mr-3 text-xl flex-shrink-0">✓</span>
+                <span>No credit card required for your free month</span>
+              </li>
+            </ul>
+          </div>
 
-          <div className="mt-8 text-center text-amber-100 text-sm">
-            <p>✓ No credit card required • ✓ Cancel anytime • ✓ Your data is safe</p>
+          <div className="text-center">
+            <p className="text-amber-100 text-sm">
+              📧 Watch your inbox for our launch announcement • Questions? Reply to any of our emails
+            </p>
           </div>
         </div>
 
