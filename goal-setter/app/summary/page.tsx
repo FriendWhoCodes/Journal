@@ -79,25 +79,25 @@ export default function Summary() {
               We&apos;ve sent a confirmation email to <strong>{localEmail}</strong>
             </p>
 
-            <div className="bg-indigo-50 rounded-xl p-6 mb-8">
-              <h2 className="text-xl font-bold text-indigo-900 mb-3">
+            <div className="bg-slate-50 rounded-xl p-6 mb-8">
+              <h2 className="text-xl font-bold text-slate-900 mb-3">
                 What happens next?
               </h2>
               <ul className="text-left space-y-2 text-gray-700">
                 <li className="flex items-start">
-                  <span className="text-indigo-500 mr-2">✓</span>
+                  <span className="text-slate-700 mr-2">✓</span>
                   <span>Your goals are securely saved</span>
                 </li>
                 <li className="flex items-start">
-                  <span className="text-indigo-500 mr-2">✓</span>
+                  <span className="text-slate-700 mr-2">✓</span>
                   <span>We&apos;ll email you on <strong>January 1st</strong> when the journal launches</span>
                 </li>
                 <li className="flex items-start">
-                  <span className="text-indigo-500 mr-2">✓</span>
+                  <span className="text-slate-700 mr-2">✓</span>
                   <span>You&apos;ll get <strong>1 month FREE</strong> Pro access</span>
                 </li>
                 <li className="flex items-start">
-                  <span className="text-indigo-500 mr-2">✓</span>
+                  <span className="text-slate-700 mr-2">✓</span>
                   <span>All your goals will be pre-loaded in the journal</span>
                 </li>
               </ul>
@@ -107,7 +107,7 @@ export default function Summary() {
               <button
                 onClick={handleDownloadPDF}
                 disabled={isGeneratingPDF}
-                className="w-full bg-indigo-600 text-white py-4 rounded-xl font-semibold text-lg hover:bg-indigo-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full bg-slate-700 text-white py-4 rounded-xl font-semibold text-lg hover:bg-slate-800 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {isGeneratingPDF ? '⏳ Generating PDF...' : '📄 Download PDF'}
               </button>
@@ -139,7 +139,7 @@ export default function Summary() {
   const experiencesArray = data.experiencesToHave?.split('\n').filter(e => e.trim()) || [];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 py-12 px-4">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-amber-50 py-12 px-4">
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <div className="text-center mb-12">
@@ -167,7 +167,7 @@ export default function Summary() {
                 <ul className="space-y-3">
                   {quickModeData.topGoals?.map((goal, i) => (
                     <li key={i} className="flex items-start">
-                      <span className="bg-indigo-100 text-indigo-700 rounded-full w-8 h-8 flex items-center justify-center font-bold mr-3 flex-shrink-0">
+                      <span className="bg-slate-100 text-slate-700 rounded-full w-8 h-8 flex items-center justify-center font-bold mr-3 flex-shrink-0">
                         {i + 1}
                       </span>
                       <span className="text-lg text-gray-800 pt-1">{goal}</span>
@@ -202,8 +202,8 @@ export default function Summary() {
                 <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center">
                   <span className="text-3xl mr-3">💡</span> THEME FOR 2026
                 </h2>
-                <div className="bg-gradient-to-r from-indigo-50 to-purple-50 p-6 rounded-xl">
-                  <p className="text-2xl font-semibold text-center text-indigo-900">
+                <div className="bg-gradient-to-r from-slate-50 to-amber-50 p-6 rounded-xl">
+                  <p className="text-2xl font-semibold text-center text-slate-900">
                     &quot;{quickModeData.mainTheme}&quot;
                   </p>
                 </div>
@@ -217,7 +217,7 @@ export default function Summary() {
                 { id: 'career', name: 'Career & Work', icon: '💼', color: 'blue' },
                 { id: 'wealth', name: 'Wealth & Finance', icon: '💰', color: 'green' },
                 { id: 'relationships', name: 'Relationships & Family', icon: '❤️', color: 'pink' },
-                { id: 'growth', name: 'Personal Growth & Learning', icon: '📚', color: 'purple' },
+                { id: 'growth', name: 'Personal Growth & Learning', icon: '📚', color: 'teal' },
                 { id: 'impact', name: 'Contribution & Impact', icon: '🌟', color: 'yellow' },
               ].map((category) => {
                 const data = deepModeData[category.id as keyof typeof deepModeData];
@@ -314,7 +314,7 @@ export default function Summary() {
           <button
             onClick={handleDownloadPDF}
             disabled={isGeneratingPDF}
-            className="bg-white text-indigo-600 px-8 py-4 rounded-xl font-semibold text-lg hover:bg-gray-50 transition-all shadow-lg disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center gap-2"
+            className="bg-white text-slate-700 px-8 py-4 rounded-xl font-semibold text-lg hover:bg-gray-50 transition-all shadow-lg disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center gap-2"
           >
             {isGeneratingPDF ? (
               <>
@@ -333,12 +333,12 @@ export default function Summary() {
         </div>
 
         {/* Email Capture */}
-        <div className="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-2xl shadow-2xl p-8 md:p-12 text-white">
+        <div className="bg-gradient-to-r from-slate-700 to-amber-600 rounded-2xl shadow-2xl p-8 md:p-12 text-white">
           <div className="text-center mb-8">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
               Unlock Your Free Journal Access
             </h2>
-            <p className="text-xl text-indigo-100">
+            <p className="text-xl text-amber-100">
               Track these goals daily starting January 1st with <strong>1 month FREE</strong> Pro access
             </p>
           </div>
@@ -359,13 +359,13 @@ export default function Summary() {
             <button
               type="submit"
               disabled={isSubmitting}
-              className="w-full bg-white text-indigo-600 py-4 rounded-xl font-bold text-lg hover:bg-indigo-50 transition-all shadow-lg disabled:opacity-50"
+              className="w-full bg-white text-slate-700 py-4 rounded-xl font-bold text-lg hover:bg-slate-50 transition-all shadow-lg disabled:opacity-50"
             >
               {isSubmitting ? 'Saving...' : 'Claim My Free Journal Access →'}
             </button>
           </form>
 
-          <div className="mt-8 text-center text-indigo-100 text-sm">
+          <div className="mt-8 text-center text-amber-100 text-sm">
             <p>✓ No credit card required • ✓ Cancel anytime • ✓ Your data is safe</p>
           </div>
         </div>

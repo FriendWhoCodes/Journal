@@ -10,7 +10,7 @@ const categories = [
   { id: 'career', name: 'Career & Work', icon: '💼', color: 'blue' },
   { id: 'wealth', name: 'Wealth & Finance', icon: '💰', color: 'green' },
   { id: 'relationships', name: 'Relationships & Family', icon: '❤️', color: 'pink' },
-  { id: 'growth', name: 'Personal Growth & Learning', icon: '📚', color: 'purple' },
+  { id: 'growth', name: 'Personal Growth & Learning', icon: '📚', color: 'teal' },
   { id: 'impact', name: 'Contribution & Impact', icon: '🌟', color: 'yellow' },
 ];
 
@@ -109,17 +109,17 @@ export default function DeepMode() {
   // Life Balance Page (Final Step)
   if (step === totalSteps) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-pink-50 py-8 px-4">
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-amber-50 py-8 px-4">
         <div className="max-w-3xl mx-auto">
           {/* Progress Bar */}
           <div className="mb-8">
             <div className="flex justify-between items-center mb-2">
               <span className="text-sm font-medium text-gray-700">Step {step} of {totalSteps}</span>
-              <span className="text-sm font-medium text-purple-600">{progressPercentage}%</span>
+              <span className="text-sm font-medium text-slate-700">{progressPercentage}%</span>
             </div>
             <div className="w-full bg-gray-200 rounded-full h-2">
               <div
-                className="bg-gradient-to-r from-purple-600 to-pink-600 h-2 rounded-full transition-all duration-300"
+                className="bg-gradient-to-r from-slate-700 to-amber-600 h-2 rounded-full transition-all duration-300"
                 style={{ width: `${progressPercentage}%` }}
               />
             </div>
@@ -146,7 +146,7 @@ export default function DeepMode() {
                 value={placesToVisit}
                 onChange={(e) => setPlacesToVisit(e.target.value)}
                 placeholder="List the places you want to explore (one per line)&#10;e.g.,&#10;Bali, Indonesia&#10;Swiss Alps&#10;Local hill stations"
-                className="w-full px-5 py-3 text-lg border-2 border-gray-200 rounded-xl focus:border-purple-500 focus:outline-none h-32 resize-none"
+                className="w-full px-5 py-3 text-lg border-2 border-gray-200 rounded-xl focus:border-slate-500 focus:outline-none h-32 resize-none"
               />
             </div>
 
@@ -159,7 +159,7 @@ export default function DeepMode() {
                 value={booksToRead}
                 onChange={(e) => setBooksToRead(e.target.value)}
                 placeholder="List the books you want to read (one per line)&#10;e.g.,&#10;Atomic Habits&#10;The Almanack of Naval Ravikant&#10;Deep Work"
-                className="w-full px-5 py-3 text-lg border-2 border-gray-200 rounded-xl focus:border-purple-500 focus:outline-none h-32 resize-none"
+                className="w-full px-5 py-3 text-lg border-2 border-gray-200 rounded-xl focus:border-slate-500 focus:outline-none h-32 resize-none"
               />
             </div>
 
@@ -172,7 +172,7 @@ export default function DeepMode() {
                 value={experiencesToHave}
                 onChange={(e) => setExperiencesToHave(e.target.value)}
                 placeholder="What experiences do you want to have? (one per line)&#10;e.g.,&#10;Learn to cook Italian cuisine&#10;Attend a music festival&#10;Volunteer at an NGO"
-                className="w-full px-5 py-3 text-lg border-2 border-gray-200 rounded-xl focus:border-purple-500 focus:outline-none h-32 resize-none"
+                className="w-full px-5 py-3 text-lg border-2 border-gray-200 rounded-xl focus:border-slate-500 focus:outline-none h-32 resize-none"
               />
             </div>
 
@@ -186,7 +186,7 @@ export default function DeepMode() {
               </button>
               <button
                 type="submit"
-                className="flex-1 bg-gradient-to-r from-purple-600 to-pink-600 text-white py-4 rounded-xl font-semibold text-lg hover:from-purple-700 hover:to-pink-700 transition-all shadow-lg"
+                className="flex-1 bg-gradient-to-r from-slate-700 to-amber-600 text-white py-4 rounded-xl font-semibold text-lg hover:from-slate-800 hover:to-amber-700 transition-all shadow-lg"
               >
                 See My 2026 Blueprint →
               </button>
@@ -204,7 +204,7 @@ export default function DeepMode() {
     blue: { bg: 'bg-blue-50', border: 'border-blue-500', text: 'text-blue-600', gradient: 'from-blue-600 to-cyan-600' },
     green: { bg: 'bg-green-50', border: 'border-green-500', text: 'text-green-600', gradient: 'from-green-600 to-emerald-600' },
     pink: { bg: 'bg-pink-50', border: 'border-pink-500', text: 'text-pink-600', gradient: 'from-pink-600 to-rose-600' },
-    purple: { bg: 'bg-purple-50', border: 'border-purple-500', text: 'text-purple-600', gradient: 'from-purple-600 to-indigo-600' },
+    teal: { bg: 'bg-teal-50', border: 'border-teal-500', text: 'text-teal-600', gradient: 'from-teal-600 to-cyan-600' },
     yellow: { bg: 'bg-yellow-50', border: 'border-yellow-500', text: 'text-yellow-600', gradient: 'from-yellow-600 to-orange-600' },
   };
   const colors = colorClasses[currentCategory.color as keyof typeof colorClasses];
