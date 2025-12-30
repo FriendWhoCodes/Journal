@@ -18,7 +18,7 @@ export default function QuickMode() {
   const [mainTheme, setMainTheme] = useState(quickModeData.mainTheme || '');
 
   const [placesToVisit, setPlacesToVisit] = useState(quickModeData.placesToVisit || '');
-  const [booksToRead, setBooksToRead] = useState(quickModeData.booksToRead || '');
+  const [moviesToWatch, setMoviesToWatch] = useState(quickModeData.moviesToWatch || '');
   const [experiencesToHave, setExperiencesToHave] = useState(quickModeData.experiencesToHave || '');
 
   if (!name) {
@@ -43,7 +43,7 @@ export default function QuickMode() {
     e.preventDefault();
     updateQuickModeData({
       placesToVisit,
-      booksToRead,
+      moviesToWatch,
       experiencesToHave,
     });
     router.push('/summary');
@@ -217,15 +217,15 @@ export default function QuickMode() {
             />
           </div>
 
-          {/* Books to Read */}
+          {/* Movies/Series to Watch */}
           <div className="mb-8">
             <label className="block text-xl font-bold text-gray-900 mb-4">
-              📚 Books I want to read in 2026
+              🎬 Movies/Series I want to watch in 2026
             </label>
             <textarea
-              value={booksToRead}
-              onChange={(e) => setBooksToRead(e.target.value)}
-              placeholder="List the books you want to read (one per line)&#10;e.g.,&#10;Atomic Habits&#10;The Almanack of Naval Ravikant&#10;Deep Work"
+              value={moviesToWatch}
+              onChange={(e) => setMoviesToWatch(e.target.value)}
+              placeholder="List the movies or series you want to watch (one per line)&#10;e.g.,&#10;The Last of Us&#10;Oppenheimer&#10;Breaking Bad (rewatch)"
               className="w-full px-5 py-3 text-lg border-2 border-gray-200 rounded-xl focus:border-slate-500 focus:outline-none h-32 resize-none"
             />
           </div>

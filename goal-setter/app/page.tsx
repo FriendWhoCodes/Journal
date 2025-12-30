@@ -10,12 +10,41 @@ export default function Home() {
   const [localName, setLocalName] = useState(name || '');
   const [localEmail, setLocalEmail] = useState(email || '');
   const [showModeSelection, setShowModeSelection] = useState(!!name && !!email);
+  const [errors, setErrors] = useState({ name: '', email: '' });
+
+  const validateEmail = (email: string): boolean => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
 
   const handleNameSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (localName.trim() && localEmail.trim()) {
-      setName(localName.trim());
-      setEmail(localEmail.trim());
+    const trimmedName = localName.trim();
+    const trimmedEmail = localEmail.trim();
+
+    let hasErrors = false;
+    const newErrors = { name: '', email: '' };
+
+    // Validate name (minimum 2 characters)
+    if (!trimmedName || trimmedName.length < 2) {
+      newErrors.name = 'Name must be at least 2 characters';
+      hasErrors = true;
+    }
+
+    // Validate email
+    if (!trimmedEmail) {
+      newErrors.email = 'Email is required';
+      hasErrors = true;
+    } else if (!validateEmail(trimmedEmail)) {
+      newErrors.email = 'Please enter a valid email address';
+      hasErrors = true;
+    }
+
+    setErrors(newErrors);
+
+    if (!hasErrors) {
+      setName(trimmedName);
+      setEmail(trimmedEmail);
       setShowModeSelection(true);
     }
   };
@@ -161,12 +190,19 @@ export default function Home() {
                 id="name"
                 type="text"
                 value={localName}
-                onChange={(e) => setLocalName(e.target.value)}
+                onChange={(e) => {
+                  setLocalName(e.target.value);
+                  if (errors.name) setErrors({ ...errors, name: '' });
+                }}
                 placeholder="Alok"
-                className="w-full px-4 py-3 text-lg text-gray-900 placeholder-gray-400 border-2 border-gray-300 rounded-xl focus:border-amber-500 focus:outline-none transition-colors"
+                className={`w-full px-4 py-3 text-lg text-gray-900 placeholder-gray-400 border-2 rounded-xl focus:outline-none transition-colors ${
+                  errors.name ? 'border-red-500 focus:border-red-500' : 'border-gray-300 focus:border-amber-500'
+                }`}
                 autoFocus
-                required
               />
+              {errors.name && (
+                <p className="mt-2 text-sm text-red-600">{errors.name}</p>
+              )}
             </div>
 
             <div className="mb-5">
@@ -177,11 +213,18 @@ export default function Home() {
                 id="email"
                 type="email"
                 value={localEmail}
-                onChange={(e) => setLocalEmail(e.target.value)}
+                onChange={(e) => {
+                  setLocalEmail(e.target.value);
+                  if (errors.email) setErrors({ ...errors, email: '' });
+                }}
                 placeholder="alok@example.com"
-                className="w-full px-4 py-3 text-lg text-gray-900 placeholder-gray-400 border-2 border-gray-300 rounded-xl focus:border-amber-500 focus:outline-none transition-colors"
-                required
+                className={`w-full px-4 py-3 text-lg text-gray-900 placeholder-gray-400 border-2 rounded-xl focus:outline-none transition-colors ${
+                  errors.email ? 'border-red-500 focus:border-red-500' : 'border-gray-300 focus:border-amber-500'
+                }`}
               />
+              {errors.email && (
+                <p className="mt-2 text-sm text-red-600">{errors.email}</p>
+              )}
             </div>
 
             <p className="text-sm text-gray-600 mb-5 leading-relaxed">

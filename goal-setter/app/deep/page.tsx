@@ -7,9 +7,9 @@ import { DeepModeCategory } from '@/lib/types';
 
 const categories = [
   { id: 'health', name: 'Health & Fitness', icon: '💪', color: 'red' },
-  { id: 'career', name: 'Career & Work', icon: '💼', color: 'blue' },
-  { id: 'wealth', name: 'Wealth & Finance', icon: '💰', color: 'green' },
   { id: 'relationships', name: 'Relationships & Family', icon: '❤️', color: 'pink' },
+  { id: 'wealth', name: 'Wealth & Finance', icon: '💰', color: 'green' },
+  { id: 'career', name: 'Career & Work', icon: '💼', color: 'blue' },
   { id: 'growth', name: 'Personal Growth & Learning', icon: '📚', color: 'teal' },
   { id: 'impact', name: 'Contribution & Impact', icon: '🌟', color: 'yellow' },
 ];
@@ -39,9 +39,9 @@ export default function DeepMode() {
   const [habitsBreak, setHabitsBreak] = useState(currentData?.habitsBreak || '');
   const [why, setWhy] = useState(currentData?.why || '');
 
-  // Life balance data
+  // Fun stuff data
   const [placesToVisit, setPlacesToVisit] = useState(deepModeData.placesToVisit || '');
-  const [booksToRead, setBooksToRead] = useState(deepModeData.booksToRead || '');
+  const [moviesToWatch, setMoviesToWatch] = useState(deepModeData.moviesToWatch || '');
   const [experiencesToHave, setExperiencesToHave] = useState(deepModeData.experiencesToHave || '');
 
   if (!name) {
@@ -79,11 +79,11 @@ export default function DeepMode() {
     }
   };
 
-  const handleLifeBalanceSubmit = (e: React.FormEvent) => {
+  const handleFunSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     updateDeepModeData({
       placesToVisit,
-      booksToRead,
+      moviesToWatch,
       experiencesToHave,
     });
     router.push('/summary');
@@ -106,7 +106,7 @@ export default function DeepMode() {
 
   const progressPercentage = Math.round((step / totalSteps) * 100);
 
-  // Life Balance Page (Final Step)
+  // Fun Stuff Page (Final Step)
   if (step === totalSteps) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-amber-50 py-8 px-4">
@@ -128,7 +128,7 @@ export default function DeepMode() {
           {/* Header */}
           <div className="text-center mb-8">
             <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-3">
-              Life Balance & Fun Stuff
+              Fun
             </h1>
             <p className="text-lg text-gray-600">
               Almost done! What do you want to experience in 2026?
@@ -136,7 +136,7 @@ export default function DeepMode() {
           </div>
 
           {/* Form */}
-          <form onSubmit={handleLifeBalanceSubmit} className="bg-white rounded-2xl shadow-xl p-8 md:p-10">
+          <form onSubmit={handleFunSubmit} className="bg-white rounded-2xl shadow-xl p-8 md:p-10">
             {/* Places to Visit */}
             <div className="mb-8">
               <label className="block text-xl font-bold text-gray-900 mb-4">
@@ -150,15 +150,15 @@ export default function DeepMode() {
               />
             </div>
 
-            {/* Books to Read */}
+            {/* Movies/Series to Watch */}
             <div className="mb-8">
               <label className="block text-xl font-bold text-gray-900 mb-4">
-                📚 Books I want to read in 2026
+                🎬 Movies/Series I want to watch in 2026
               </label>
               <textarea
-                value={booksToRead}
-                onChange={(e) => setBooksToRead(e.target.value)}
-                placeholder="List the books you want to read (one per line)&#10;e.g.,&#10;Atomic Habits&#10;The Almanack of Naval Ravikant&#10;Deep Work"
+                value={moviesToWatch}
+                onChange={(e) => setMoviesToWatch(e.target.value)}
+                placeholder="List the movies or series you want to watch (one per line)&#10;e.g.,&#10;The Last of Us&#10;Oppenheimer&#10;Breaking Bad (rewatch)"
                 className="w-full px-5 py-3 text-lg border-2 border-gray-200 rounded-xl focus:border-slate-500 focus:outline-none h-32 resize-none"
               />
             </div>
@@ -319,7 +319,7 @@ export default function DeepMode() {
               type="submit"
               className={`flex-1 bg-gradient-to-r ${colors.gradient} text-white py-4 rounded-xl font-semibold text-lg hover:opacity-90 transition-all shadow-lg`}
             >
-              {step < categories.length ? `Next: ${categories[step].name} →` : 'Continue to Life Balance →'}
+              {step < categories.length ? `Next: ${categories[step].name} →` : 'Continue to Fun →'}
             </button>
           </div>
         </form>

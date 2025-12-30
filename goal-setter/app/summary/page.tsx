@@ -45,10 +45,10 @@ export default function Summary() {
     }
   };
 
-  // Parse life balance data
+  // Parse fun stuff data
   const data = mode === 'quick' ? quickModeData : deepModeData;
   const placesArray = data.placesToVisit?.split('\n').filter(p => p.trim()) || [];
-  const booksArray = data.booksToRead?.split('\n').filter(b => b.trim()) || [];
+  const moviesArray = data.moviesToWatch?.split('\n').filter(m => m.trim()) || [];
   const experiencesArray = data.experiencesToHave?.split('\n').filter(e => e.trim()) || [];
 
   return (
@@ -127,9 +127,9 @@ export default function Summary() {
             <div className="space-y-8">
               {[
                 { id: 'health', name: 'Health & Fitness', icon: '💪', color: 'red' },
-                { id: 'career', name: 'Career & Work', icon: '💼', color: 'blue' },
-                { id: 'wealth', name: 'Wealth & Finance', icon: '💰', color: 'green' },
                 { id: 'relationships', name: 'Relationships & Family', icon: '❤️', color: 'pink' },
+                { id: 'wealth', name: 'Wealth & Finance', icon: '💰', color: 'green' },
+                { id: 'career', name: 'Career & Work', icon: '💼', color: 'blue' },
                 { id: 'growth', name: 'Personal Growth & Learning', icon: '📚', color: 'teal' },
                 { id: 'impact', name: 'Contribution & Impact', icon: '🌟', color: 'yellow' },
               ].map((category) => {
@@ -171,11 +171,11 @@ export default function Summary() {
             </div>
           )}
 
-          {/* Life Balance (Both Modes) */}
-          {(placesArray.length > 0 || booksArray.length > 0 || experiencesArray.length > 0) && (
+          {/* Fun (Both Modes) */}
+          {(placesArray.length > 0 || moviesArray.length > 0 || experiencesArray.length > 0) && (
             <section className="border-t pt-10 mt-10">
               <h2 className="text-3xl font-bold text-gray-900 mb-6 text-center">
-                Life Balance & Fun Stuff
+                Fun
               </h2>
 
               <div className="grid md:grid-cols-3 gap-6">
@@ -192,14 +192,14 @@ export default function Summary() {
                   </div>
                 )}
 
-                {booksArray.length > 0 && (
+                {moviesArray.length > 0 && (
                   <div>
                     <h3 className="font-bold text-lg text-gray-900 mb-3 flex items-center">
-                      <span className="mr-2">📚</span> Books to Read
+                      <span className="mr-2">🎬</span> Movies/Series to Watch
                     </h3>
                     <ul className="space-y-2">
-                      {booksArray.map((book, i) => (
-                        <li key={i} className="text-gray-700">• {book}</li>
+                      {moviesArray.map((movie, i) => (
+                        <li key={i} className="text-gray-700">• {movie}</li>
                       ))}
                     </ul>
                   </div>

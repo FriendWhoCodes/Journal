@@ -7,7 +7,7 @@ export interface QuickModeData {
   habitToBreak: string;
   mainTheme: string;
   placesToVisit: string;
-  booksToRead: string;
+  moviesToWatch: string;
   experiencesToHave: string;
 }
 
@@ -27,7 +27,7 @@ export interface DeepModeData {
   growth: DeepModeCategory;
   impact: DeepModeCategory;
   placesToVisit: string;
-  booksToRead: string;
+  moviesToWatch: string;
   experiencesToHave: string;
 }
 
@@ -42,7 +42,7 @@ export interface GoalSetterResponse {
   mainTheme?: string;
   deepModeData?: Record<string, DeepModeCategory>;
   placesToVisit?: string[];
-  booksToRead?: string[];
+  moviesToWatch?: string[];
   experiencesToHave?: string[];
   completedAt: Date;
 }
