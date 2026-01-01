@@ -125,51 +125,121 @@ export default function Summary() {
             </>
           ) : (
             // Deep Mode Display
-            <div className="space-y-8">
-              {[
-                { id: 'health', name: 'Health & Fitness', icon: '💪', color: 'red' },
-                { id: 'career', name: 'Career & Work', icon: '💼', color: 'blue' },
-                { id: 'wealth', name: 'Wealth & Finance', icon: '💰', color: 'green' },
-                { id: 'relationships', name: 'Relationships & Family', icon: '❤️', color: 'pink' },
-                { id: 'growth', name: 'Personal Growth & Learning', icon: '📚', color: 'teal' },
-                { id: 'impact', name: 'Contribution & Impact', icon: '🌟', color: 'yellow' },
-              ].map((category) => {
-                const data = deepModeData[category.id as keyof typeof deepModeData];
-                // Type guard to ensure we have a DeepModeCategory object
-                const categoryData = data && typeof data === 'object' && 'goal' in data ? data : undefined;
-                if (!categoryData?.goal) return null;
+            <>
+              {/* Top 3 Goals */}
+              <section className="mb-10">
+                <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center">
+                  <span className="text-3xl mr-3">🎯</span> TOP 3 GOALS
+                </h2>
+                <ul className="space-y-3">
+                  {deepModeData.topGoals?.map((goal, i) => (
+                    <li key={i} className="flex items-start">
+                      <span className="bg-slate-100 text-slate-700 rounded-full w-8 h-8 flex items-center justify-center font-bold mr-3 flex-shrink-0">
+                        {i + 1}
+                      </span>
+                      <span className="text-lg text-gray-800 pt-1">{goal}</span>
+                    </li>
+                  ))}
+                </ul>
+              </section>
 
-                return (
-                  <section key={category.id} className="border-b pb-8 last:border-b-0">
-                    <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center">
-                      <span className="text-3xl mr-3">{category.icon}</span> {category.name}
-                    </h2>
+              {/* Habits */}
+              <div className="grid md:grid-cols-2 gap-8 mb-10">
+                <section>
+                  <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center">
+                    <span className="text-3xl mr-3">✅</span> HABITS TO BUILD
+                  </h2>
+                  <div className="bg-green-50 p-4 rounded-xl">
+                    {deepModeData.habitsToBuild && deepModeData.habitsToBuild.length > 0 ? (
+                      <ul className="space-y-2">
+                        {deepModeData.habitsToBuild.map((habit, i) => (
+                          <li key={i} className="text-gray-800 flex items-start">
+                            <span className="mr-2">•</span>
+                            <span>{habit}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    ) : (
+                      <p className="text-gray-500 italic">No habits selected</p>
+                    )}
+                  </div>
+                </section>
 
-                    <div className="space-y-4 ml-12">
-                      <div>
-                        <h3 className="font-semibold text-gray-700 mb-2">🎯 Goal:</h3>
-                        <p className="text-gray-800 bg-gray-50 p-3 rounded-lg">{categoryData.goal}</p>
-                      </div>
+                <section>
+                  <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center">
+                    <span className="text-3xl mr-3">❌</span> HABITS TO BREAK
+                  </h2>
+                  <div className="bg-red-50 p-4 rounded-xl">
+                    {deepModeData.habitsToBreak && deepModeData.habitsToBreak.length > 0 ? (
+                      <ul className="space-y-2">
+                        {deepModeData.habitsToBreak.map((habit, i) => (
+                          <li key={i} className="text-gray-800 flex items-start">
+                            <span className="mr-2">•</span>
+                            <span>{habit}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    ) : (
+                      <p className="text-gray-500 italic">No habits selected</p>
+                    )}
+                  </div>
+                </section>
+              </div>
 
-                      <div>
-                        <h3 className="font-semibold text-gray-700 mb-2">✅ Habits to Build:</h3>
-                        <p className="text-gray-800 bg-green-50 p-3 rounded-lg whitespace-pre-line">{categoryData.habitsBuild}</p>
-                      </div>
+              {/* Theme */}
+              <section className="mb-10">
+                <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center">
+                  <span className="text-3xl mr-3">💡</span> THEME FOR 2026
+                </h2>
+                <div className="bg-gradient-to-r from-slate-50 to-amber-50 p-6 rounded-xl">
+                  <p className="text-2xl font-semibold text-center text-slate-900">
+                    &quot;{deepModeData.mainTheme}&quot;
+                  </p>
+                </div>
+              </section>
 
-                      <div>
-                        <h3 className="font-semibold text-gray-700 mb-2">❌ Habits to Break:</h3>
-                        <p className="text-gray-800 bg-red-50 p-3 rounded-lg whitespace-pre-line">{categoryData.habitsBreak}</p>
-                      </div>
+              {/* Category Deep Dives */}
+              <section className="mb-10">
+                <h2 className="text-3xl font-bold text-gray-900 mb-6 text-center border-t pt-10">
+                  Category Deep Dives
+                </h2>
+                <div className="space-y-8">
+                  {[
+                    { id: 'health', name: 'Health & Fitness', icon: '💪', color: 'red' },
+                    { id: 'relationships', name: 'Relationships & Family', icon: '❤️', color: 'pink' },
+                    { id: 'wealth', name: 'Wealth & Finance', icon: '💰', color: 'green' },
+                    { id: 'career', name: 'Career & Work', icon: '💼', color: 'blue' },
+                    { id: 'growth', name: 'Personal Growth & Learning', icon: '📚', color: 'teal' },
+                    { id: 'impact', name: 'Contribution & Impact', icon: '🌟', color: 'yellow' },
+                  ].map((category) => {
+                    const data = deepModeData[category.id as keyof typeof deepModeData];
+                    // Type guard to ensure we have a DeepModeCategory object
+                    const categoryData = data && typeof data === 'object' && 'goal' in data ? data : undefined;
+                    if (!categoryData?.goal) return null;
 
-                      <div>
-                        <h3 className="font-semibold text-gray-700 mb-2">💡 Why This Matters:</h3>
-                        <p className="text-gray-800 bg-blue-50 p-3 rounded-lg italic">{categoryData.why}</p>
-                      </div>
-                    </div>
-                  </section>
-                );
-              })}
-            </div>
+                    return (
+                      <section key={category.id} className="border-b pb-8 last:border-b-0">
+                        <h3 className="text-2xl font-bold text-gray-900 mb-4 flex items-center">
+                          <span className="text-3xl mr-3">{category.icon}</span> {category.name}
+                        </h3>
+
+                        <div className="space-y-4 ml-12">
+                          <div>
+                            <h4 className="font-semibold text-gray-700 mb-2">🎯 Goal:</h4>
+                            <p className="text-gray-800 bg-gray-50 p-3 rounded-lg">{categoryData.goal}</p>
+                          </div>
+
+                          <div>
+                            <h4 className="font-semibold text-gray-700 mb-2">💡 Why This Matters:</h4>
+                            <p className="text-gray-800 bg-blue-50 p-3 rounded-lg italic">{categoryData.why}</p>
+                          </div>
+                        </div>
+                      </section>
+                    );
+                  })}
+                </div>
+              </section>
+            </>
           )}
 
           {/* Fun (Both Modes) */}
