@@ -3,7 +3,7 @@ module.exports = {
     name: 'goal-setter',
     script: 'npm',
     args: 'start',
-    cwd: '/var/www/Journal/goal-setter',
+    cwd: '/root/var/www/goal-setter/goal-setter',
     instances: 1,
     exec_mode: 'fork',
     env: {
