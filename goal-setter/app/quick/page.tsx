@@ -13,8 +13,8 @@ export default function QuickMode() {
   const [goal1, setGoal1] = useState(quickModeData.topGoals?.[0] || '');
   const [goal2, setGoal2] = useState(quickModeData.topGoals?.[1] || '');
   const [goal3, setGoal3] = useState(quickModeData.topGoals?.[2] || '');
-  const [habitToBuild, setHabitToBuild] = useState(quickModeData.habitToBuild || '');
-  const [habitToBreak, setHabitToBreak] = useState(quickModeData.habitToBreak || '');
+  const [habitToBuild, setHabitToBuild] = useState(quickModeData.habitsToBuild?.[0] || '');
+  const [habitToBreak, setHabitToBreak] = useState(quickModeData.habitsToBreak?.[0] || '');
   const [mainTheme, setMainTheme] = useState(quickModeData.mainTheme || '');
 
   const [placesToVisit, setPlacesToVisit] = useState(quickModeData.placesToVisit || '');
@@ -31,8 +31,8 @@ export default function QuickMode() {
     if (goal1 && goal2 && goal3 && habitToBuild && habitToBreak && mainTheme) {
       updateQuickModeData({
         topGoals: [goal1, goal2, goal3] as [string, string, string],
-        habitToBuild,
-        habitToBreak,
+        habitsToBuild: [habitToBuild],
+        habitsToBreak: [habitToBreak],
         mainTheme,
       });
       setStep(2);
