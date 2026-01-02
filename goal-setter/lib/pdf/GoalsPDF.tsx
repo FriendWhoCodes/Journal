@@ -176,12 +176,16 @@ export const GoalsPDF = ({ name, mode, quickModeData, deepModeData }: GoalsPDFPr
             <View style={styles.section}>
               <Text style={styles.sectionTitle}>HABITS</Text>
               <View style={styles.habitBox}>
-                <Text style={styles.habitTitle}>Habit to Build:</Text>
-                <Text style={styles.habitText}>{quickModeData.habitToBuild}</Text>
+                <Text style={styles.habitTitle}>Habits to Build:</Text>
+                {quickModeData.habitsToBuild?.map((habit, i) => (
+                  <Text key={i} style={styles.habitText}>• {habit}</Text>
+                ))}
               </View>
               <View style={styles.habitBox}>
-                <Text style={styles.habitTitle}>Habit to Break:</Text>
-                <Text style={styles.habitText}>{quickModeData.habitToBreak}</Text>
+                <Text style={styles.habitTitle}>Habits to Break:</Text>
+                {quickModeData.habitsToBreak?.map((habit, i) => (
+                  <Text key={i} style={styles.habitText}>• {habit}</Text>
+                ))}
               </View>
             </View>
 
@@ -218,16 +222,6 @@ export const GoalsPDF = ({ name, mode, quickModeData, deepModeData }: GoalsPDFPr
                   <View style={styles.categoryItem}>
                     <Text style={styles.categoryItemTitle}>Goal:</Text>
                     <Text style={styles.categoryItemText}>{categoryData.goal}</Text>
-                  </View>
-
-                  <View style={styles.categoryItem}>
-                    <Text style={styles.categoryItemTitle}>Habits to Build:</Text>
-                    <Text style={styles.categoryItemText}>{categoryData.habitsBuild}</Text>
-                  </View>
-
-                  <View style={styles.categoryItem}>
-                    <Text style={styles.categoryItemTitle}>Habits to Break:</Text>
-                    <Text style={styles.categoryItemText}>{categoryData.habitsBreak}</Text>
                   </View>
 
                   <View style={styles.categoryItem}>
