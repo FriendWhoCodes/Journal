@@ -162,7 +162,7 @@ export default function Home() {
                 type="text"
                 value={localName}
                 onChange={(e) => setLocalName(e.target.value)}
-                placeholder="Alok"
+                placeholder="Your name"
                 className="w-full px-4 py-3 text-lg text-gray-900 placeholder-gray-400 border-2 border-gray-300 rounded-xl focus:border-amber-500 focus:outline-none transition-colors"
                 autoFocus
                 required
@@ -178,7 +178,7 @@ export default function Home() {
                 type="email"
                 value={localEmail}
                 onChange={(e) => setLocalEmail(e.target.value)}
-                placeholder="alok@example.com"
+                placeholder="you@example.com"
                 className="w-full px-4 py-3 text-lg text-gray-900 placeholder-gray-400 border-2 border-gray-300 rounded-xl focus:border-amber-500 focus:outline-none transition-colors"
                 required
               />
