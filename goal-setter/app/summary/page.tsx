@@ -359,7 +359,7 @@ export default function Summary() {
             </div>
 
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              Get Ready for the Man of Wisdom Journal
+              Get Ready for the Man of Wisdom Online Journal
             </h2>
             <p className="text-xl text-amber-100 mb-6">
               Track these goals daily starting <strong>January 11th</strong> with <strong>1 month FREE</strong> Pro access
