@@ -8,7 +8,7 @@ import { HABITS_TO_BUILD, HABITS_TO_BREAK } from '@/lib/constants';
 
 const categories = [
   { id: 'health', name: 'Health & Fitness', icon: '💪', color: 'red' },
-  { id: 'relationships', name: 'Relationships & Family', icon: '❤️', color: 'pink' },
+  { id: 'relationships', name: 'Family and Relationship', icon: '❤️', color: 'pink' },
   { id: 'wealth', name: 'Wealth & Finance', icon: '💰', color: 'green' },
   { id: 'career', name: 'Career & Work', icon: '💼', color: 'blue' },
   { id: 'growth', name: 'Personal Growth & Learning', icon: '📚', color: 'teal' },
@@ -174,11 +174,11 @@ export default function DeepMode() {
           </div>
 
           {/* Header */}
-          <div className="text-center mb-8">
-            <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-3">
+          <div className="text-center mb-6">
+            <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">
               Your 2026 Goals & Habits
             </h1>
-            <p className="text-lg text-gray-600">
+            <p className="text-base text-gray-600">
               Let's start with your top goals and the habits that will help you achieve them
             </p>
           </div>
@@ -186,17 +186,17 @@ export default function DeepMode() {
           {/* Form */}
           <form onSubmit={handleOverallSubmit} className="bg-white rounded-2xl shadow-xl p-8 md:p-10">
             {/* Top 3 Goals */}
-            <div className="mb-8">
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">
+            <div className="mb-6">
+              <h2 className="text-xl font-bold text-gray-900 mb-3">
                 🎯 Your Top 3 Goals for 2026
               </h2>
-              <div className="space-y-4">
+              <div className="space-y-3">
                 <input
                   type="text"
                   value={goal1}
                   onChange={(e) => setGoal1(e.target.value)}
                   placeholder="1. Example: Run a marathon"
-                  className="w-full px-5 py-3 text-lg border-2 border-gray-200 rounded-xl focus:border-slate-500 focus:outline-none"
+                  className="w-full px-4 py-2.5 text-base border-2 border-gray-200 rounded-lg focus:border-slate-500 focus:outline-none"
                   required
                 />
                 <input
@@ -204,7 +204,7 @@ export default function DeepMode() {
                   value={goal2}
                   onChange={(e) => setGoal2(e.target.value)}
                   placeholder="2. Example: Launch my side project"
-                  className="w-full px-5 py-3 text-lg border-2 border-gray-200 rounded-xl focus:border-slate-500 focus:outline-none"
+                  className="w-full px-4 py-2.5 text-base border-2 border-gray-200 rounded-lg focus:border-slate-500 focus:outline-none"
                   required
                 />
                 <input
@@ -212,39 +212,42 @@ export default function DeepMode() {
                   value={goal3}
                   onChange={(e) => setGoal3(e.target.value)}
                   placeholder="3. Example: Read 24 books"
-                  className="w-full px-5 py-3 text-lg border-2 border-gray-200 rounded-xl focus:border-slate-500 focus:outline-none"
+                  className="w-full px-4 py-2.5 text-base border-2 border-gray-200 rounded-lg focus:border-slate-500 focus:outline-none"
                   required
                 />
               </div>
             </div>
 
             {/* Habits to Build */}
-            <div className="mb-8">
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">
-                ✅ Habits to Build
+            <div className="mb-6">
+              <h2 className="text-xl font-bold text-gray-900 mb-1">
+                ✅ Keystone Habits to Build
               </h2>
-              <div className="space-y-3 mb-4">
+              <p className="text-sm text-gray-600 mb-3">
+                Habits that improve multiple aspects of your life (like sleep, exercise, nutrition, meditation)
+              </p>
+              <div className="space-y-2 mb-3">
                 {HABITS_TO_BUILD.map((habit) => (
-                  <label key={habit} className="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-50 cursor-pointer">
+                  <label key={habit} className="flex items-center space-x-2.5 p-2 rounded-lg hover:bg-gray-50 cursor-pointer">
                     <input
                       type="checkbox"
                       checked={habitsToBuildSelected.includes(habit)}
                       onChange={() => toggleHabitBuild(habit)}
-                      className="w-5 h-5 text-slate-600 rounded focus:ring-slate-500"
+                      className="w-4 h-4 text-slate-600 rounded focus:ring-slate-500"
                     />
-                    <span className="text-gray-800">{habit}</span>
+                    <span className="text-sm text-gray-800">{habit}</span>
                   </label>
                 ))}
                 {/* Custom habits */}
                 {habitsToBuildSelected.filter(h => !HABITS_TO_BUILD.includes(h)).map((habit, i) => (
-                  <label key={`custom-${i}`} className="flex items-center space-x-3 p-3 rounded-lg bg-amber-50">
+                  <label key={`custom-${i}`} className="flex items-center space-x-2.5 p-2 rounded-lg bg-amber-50">
                     <input
                       type="checkbox"
                       checked={true}
                       onChange={() => setHabitsToBuildSelected(habitsToBuildSelected.filter(h => h !== habit))}
-                      className="w-5 h-5 text-slate-600 rounded focus:ring-slate-500"
+                      className="w-4 h-4 text-slate-600 rounded focus:ring-slate-500"
                     />
-                    <span className="text-gray-800">{habit}</span>
+                    <span className="text-sm text-gray-800">{habit}</span>
                   </label>
                 ))}
               </div>
@@ -256,12 +259,12 @@ export default function DeepMode() {
                   onChange={(e) => setCustomHabitBuild(e.target.value)}
                   onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addCustomHabitBuild())}
                   placeholder="Add your own habit..."
-                  className="flex-1 px-4 py-2 border-2 border-gray-200 rounded-lg focus:border-slate-500 focus:outline-none"
+                  className="flex-1 px-3 py-2 text-sm border-2 border-gray-200 rounded-lg focus:border-slate-500 focus:outline-none"
                 />
                 <button
                   type="button"
                   onClick={addCustomHabitBuild}
-                  className="px-6 py-2 bg-slate-100 text-slate-700 rounded-lg hover:bg-slate-200 font-medium"
+                  className="px-3 py-2 bg-slate-100 text-slate-700 rounded-lg hover:bg-slate-200 text-sm font-medium"
                 >
                   + Add
                 </button>
@@ -269,32 +272,32 @@ export default function DeepMode() {
             </div>
 
             {/* Habits to Break */}
-            <div className="mb-8">
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">
+            <div className="mb-6">
+              <h2 className="text-xl font-bold text-gray-900 mb-3">
                 ❌ Habits to Break
               </h2>
-              <div className="space-y-3 mb-4">
+              <div className="space-y-2 mb-3">
                 {HABITS_TO_BREAK.map((habit) => (
-                  <label key={habit} className="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-50 cursor-pointer">
+                  <label key={habit} className="flex items-center space-x-2.5 p-2 rounded-lg hover:bg-gray-50 cursor-pointer">
                     <input
                       type="checkbox"
                       checked={habitsToBreakSelected.includes(habit)}
                       onChange={() => toggleHabitBreak(habit)}
-                      className="w-5 h-5 text-slate-600 rounded focus:ring-slate-500"
+                      className="w-4 h-4 text-slate-600 rounded focus:ring-slate-500"
                     />
-                    <span className="text-gray-800">{habit}</span>
+                    <span className="text-sm text-gray-800">{habit}</span>
                   </label>
                 ))}
                 {/* Custom habits */}
                 {habitsToBreakSelected.filter(h => !HABITS_TO_BREAK.includes(h)).map((habit, i) => (
-                  <label key={`custom-${i}`} className="flex items-center space-x-3 p-3 rounded-lg bg-red-50">
+                  <label key={`custom-${i}`} className="flex items-center space-x-2.5 p-2 rounded-lg bg-red-50">
                     <input
                       type="checkbox"
                       checked={true}
                       onChange={() => setHabitsToBreakSelected(habitsToBreakSelected.filter(h => h !== habit))}
-                      className="w-5 h-5 text-slate-600 rounded focus:ring-slate-500"
+                      className="w-4 h-4 text-slate-600 rounded focus:ring-slate-500"
                     />
-                    <span className="text-gray-800">{habit}</span>
+                    <span className="text-sm text-gray-800">{habit}</span>
                   </label>
                 ))}
               </div>
@@ -306,12 +309,12 @@ export default function DeepMode() {
                   onChange={(e) => setCustomHabitBreak(e.target.value)}
                   onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addCustomHabitBreak())}
                   placeholder="Add your own habit to break..."
-                  className="flex-1 px-4 py-2 border-2 border-gray-200 rounded-lg focus:border-slate-500 focus:outline-none"
+                  className="flex-1 px-3 py-2 text-sm border-2 border-gray-200 rounded-lg focus:border-slate-500 focus:outline-none"
                 />
                 <button
                   type="button"
                   onClick={addCustomHabitBreak}
-                  className="px-6 py-2 bg-slate-100 text-slate-700 rounded-lg hover:bg-slate-200 font-medium"
+                  className="px-3 py-2 bg-slate-100 text-slate-700 rounded-lg hover:bg-slate-200 text-sm font-medium"
                 >
                   + Add
                 </button>
@@ -319,8 +322,8 @@ export default function DeepMode() {
             </div>
 
             {/* Theme */}
-            <div className="mb-8">
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">
+            <div className="mb-6">
+              <h2 className="text-xl font-bold text-gray-900 mb-3">
                 💡 Your Theme for 2026
               </h2>
               <input
@@ -328,7 +331,7 @@ export default function DeepMode() {
                 value={mainTheme}
                 onChange={(e) => setMainTheme(e.target.value)}
                 placeholder='Example: "Year of Health" or "Year of Growth"'
-                className="w-full px-5 py-3 text-lg border-2 border-gray-200 rounded-xl focus:border-slate-500 focus:outline-none"
+                className="w-full px-4 py-2.5 text-base border-2 border-gray-200 rounded-lg focus:border-slate-500 focus:outline-none"
                 required
               />
             </div>
@@ -397,7 +400,7 @@ export default function DeepMode() {
             {/* Goal */}
             <div className="mb-8">
               <label className="block text-xl font-bold text-gray-900 mb-4">
-                🎯 Your Goal for {currentCategory.name}
+                🎯 Your top goal for {currentCategory.name.toLowerCase()}
               </label>
               <textarea
                 value={categoryGoal}
@@ -483,7 +486,7 @@ export default function DeepMode() {
               <textarea
                 value={placesToVisit}
                 onChange={(e) => setPlacesToVisit(e.target.value)}
-                placeholder="List the places you want to explore (one per line)&#10;e.g.,&#10;Bali, Indonesia&#10;Swiss Alps&#10;Local hill stations"
+                placeholder="• Bali, Indonesia&#10;• Swiss Alps&#10;• Local hill stations"
                 className="w-full px-5 py-3 text-lg border-2 border-gray-200 rounded-xl focus:border-slate-500 focus:outline-none h-32 resize-none"
               />
             </div>
@@ -496,7 +499,7 @@ export default function DeepMode() {
               <textarea
                 value={booksToRead}
                 onChange={(e) => setBooksToRead(e.target.value)}
-                placeholder="List the books you want to read (one per line)&#10;e.g.,&#10;Atomic Habits&#10;The Almanack of Naval Ravikant&#10;Deep Work"
+                placeholder="• Atomic Habits&#10;• The Almanack of Naval Ravikant&#10;• Deep Work"
                 className="w-full px-5 py-3 text-lg border-2 border-gray-200 rounded-xl focus:border-slate-500 focus:outline-none h-32 resize-none"
               />
             </div>
@@ -509,7 +512,7 @@ export default function DeepMode() {
               <textarea
                 value={moviesToWatch}
                 onChange={(e) => setMoviesToWatch(e.target.value)}
-                placeholder="List the movies or series you want to watch (one per line)&#10;e.g.,&#10;The Last of Us&#10;Oppenheimer&#10;Breaking Bad (rewatch)"
+                placeholder="• The Last of Us&#10;• Oppenheimer&#10;• Breaking Bad (rewatch)"
                 className="w-full px-5 py-3 text-lg border-2 border-gray-200 rounded-xl focus:border-slate-500 focus:outline-none h-32 resize-none"
               />
             </div>
@@ -522,7 +525,7 @@ export default function DeepMode() {
               <textarea
                 value={experiencesToHave}
                 onChange={(e) => setExperiencesToHave(e.target.value)}
-                placeholder="What experiences do you want to have? (one per line)&#10;e.g.,&#10;Learn to cook Italian cuisine&#10;Attend a music festival&#10;Volunteer at an NGO"
+                placeholder="• Learn to cook Italian cuisine&#10;• Attend a music festival&#10;• Volunteer at an NGO"
                 className="w-full px-5 py-3 text-lg border-2 border-gray-200 rounded-xl focus:border-slate-500 focus:outline-none h-32 resize-none"
               />
             </div>
