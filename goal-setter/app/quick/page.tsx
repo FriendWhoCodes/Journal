@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useGoalSetter } from '@/lib/context/GoalSetterContext';
+import { HABITS_TO_BUILD, HABITS_TO_BREAK } from '@/lib/constants';
 
 export default function QuickMode() {
   const router = useRouter();
@@ -13,12 +14,15 @@ export default function QuickMode() {
   const [goal1, setGoal1] = useState(quickModeData.topGoals?.[0] || '');
   const [goal2, setGoal2] = useState(quickModeData.topGoals?.[1] || '');
   const [goal3, setGoal3] = useState(quickModeData.topGoals?.[2] || '');
-  const [habitToBuild, setHabitToBuild] = useState(quickModeData.habitsToBuild?.[0] || '');
-  const [habitToBreak, setHabitToBreak] = useState(quickModeData.habitsToBreak?.[0] || '');
+  const [habitsToBuildSelected, setHabitsToBuildSelected] = useState<string[]>(quickModeData.habitsToBuild || []);
+  const [habitsToBreakSelected, setHabitsToBreakSelected] = useState<string[]>(quickModeData.habitsToBreak || []);
+  const [customHabitBuild, setCustomHabitBuild] = useState('');
+  const [customHabitBreak, setCustomHabitBreak] = useState('');
   const [mainTheme, setMainTheme] = useState(quickModeData.mainTheme || '');
 
   const [placesToVisit, setPlacesToVisit] = useState(quickModeData.placesToVisit || '');
   const [booksToRead, setBooksToRead] = useState(quickModeData.booksToRead || '');
+  const [moviesToWatch, setMoviesToWatch] = useState(quickModeData.moviesToWatch || '');
   const [experiencesToHave, setExperiencesToHave] = useState(quickModeData.experiencesToHave || '');
 
   if (!name) {
@@ -26,13 +30,41 @@ export default function QuickMode() {
     return null;
   }
 
+  // Handle habit checkbox toggle
+  const toggleHabitBuild = (habit: string) => {
+    setHabitsToBuildSelected(prev =>
+      prev.includes(habit) ? prev.filter(h => h !== habit) : [...prev, habit]
+    );
+  };
+
+  const toggleHabitBreak = (habit: string) => {
+    setHabitsToBreakSelected(prev =>
+      prev.includes(habit) ? prev.filter(h => h !== habit) : [...prev, habit]
+    );
+  };
+
+  // Add custom habit
+  const addCustomHabitBuild = () => {
+    if (customHabitBuild.trim()) {
+      setHabitsToBuildSelected([...habitsToBuildSelected, customHabitBuild.trim()]);
+      setCustomHabitBuild('');
+    }
+  };
+
+  const addCustomHabitBreak = () => {
+    if (customHabitBreak.trim()) {
+      setHabitsToBreakSelected([...habitsToBreakSelected, customHabitBreak.trim()]);
+      setCustomHabitBreak('');
+    }
+  };
+
   const handleStep1Continue = (e: React.FormEvent) => {
     e.preventDefault();
-    if (goal1 && goal2 && goal3 && habitToBuild && habitToBreak && mainTheme) {
+    if (goal1 && goal2 && goal3 && habitsToBuildSelected.length > 0 && habitsToBreakSelected.length > 0 && mainTheme) {
       updateQuickModeData({
         topGoals: [goal1, goal2, goal3] as [string, string, string],
-        habitsToBuild: [habitToBuild],
-        habitsToBreak: [habitToBreak],
+        habitsToBuild: habitsToBuildSelected,
+        habitsToBreak: habitsToBreakSelected,
         mainTheme,
       });
       setStep(2);
@@ -44,6 +76,7 @@ export default function QuickMode() {
     updateQuickModeData({
       placesToVisit,
       booksToRead,
+      moviesToWatch,
       experiencesToHave,
     });
     router.push('/summary');
@@ -114,34 +147,107 @@ export default function QuickMode() {
               </div>
             </div>
 
-            {/* Habit to Build */}
+            {/* Habits to Build */}
             <div className="mb-8">
-              <label className="block text-xl font-bold text-gray-900 mb-4">
-                ✅ What&apos;s the #1 habit you want to BUILD in 2026?
-              </label>
-              <input
-                type="text"
-                value={habitToBuild}
-                onChange={(e) => setHabitToBuild(e.target.value)}
-                placeholder="e.g., Exercise 5x/week, Meditate daily, Read 30 min/day"
-                className="w-full px-5 py-3 text-lg border-2 border-gray-200 rounded-xl focus:border-indigo-500 focus:outline-none"
-                required
-              />
+              <h2 className="text-xl font-bold text-gray-900 mb-1">
+                ✅ Keystone Habits to Build
+              </h2>
+              <p className="text-sm text-gray-600 mb-3">
+                Habits that improve multiple aspects of your life (like sleep, exercise, nutrition, meditation)
+              </p>
+              <div className="space-y-2 mb-3">
+                {HABITS_TO_BUILD.map((habit) => (
+                  <label key={habit} className="flex items-center space-x-2.5 p-2 rounded-lg hover:bg-gray-50 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={habitsToBuildSelected.includes(habit)}
+                      onChange={() => toggleHabitBuild(habit)}
+                      className="w-4 h-4 text-slate-600 rounded focus:ring-slate-500"
+                    />
+                    <span className="text-sm text-gray-800">{habit}</span>
+                  </label>
+                ))}
+                {/* Custom habits */}
+                {habitsToBuildSelected.filter(h => !HABITS_TO_BUILD.includes(h)).map((habit, i) => (
+                  <label key={`custom-${i}`} className="flex items-center space-x-2.5 p-2 rounded-lg bg-amber-50">
+                    <input
+                      type="checkbox"
+                      checked={true}
+                      onChange={() => setHabitsToBuildSelected(habitsToBuildSelected.filter(h => h !== habit))}
+                      className="w-4 h-4 text-slate-600 rounded focus:ring-slate-500"
+                    />
+                    <span className="text-sm text-gray-800">{habit}</span>
+                  </label>
+                ))}
+              </div>
+              {/* Add custom habit */}
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  value={customHabitBuild}
+                  onChange={(e) => setCustomHabitBuild(e.target.value)}
+                  onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addCustomHabitBuild())}
+                  placeholder="Add your own habit..."
+                  className="flex-1 px-3 py-2 text-sm border-2 border-gray-200 rounded-lg focus:border-slate-500 focus:outline-none"
+                />
+                <button
+                  type="button"
+                  onClick={addCustomHabitBuild}
+                  className="px-3 py-2 bg-slate-100 text-slate-700 rounded-lg hover:bg-slate-200 text-sm font-medium"
+                >
+                  + Add
+                </button>
+              </div>
             </div>
 
-            {/* Habit to Break */}
+            {/* Habits to Break */}
             <div className="mb-8">
-              <label className="block text-xl font-bold text-gray-900 mb-4">
-                ❌ What&apos;s the #1 habit you want to BREAK in 2026?
-              </label>
-              <input
-                type="text"
-                value={habitToBreak}
-                onChange={(e) => setHabitToBreak(e.target.value)}
-                placeholder="e.g., Stop doomscrolling, Quit sugar, No phone in bed"
-                className="w-full px-5 py-3 text-lg border-2 border-gray-200 rounded-xl focus:border-indigo-500 focus:outline-none"
-                required
-              />
+              <h2 className="text-xl font-bold text-gray-900 mb-3">
+                ❌ Habits to Break
+              </h2>
+              <div className="space-y-2 mb-3">
+                {HABITS_TO_BREAK.map((habit) => (
+                  <label key={habit} className="flex items-center space-x-2.5 p-2 rounded-lg hover:bg-gray-50 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={habitsToBreakSelected.includes(habit)}
+                      onChange={() => toggleHabitBreak(habit)}
+                      className="w-4 h-4 text-slate-600 rounded focus:ring-slate-500"
+                    />
+                    <span className="text-sm text-gray-800">{habit}</span>
+                  </label>
+                ))}
+                {/* Custom habits */}
+                {habitsToBreakSelected.filter(h => !HABITS_TO_BREAK.includes(h)).map((habit, i) => (
+                  <label key={`custom-${i}`} className="flex items-center space-x-2.5 p-2 rounded-lg bg-red-50">
+                    <input
+                      type="checkbox"
+                      checked={true}
+                      onChange={() => setHabitsToBreakSelected(habitsToBreakSelected.filter(h => h !== habit))}
+                      className="w-4 h-4 text-slate-600 rounded focus:ring-slate-500"
+                    />
+                    <span className="text-sm text-gray-800">{habit}</span>
+                  </label>
+                ))}
+              </div>
+              {/* Add custom habit */}
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  value={customHabitBreak}
+                  onChange={(e) => setCustomHabitBreak(e.target.value)}
+                  onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addCustomHabitBreak())}
+                  placeholder="Add your own habit to break..."
+                  className="flex-1 px-3 py-2 text-sm border-2 border-gray-200 rounded-lg focus:border-slate-500 focus:outline-none"
+                />
+                <button
+                  type="button"
+                  onClick={addCustomHabitBreak}
+                  className="px-3 py-2 bg-slate-100 text-slate-700 rounded-lg hover:bg-slate-200 text-sm font-medium"
+                >
+                  + Add
+                </button>
+              </div>
             </div>
 
             {/* Main Theme */}
@@ -195,7 +301,7 @@ export default function QuickMode() {
         {/* Header */}
         <div className="text-center mb-8">
           <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-3">
-            Life Balance & Fun Stuff
+            Fun
           </h1>
           <p className="text-lg text-gray-600">
             Life isn&apos;t just about work - what do you want to experience in 2026?
@@ -212,7 +318,7 @@ export default function QuickMode() {
             <textarea
               value={placesToVisit}
               onChange={(e) => setPlacesToVisit(e.target.value)}
-              placeholder="List the places you want to explore (one per line)&#10;e.g.,&#10;Bali, Indonesia&#10;Swiss Alps&#10;Local hill stations"
+              placeholder="• Bali, Indonesia&#10;• Swiss Alps&#10;• Local hill stations"
               className="w-full px-5 py-3 text-lg border-2 border-gray-200 rounded-xl focus:border-slate-500 focus:outline-none h-32 resize-none"
             />
           </div>
@@ -225,7 +331,20 @@ export default function QuickMode() {
             <textarea
               value={booksToRead}
               onChange={(e) => setBooksToRead(e.target.value)}
-              placeholder="List the books you want to read (one per line)&#10;e.g.,&#10;Atomic Habits&#10;The Almanack of Naval Ravikant&#10;Deep Work"
+              placeholder="• Atomic Habits&#10;• The Almanack of Naval Ravikant&#10;• Deep Work"
+              className="w-full px-5 py-3 text-lg border-2 border-gray-200 rounded-xl focus:border-slate-500 focus:outline-none h-32 resize-none"
+            />
+          </div>
+
+          {/* Movies/Series to Watch */}
+          <div className="mb-8">
+            <label className="block text-xl font-bold text-gray-900 mb-4">
+              🎬 Movies/Series I want to watch in 2026
+            </label>
+            <textarea
+              value={moviesToWatch}
+              onChange={(e) => setMoviesToWatch(e.target.value)}
+              placeholder="• The Last of Us&#10;• Oppenheimer&#10;• Breaking Bad (rewatch)"
               className="w-full px-5 py-3 text-lg border-2 border-gray-200 rounded-xl focus:border-slate-500 focus:outline-none h-32 resize-none"
             />
           </div>
@@ -238,7 +357,7 @@ export default function QuickMode() {
             <textarea
               value={experiencesToHave}
               onChange={(e) => setExperiencesToHave(e.target.value)}
-              placeholder="What experiences do you want to have? (one per line)&#10;e.g.,&#10;Learn to cook Italian cuisine&#10;Attend a music festival&#10;Volunteer at an NGO"
+              placeholder="• Learn to cook Italian cuisine&#10;• Attend a music festival&#10;• Volunteer at an NGO"
               className="w-full px-5 py-3 text-lg border-2 border-gray-200 rounded-xl focus:border-slate-500 focus:outline-none h-32 resize-none"
             />
           </div>
