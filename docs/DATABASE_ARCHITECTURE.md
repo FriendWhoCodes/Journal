@@ -6,36 +6,39 @@
 
 ## 🎯 Architecture Philosophy
 
-**One Database, Multiple Modules:**
+**Database Naming Strategy:**
 ```
-manofwisdom (database)
-├── Goal Setter Tables (Phase 1 - Now)
-│   ├── users
-│   └── goal_submissions
+Man of Wisdom Ecosystem
+├── mow_journal (database) ← Current focus
+│   ├── goal_setter_users (Phase 1 - Now)
+│   ├── goal_setter_submissions (Phase 1 - Now)
+│   ├── journal_users (Phase 2 - Future, or reuse goal_setter_users)
+│   ├── journal_entries (Phase 2 - Future)
+│   └── journal_habit_logs (Phase 2 - Future)
 │
-└── Journal Tables (Phase 2 - Later)
-    ├── journal_entries
-    ├── journal_habits
-    └── journal_reflections
+├── mow_courses (database) ← Future
+├── mow_community (database) ← Future
+└── mow_analytics (database) ← Future
 ```
 
-**Why Unified?**
-- ✅ Single user account across products
-- ✅ Easy to link goals → journal entries
-- ✅ Simpler to maintain
-- ✅ Better analytics (cross-product insights)
-- ✅ One backup strategy
+**Why this approach?**
+- ✅ Clear naming: `mow_` prefix identifies ecosystem
+- ✅ Scoped databases: Each product has its own DB
+- ✅ Scalable: Easy to add new products
+- ✅ Goal Setter is subset of Journal ecosystem
+- ✅ Table prefixes (`goal_setter_*`) show module ownership
+- ✅ Can share users table between modules if needed
 
 ---
 
 ## 📊 Current Schema (Goal Setter)
 
-### 1. `users` Table
+### 1. `goal_setter_users` Table
 
-**Purpose:** Store user information for both Goal Setter and Journal
+**Purpose:** Store user information for Goal Setter (can be shared with Journal later)
 
 ```sql
-CREATE TABLE users (
+CREATE TABLE goal_setter_users (
     id SERIAL PRIMARY KEY,           -- Auto-incrementing ID
     email VARCHAR(255) UNIQUE NOT NULL,  -- Email (unique, required)
     name VARCHAR(255) NOT NULL,      -- User's name
@@ -55,14 +58,14 @@ CREATE TABLE users (
 
 ---
 
-### 2. `goal_submissions` Table
+### 2. `goal_setter_submissions` Table
 
 **Purpose:** Store completed goal-setter submissions
 
 ```sql
-CREATE TABLE goal_submissions (
+CREATE TABLE goal_setter_submissions (
     id SERIAL PRIMARY KEY,
-    user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    user_id INTEGER NOT NULL REFERENCES goal_setter_users(id) ON DELETE CASCADE,
     mode VARCHAR(10) NOT NULL CHECK (mode IN ('quick', 'deep')),
 
     -- Top 3 Goals (both modes)
@@ -200,9 +203,9 @@ CREATE TABLE habit_logs (
 
 ### Indexes (for faster queries)
 ```sql
-CREATE INDEX idx_user_email ON users(email);
-CREATE INDEX idx_submission_user ON goal_submissions(user_id);
-CREATE INDEX idx_submission_created ON goal_submissions(created_at);
+CREATE INDEX idx_user_email ON goal_setter_users(email);
+CREATE INDEX idx_submission_user ON goal_setter_submissions(user_id);
+CREATE INDEX idx_submission_created ON goal_setter_submissions(created_at);
 ```
 
 **Why indexes?**
