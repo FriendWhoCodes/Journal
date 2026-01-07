@@ -198,6 +198,110 @@ scp FILE user@host:PATH # Copy file to remote server
 
 ---
 
+## Security & Password Management
+
+### Password Generation
+
+#### `openssl rand` (Recommended - Most Secure)
+Generate cryptographically secure random passwords
+
+```bash
+openssl rand -base64 24        # Generate 24-byte password (base64 encoded)
+openssl rand -base64 32        # Generate 32-byte password (more secure)
+openssl rand -hex 16           # Generate 16-byte password (hex encoded)
+```
+
+**Flags:**
+- `-base64`: Encode output as base64 (A-Z, a-z, 0-9, +, /)
+- `-hex`: Encode as hexadecimal (0-9, a-f)
+- **Number**: Bytes to generate (not final length!)
+
+**Base64 length formula:** bytes × 1.33 = characters
+- 24 bytes → ~32 characters
+- 32 bytes → ~43 characters
+
+**Example:**
+```bash
+$ openssl rand -base64 24
+Xk9mP3vLn8sWz2fJ1cN5dE4qR7tY6bH0
+
+# This gives you a secure password - copy immediately!
+```
+
+---
+
+#### `tr` + `/dev/urandom` (Custom Character Set)
+Generate password with specific characters
+
+```bash
+# Generate 32-character password with letters, numbers, and symbols
+tr -dc 'A-Za-z0-9!@#$%^&*' < /dev/urandom | head -c 32; echo
+```
+
+**Breakdown:**
+```bash
+tr                                  # Translate/delete characters
+  -d                               # Delete
+  -c 'A-Za-z0-9!@#$%^&*'          # Everything NOT in this set
+< /dev/urandom                     # Read from random generator
+| head -c 32                       # Take first 32 characters
+; echo                             # Add newline at end
+```
+
+**Flags:**
+- `-d`: Delete characters
+- `-c`: Complement (keep only specified chars)
+
+**Character set options:**
+```bash
+# Only letters and numbers (alphanumeric)
+tr -dc 'A-Za-z0-9' < /dev/urandom | head -c 32; echo
+
+# With special symbols
+tr -dc 'A-Za-z0-9!@#$%^&*()_+-=' < /dev/urandom | head -c 32; echo
+
+# Only numbers (for PIN)
+tr -dc '0-9' < /dev/urandom | head -c 6; echo
+```
+
+**Example output:**
+```bash
+$ tr -dc 'A-Za-z0-9!@#$%' < /dev/urandom | head -c 32; echo
+Kp8!mQv@3nRz#Y6bN$jW2fL%x9cV5dE1
+```
+
+---
+
+#### `sha256sum` + `date` (Quick Method)
+Generate from current timestamp
+
+```bash
+date +%s | sha256sum | base64 | head -c 32; echo
+```
+
+**What it does:**
+- `date +%s`: Get current Unix timestamp (seconds since 1970)
+- `sha256sum`: Hash the timestamp
+- `base64`: Encode hash as base64
+- `head -c 32`: Take first 32 characters
+
+**⚠️ Note:** Less secure (predictable if someone knows timestamp), but fine for development/testing.
+
+---
+
+### `/dev/urandom` vs `/dev/random`
+
+**`/dev/urandom`:** (Use this)
+- ✅ Never blocks
+- ✅ Cryptographically secure
+- ✅ Fast
+
+**`/dev/random`:** (Avoid for passwords)
+- ❌ Can block if entropy pool is low
+- Slightly more random, but unnecessary
+
+---
+
 ## Tips
 
 ### Pipe (`|`)
