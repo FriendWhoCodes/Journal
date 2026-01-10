@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useGoalSetter } from '@/lib/context/GoalSetterContext';
 import { DeepModeCategory } from '@/lib/types';
@@ -9,13 +9,50 @@ import { GoalsPDF } from '@/lib/pdf/GoalsPDF';
 
 export default function Summary() {
   const router = useRouter();
-  const { name, mode, quickModeData, deepModeData } = useGoalSetter();
+  const { name, email, mode, quickModeData, deepModeData } = useGoalSetter();
   const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
+  const [isSaved, setIsSaved] = useState(false);
+  const [saveError, setSaveError] = useState<string | null>(null);
 
   if (!name || !mode) {
     router.push('/');
     return null;
   }
+
+  // Save to database on mount (once)
+  useEffect(() => {
+    const saveSubmission = async () => {
+      if (isSaved || !email) return; // Skip if already saved or no email
+
+      try {
+        const response = await fetch('/api/submissions', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            name,
+            email,
+            mode,
+            quickModeData,
+            deepModeData,
+          }),
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.error || 'Failed to save submission');
+        }
+
+        setIsSaved(true);
+        console.log('Submission saved:', data);
+      } catch (error) {
+        console.error('Error saving submission:', error);
+        setSaveError(error instanceof Error ? error.message : 'Failed to save');
+      }
+    };
+
+    saveSubmission();
+  }, []); // Only run once on mount
 
   const handleDownloadPDF = async () => {
     setIsGeneratingPDF(true);
@@ -55,6 +92,22 @@ export default function Summary() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-amber-50 py-12 px-4">
       <div className="max-w-4xl mx-auto">
+        {/* Save Status Notification */}
+        {saveError && (
+          <div className="mb-6 bg-red-50 border border-red-200 rounded-lg p-4 text-center">
+            <p className="text-red-700">
+              ⚠️ Failed to save: {saveError}
+            </p>
+          </div>
+        )}
+        {isSaved && (
+          <div className="mb-6 bg-green-50 border border-green-200 rounded-lg p-4 text-center">
+            <p className="text-green-700">
+              ✓ Your goals have been saved to the database!
+            </p>
+          </div>
+        )}
+
         {/* Header */}
         <div className="text-center mb-12">
           <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-4">
