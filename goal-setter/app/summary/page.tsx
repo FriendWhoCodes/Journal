@@ -412,10 +412,10 @@ export default function Summary() {
             </div>
 
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              Get Ready for the Man of Wisdom Online Journal
+              Get Ready for the Man of Wisdom Digital Journal
             </h2>
             <p className="text-xl text-amber-100 mb-6">
-              Track these goals daily starting <strong>January 11th</strong> with <strong>1 month FREE</strong> Pro access
+              Track these goals daily starting <strong>February 1st</strong> with <strong>1 month FREE</strong> Pro access
             </p>
           </div>
 
@@ -424,7 +424,7 @@ export default function Summary() {
             <ul className="space-y-3 text-amber-50">
               <li className="flex items-start">
                 <span className="text-emerald-300 mr-3 text-xl flex-shrink-0">✓</span>
-                <span>We&apos;ll email you on <strong className="text-white">January 11th</strong> when the journal launches</span>
+                <span>We&apos;ll email you on <strong className="text-white">February 1st</strong> when the journal launches</span>
               </li>
               <li className="flex items-start">
                 <span className="text-emerald-300 mr-3 text-xl flex-shrink-0">✓</span>

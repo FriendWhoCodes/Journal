@@ -146,7 +146,7 @@ export default function Home() {
             Set your goals in 5 minutes
           </p>
           <p className="text-base text-gray-700">
-            and unlock <strong className="text-amber-700">1 month free</strong> access to Man of Wisdom Journal
+            and unlock <strong className="text-amber-700">1 month free</strong> access to Man of Wisdom Digital Journal
           </p>
         </div>
 
@@ -163,7 +163,7 @@ export default function Home() {
                 value={localName}
                 onChange={(e) => setLocalName(e.target.value)}
                 placeholder="Your name"
-                className="w-full px-4 py-3 text-lg text-gray-900 placeholder-gray-400 border-2 border-gray-300 rounded-xl focus:border-amber-500 focus:outline-none transition-colors"
+                className="w-full px-4 py-3 text-lg text-gray-900 placeholder-gray-500 border-2 border-gray-300 rounded-xl focus:border-amber-500 focus:outline-none transition-colors"
                 autoFocus
                 required
               />
@@ -179,7 +179,7 @@ export default function Home() {
                 value={localEmail}
                 onChange={(e) => setLocalEmail(e.target.value)}
                 placeholder="you@example.com"
-                className="w-full px-4 py-3 text-lg text-gray-900 placeholder-gray-400 border-2 border-gray-300 rounded-xl focus:border-amber-500 focus:outline-none transition-colors"
+                className="w-full px-4 py-3 text-lg text-gray-900 placeholder-gray-500 border-2 border-gray-300 rounded-xl focus:border-amber-500 focus:outline-none transition-colors"
                 required
               />
             </div>
@@ -210,7 +210,7 @@ export default function Home() {
               <div className="text-xs text-gray-600">1 Month Journal</div>
             </div>
             <div className="text-center">
-              <div className="text-2xl font-bold text-emerald-600">Jan 11</div>
+              <div className="text-2xl font-bold text-emerald-600">Feb 1</div>
               <div className="text-xs text-gray-600">Launch Date</div>
             </div>
           </div>
