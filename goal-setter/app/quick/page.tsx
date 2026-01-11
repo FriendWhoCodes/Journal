@@ -125,7 +125,7 @@ export default function QuickMode() {
                   value={goal1}
                   onChange={(e) => setGoal1(e.target.value)}
                   placeholder="Goal #1 (e.g., Launch my SaaS product)"
-                  className="w-full px-5 py-3 text-lg border-2 border-gray-200 rounded-xl focus:border-slate-500 focus:outline-none"
+                  className="w-full px-5 py-3 text-lg text-gray-900 placeholder-gray-500 border-2 border-gray-200 rounded-xl focus:border-slate-500 focus:outline-none"
                   required
                 />
                 <input
@@ -133,7 +133,7 @@ export default function QuickMode() {
                   value={goal2}
                   onChange={(e) => setGoal2(e.target.value)}
                   placeholder="Goal #2 (e.g., Run a marathon)"
-                  className="w-full px-5 py-3 text-lg border-2 border-gray-200 rounded-xl focus:border-slate-500 focus:outline-none"
+                  className="w-full px-5 py-3 text-lg text-gray-900 placeholder-gray-500 border-2 border-gray-200 rounded-xl focus:border-slate-500 focus:outline-none"
                   required
                 />
                 <input
@@ -141,7 +141,7 @@ export default function QuickMode() {
                   value={goal3}
                   onChange={(e) => setGoal3(e.target.value)}
                   placeholder="Goal #3 (e.g., Learn Spanish)"
-                  className="w-full px-5 py-3 text-lg border-2 border-gray-200 rounded-xl focus:border-slate-500 focus:outline-none"
+                  className="w-full px-5 py-3 text-lg text-gray-900 placeholder-gray-500 border-2 border-gray-200 rounded-xl focus:border-slate-500 focus:outline-none"
                   required
                 />
               </div>
@@ -260,7 +260,7 @@ export default function QuickMode() {
                 value={mainTheme}
                 onChange={(e) => setMainTheme(e.target.value)}
                 placeholder="e.g., Consistency over intensity, Less talk more action"
-                className="w-full px-5 py-3 text-lg border-2 border-gray-200 rounded-xl focus:border-indigo-500 focus:outline-none"
+                className="w-full px-5 py-3 text-lg text-gray-900 placeholder-gray-500 border-2 border-gray-200 rounded-xl focus:border-indigo-500 focus:outline-none"
                 required
               />
               <p className="mt-2 text-sm text-gray-500">
@@ -319,7 +319,7 @@ export default function QuickMode() {
               value={placesToVisit}
               onChange={(e) => setPlacesToVisit(e.target.value)}
               placeholder="• Bali, Indonesia&#10;• Swiss Alps&#10;• Local hill stations"
-              className="w-full px-5 py-3 text-lg border-2 border-gray-200 rounded-xl focus:border-slate-500 focus:outline-none h-32 resize-none"
+              className="w-full px-5 py-3 text-lg text-gray-900 placeholder-gray-500 border-2 border-gray-200 rounded-xl focus:border-slate-500 focus:outline-none h-32 resize-none"
             />
           </div>
 
@@ -332,7 +332,7 @@ export default function QuickMode() {
               value={booksToRead}
               onChange={(e) => setBooksToRead(e.target.value)}
               placeholder="• Atomic Habits&#10;• The Almanack of Naval Ravikant&#10;• Deep Work"
-              className="w-full px-5 py-3 text-lg border-2 border-gray-200 rounded-xl focus:border-slate-500 focus:outline-none h-32 resize-none"
+              className="w-full px-5 py-3 text-lg text-gray-900 placeholder-gray-500 border-2 border-gray-200 rounded-xl focus:border-slate-500 focus:outline-none h-32 resize-none"
             />
           </div>
 
@@ -345,7 +345,7 @@ export default function QuickMode() {
               value={moviesToWatch}
               onChange={(e) => setMoviesToWatch(e.target.value)}
               placeholder="• The Last of Us&#10;• Oppenheimer&#10;• Breaking Bad (rewatch)"
-              className="w-full px-5 py-3 text-lg border-2 border-gray-200 rounded-xl focus:border-slate-500 focus:outline-none h-32 resize-none"
+              className="w-full px-5 py-3 text-lg text-gray-900 placeholder-gray-500 border-2 border-gray-200 rounded-xl focus:border-slate-500 focus:outline-none h-32 resize-none"
             />
           </div>
 
@@ -358,7 +358,7 @@ export default function QuickMode() {
               value={experiencesToHave}
               onChange={(e) => setExperiencesToHave(e.target.value)}
               placeholder="• Learn to cook Italian cuisine&#10;• Attend a music festival&#10;• Volunteer at an NGO"
-              className="w-full px-5 py-3 text-lg border-2 border-gray-200 rounded-xl focus:border-slate-500 focus:outline-none h-32 resize-none"
+              className="w-full px-5 py-3 text-lg text-gray-900 placeholder-gray-500 border-2 border-gray-200 rounded-xl focus:border-slate-500 focus:outline-none h-32 resize-none"
             />
           </div>
 

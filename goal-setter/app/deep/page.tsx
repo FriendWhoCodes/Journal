@@ -196,7 +196,7 @@ export default function DeepMode() {
                   value={goal1}
                   onChange={(e) => setGoal1(e.target.value)}
                   placeholder="1. Example: Run a marathon"
-                  className="w-full px-4 py-2.5 text-base border-2 border-gray-200 rounded-lg focus:border-slate-500 focus:outline-none"
+                  className="w-full px-4 py-2.5 text-base text-gray-900 placeholder-gray-500 border-2 border-gray-200 rounded-lg focus:border-slate-500 focus:outline-none"
                   required
                 />
                 <input
@@ -204,7 +204,7 @@ export default function DeepMode() {
                   value={goal2}
                   onChange={(e) => setGoal2(e.target.value)}
                   placeholder="2. Example: Launch my side project"
-                  className="w-full px-4 py-2.5 text-base border-2 border-gray-200 rounded-lg focus:border-slate-500 focus:outline-none"
+                  className="w-full px-4 py-2.5 text-base text-gray-900 placeholder-gray-500 border-2 border-gray-200 rounded-lg focus:border-slate-500 focus:outline-none"
                   required
                 />
                 <input
@@ -212,7 +212,7 @@ export default function DeepMode() {
                   value={goal3}
                   onChange={(e) => setGoal3(e.target.value)}
                   placeholder="3. Example: Read 24 books"
-                  className="w-full px-4 py-2.5 text-base border-2 border-gray-200 rounded-lg focus:border-slate-500 focus:outline-none"
+                  className="w-full px-4 py-2.5 text-base text-gray-900 placeholder-gray-500 border-2 border-gray-200 rounded-lg focus:border-slate-500 focus:outline-none"
                   required
                 />
               </div>
@@ -331,7 +331,7 @@ export default function DeepMode() {
                 value={mainTheme}
                 onChange={(e) => setMainTheme(e.target.value)}
                 placeholder='Example: "Year of Health" or "Year of Growth"'
-                className="w-full px-4 py-2.5 text-base border-2 border-gray-200 rounded-lg focus:border-slate-500 focus:outline-none"
+                className="w-full px-4 py-2.5 text-base text-gray-900 placeholder-gray-500 border-2 border-gray-200 rounded-lg focus:border-slate-500 focus:outline-none"
                 required
               />
             </div>
@@ -406,7 +406,7 @@ export default function DeepMode() {
                 value={categoryGoal}
                 onChange={(e) => setCategoryGoal(e.target.value)}
                 placeholder={`What do you want to achieve in ${currentCategory.name.toLowerCase()}?`}
-                className="w-full px-5 py-3 text-lg border-2 border-gray-200 rounded-xl focus:border-slate-500 focus:outline-none h-24 resize-none"
+                className="w-full px-5 py-3 text-lg text-gray-900 placeholder-gray-500 border-2 border-gray-200 rounded-xl focus:border-slate-500 focus:outline-none h-24 resize-none"
                 required
               />
             </div>
@@ -420,7 +420,7 @@ export default function DeepMode() {
                 value={categoryWhy}
                 onChange={(e) => setCategoryWhy(e.target.value)}
                 placeholder="Why is this important? What will achieving this mean to you?"
-                className="w-full px-5 py-3 text-lg border-2 border-gray-200 rounded-xl focus:border-slate-500 focus:outline-none h-32 resize-none"
+                className="w-full px-5 py-3 text-lg text-gray-900 placeholder-gray-500 border-2 border-gray-200 rounded-xl focus:border-slate-500 focus:outline-none h-32 resize-none"
                 required
               />
             </div>
@@ -487,7 +487,7 @@ export default function DeepMode() {
                 value={placesToVisit}
                 onChange={(e) => setPlacesToVisit(e.target.value)}
                 placeholder="• Bali, Indonesia&#10;• Swiss Alps&#10;• Local hill stations"
-                className="w-full px-5 py-3 text-lg border-2 border-gray-200 rounded-xl focus:border-slate-500 focus:outline-none h-32 resize-none"
+                className="w-full px-5 py-3 text-lg text-gray-900 placeholder-gray-500 border-2 border-gray-200 rounded-xl focus:border-slate-500 focus:outline-none h-32 resize-none"
               />
             </div>
 
@@ -500,7 +500,7 @@ export default function DeepMode() {
                 value={booksToRead}
                 onChange={(e) => setBooksToRead(e.target.value)}
                 placeholder="• Atomic Habits&#10;• The Almanack of Naval Ravikant&#10;• Deep Work"
-                className="w-full px-5 py-3 text-lg border-2 border-gray-200 rounded-xl focus:border-slate-500 focus:outline-none h-32 resize-none"
+                className="w-full px-5 py-3 text-lg text-gray-900 placeholder-gray-500 border-2 border-gray-200 rounded-xl focus:border-slate-500 focus:outline-none h-32 resize-none"
               />
             </div>
 
@@ -513,7 +513,7 @@ export default function DeepMode() {
                 value={moviesToWatch}
                 onChange={(e) => setMoviesToWatch(e.target.value)}
                 placeholder="• The Last of Us&#10;• Oppenheimer&#10;• Breaking Bad (rewatch)"
-                className="w-full px-5 py-3 text-lg border-2 border-gray-200 rounded-xl focus:border-slate-500 focus:outline-none h-32 resize-none"
+                className="w-full px-5 py-3 text-lg text-gray-900 placeholder-gray-500 border-2 border-gray-200 rounded-xl focus:border-slate-500 focus:outline-none h-32 resize-none"
               />
             </div>
 
@@ -526,7 +526,7 @@ export default function DeepMode() {
                 value={experiencesToHave}
                 onChange={(e) => setExperiencesToHave(e.target.value)}
                 placeholder="• Learn to cook Italian cuisine&#10;• Attend a music festival&#10;• Volunteer at an NGO"
-                className="w-full px-5 py-3 text-lg border-2 border-gray-200 rounded-xl focus:border-slate-500 focus:outline-none h-32 resize-none"
+                className="w-full px-5 py-3 text-lg text-gray-900 placeholder-gray-500 border-2 border-gray-200 rounded-xl focus:border-slate-500 focus:outline-none h-32 resize-none"
               />
             </div>
 
