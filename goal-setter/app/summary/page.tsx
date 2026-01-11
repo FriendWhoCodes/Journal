@@ -404,15 +404,67 @@ export default function Summary() {
           </p>
         </div>
 
-        {/* Journal Launch CTA */}
-        <div className="bg-gradient-to-r from-slate-700 to-amber-600 rounded-2xl shadow-2xl p-8 md:p-12 text-white">
-          <div className="text-center mb-8">
-            <div className="inline-block bg-white/20 backdrop-blur-sm rounded-full px-6 py-2 mb-6">
-              <p className="text-sm font-semibold text-white">✨ Your Goals Are Saved</p>
+        {/* Tablet Edition Launch - January 21st */}
+        <div className="bg-gradient-to-r from-emerald-600 to-teal-600 rounded-2xl shadow-2xl p-8 md:p-12 text-white mb-8">
+          <div className="text-center mb-6">
+            <div className="inline-block bg-white/20 backdrop-blur-sm rounded-full px-6 py-2 mb-4">
+              <p className="text-sm font-semibold text-white">🎉 NEW RELEASE - January 21st</p>
             </div>
 
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              Get Ready for the Man of Wisdom Digital Journal
+              Man of Wisdom Journal - Tablet Edition
+            </h2>
+            <p className="text-xl text-emerald-100 mb-6">
+              The complete printable journal for iPad & tablets - <strong>Available January 21st</strong>
+            </p>
+          </div>
+
+          <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 mb-6 max-w-2xl mx-auto">
+            <h3 className="text-xl font-bold mb-4 text-center">Why Choose Tablet Edition?</h3>
+            <ul className="space-y-3 text-emerald-50">
+              <li className="flex items-start">
+                <span className="text-white mr-3 text-xl flex-shrink-0">📱</span>
+                <span>Designed specifically for iPad & Android tablets with GoodNotes, Notability</span>
+              </li>
+              <li className="flex items-start">
+                <span className="text-white mr-3 text-xl flex-shrink-0">✍️</span>
+                <span>Fully interactive - write, draw, and customize with Apple Pencil or stylus</span>
+              </li>
+              <li className="flex items-start">
+                <span className="text-white mr-3 text-xl flex-shrink-0">🔄</span>
+                <span>One-time purchase - yours forever, no subscription needed</span>
+              </li>
+              <li className="flex items-start">
+                <span className="text-white mr-3 text-xl flex-shrink-0">📊</span>
+                <span>Complete goal tracking system with daily, weekly, and monthly reviews</span>
+              </li>
+            </ul>
+          </div>
+
+          <div className="text-center">
+            <a
+              href="https://manofwisdom.co/tablet-journal"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-block bg-white text-emerald-700 px-8 py-4 rounded-xl font-bold text-lg hover:bg-emerald-50 transition-all shadow-lg transform hover:scale-105"
+            >
+              Pre-Order Now →
+            </a>
+            <p className="mt-4 text-emerald-100 text-sm">
+              🎁 Early bird pricing available • Instant download on January 21st
+            </p>
+          </div>
+        </div>
+
+        {/* Digital Journal Launch - February 1st */}
+        <div className="bg-gradient-to-r from-slate-700 to-amber-600 rounded-2xl shadow-2xl p-8 md:p-12 text-white">
+          <div className="text-center mb-8">
+            <div className="inline-block bg-white/20 backdrop-blur-sm rounded-full px-6 py-2 mb-6">
+              <p className="text-sm font-semibold text-white">✨ COMING SOON - February 1st</p>
+            </div>
+
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+              Man of Wisdom Digital Journal (SaaS)
             </h2>
             <p className="text-xl text-amber-100 mb-6">
               Track these goals daily starting <strong>February 1st</strong> with <strong>1 month FREE</strong> Pro access
