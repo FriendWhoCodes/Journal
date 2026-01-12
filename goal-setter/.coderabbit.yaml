@@ -1,0 +1,98 @@
+# CodeRabbit Configuration for Man of Wisdom Goal Setter
+# Focus: Security, Performance, Best Practices
+
+language: en-US
+early_access: false
+reviews:
+  profile: chill
+  request_changes_workflow: false
+  high_level_summary: true
+  poem: false
+  review_status: true
+  collapse_walkthrough: false
+  auto_review:
+    enabled: true
+    drafts: false
+  tools:
+    ruff:
+      enabled: false
+    shellcheck:
+      enabled: true
+    markdownlint:
+      enabled: true
+    github-checks:
+      enabled: true
+      timeout_ms: 90000
+    languagetool:
+      enabled: true
+      enabled_only: false
+      level: default
+    biome:
+      enabled: true
+    hadolint:
+      enabled: true
+    swiftlint:
+      enabled: false
+    phpstan:
+      enabled: false
+    golangci-lint:
+      enabled: false
+    yamllint:
+      enabled: true
+    gitleaks:
+      enabled: true
+    checkov:
+      enabled: true
+    detekt:
+      enabled: false
+    eslint:
+      enabled: true
+    buf:
+      enabled: false
+    regal:
+      enabled: false
+    infer:
+      enabled: false
+    pmd:
+      enabled: false
+    semgrep:
+      enabled: true
+
+chat:
+  auto_reply: true
+
+# Security-focused instructions
+knowledge_base:
+  - "This is a Next.js 16 + Prisma + PostgreSQL goal-setting application"
+  - "Security is critical - check for SQL injection, XSS, CSRF vulnerabilities"
+  - "All database queries use Prisma ORM (prevents SQL injection)"
+  - "User input must be sanitized before storage and display"
+  - "Sensitive data: user emails, goal submissions - must be protected"
+  - "Environment variables (.env) must never be committed"
+  - "Rate limiting should be implemented on API routes"
+  - "HTTPS/SSL required in production"
+  - "Input validation required on all forms"
+  - "Check for exposed API keys or secrets"
+  - "Verify proper error handling (no stack traces to users)"
+  - "Check for proper authentication/authorization logic"
+  - "Review TypeScript types for type safety"
+  - "Verify all user inputs are validated server-side"
+  - "Check for proper CORS configuration"
+
+# Custom review instructions
+instructions:
+  - "Always check for security vulnerabilities first"
+  - "Flag any potential SQL injection points (even though we use Prisma)"
+  - "Check for XSS vulnerabilities in user-generated content"
+  - "Verify input validation on both client and server"
+  - "Check for exposed secrets or API keys"
+  - "Review error handling - ensure no sensitive info in error messages"
+  - "Verify rate limiting on API endpoints"
+  - "Check for proper TypeScript usage and type safety"
+  - "Review database queries for N+1 problems"
+  - "Check for proper error boundaries in React components"
+  - "Verify accessibility (a11y) best practices"
+  - "Check for performance issues (large bundle sizes, unnecessary re-renders)"
+  - "Review for proper Next.js 16 best practices (Server Components, caching)"
+  - "Check Prisma schema for proper indexes and constraints"
+  - "Verify proper handling of user authentication state"
