@@ -8,9 +8,10 @@ const RATE_LIMIT_WINDOW = 60 * 1000; // 1 minute
 const RATE_LIMIT_MAX_REQUESTS = 60; // 60 requests per minute per IP
 
 function getRateLimitKey(request: NextRequest): string {
-  // Use X-Forwarded-For if behind proxy (Cloudflare), otherwise use IP
+  // Use Cloudflare's CF-Connecting-IP or X-Forwarded-For for real client IP
+  const cfIp = request.headers.get('cf-connecting-ip');
   const forwarded = request.headers.get('x-forwarded-for');
-  const ip = forwarded ? forwarded.split(',')[0] : request.ip || 'unknown';
+  const ip = cfIp || (forwarded ? forwarded.split(',')[0].trim() : 'unknown');
   return `ratelimit:${ip}`;
 }
 
