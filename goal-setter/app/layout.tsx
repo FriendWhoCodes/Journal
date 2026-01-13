@@ -14,6 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://goals.manofwisdom.co"),
   title: "Man of Wisdom - Set Your 2026 Goals",
   description: "Plan your 2026 in 5 minutes and unlock your free journal",
   icons: {
@@ -27,7 +28,7 @@ export const metadata: Metadata = {
     siteName: "Man of Wisdom",
     images: [
       {
-        url: "/og-image.png",
+        url: "https://goals.manofwisdom.co/og-image.png",
         width: 1200,
         height: 630,
         alt: "Set Your 2026 Goals - Man of Wisdom",
@@ -39,7 +40,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Set Your 2026 Goals in 5 Minutes",
     description: "Plan your year and get 1 month FREE access to Man of Wisdom Digital Journal",
-    images: ["/og-image.png"],
+    images: ["https://goals.manofwisdom.co/og-image.png"],
   },
 };
 
