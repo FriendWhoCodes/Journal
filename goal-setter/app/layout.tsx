@@ -20,6 +20,27 @@ export const metadata: Metadata = {
     icon: "/favicon.ico",
     apple: "/apple-touch-icon.png",
   },
+  openGraph: {
+    title: "Set Your 2026 Goals in 5 Minutes",
+    description: "Plan your year and get 1 month FREE access to Man of Wisdom Digital Journal",
+    url: "https://goals.manofwisdom.co",
+    siteName: "Man of Wisdom",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "Set Your 2026 Goals - Man of Wisdom",
+      },
+    ],
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Set Your 2026 Goals in 5 Minutes",
+    description: "Plan your year and get 1 month FREE access to Man of Wisdom Digital Journal",
+    images: ["/og-image.png"],
+  },
 };
 
 export default function RootLayout({
