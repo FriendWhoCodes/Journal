@@ -29,9 +29,9 @@ export const metadata: Metadata = {
     images: [
       {
         url: "https://goals.manofwisdom.co/og-image.png",
-        width: 1536,
-        height: 1024,
-        alt: "Set Your 2026 Goals - Man of Wisdom",
+        width: 1200,
+        height: 630,
+        alt: "Set Your 2026 Goals - Man of Wisdom Goal Setter",
       },
     ],
     type: "website",
