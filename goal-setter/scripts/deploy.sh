@@ -24,7 +24,8 @@ git reset --hard origin/$BRANCH
 cd $APP_DIR || exit 1
 
 echo "📦 Installing dependencies..."
-npm ci --production=false
+# Use npm install instead of npm ci to handle lock file mismatches
+npm install --legacy-peer-deps
 
 echo "🏗️  Building application..."
 npm run build
