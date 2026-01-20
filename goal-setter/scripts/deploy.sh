@@ -8,20 +8,20 @@ set -e # Exit on any error
 echo "🚀 Starting deployment..."
 
 # Configuration
-APP_DIR="/var/www/goal-setter"
-REPO_URL="https://github.com/FriendWhoCodes/Journal.git"
-BRANCH="main"  # Or your deployment branch
+REPO_DIR="/var/www/Journal"
+APP_DIR="/var/www/Journal/goal-setter"
+BRANCH="main"
 APP_NAME="goal-setter"
 
-# Navigate to app directory
-cd $APP_DIR || exit 1
+# Navigate to repo root and pull
+cd $REPO_DIR || exit 1
 
 echo "📥 Pulling latest code..."
 git fetch origin
 git reset --hard origin/$BRANCH
 
-# Navigate to goal-setter subdirectory
-cd goal-setter || exit 1
+# Navigate to goal-setter app directory
+cd $APP_DIR || exit 1
 
 echo "📦 Installing dependencies..."
 npm ci --production=false

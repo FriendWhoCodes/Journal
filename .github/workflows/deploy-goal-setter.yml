@@ -24,7 +24,7 @@ jobs:
           key: ${{ secrets.HETZNER_SSH_KEY }}
           port: ${{ secrets.HETZNER_PORT || 22 }}
           script: |
-            cd /var/www/goal-setter
+            cd /var/www/Journal/goal-setter
             bash scripts/deploy.sh
 
       - name: Notify deployment status
