@@ -1,6 +1,6 @@
 # Goal Setter - Project Status
 
-Last Updated: January 13, 2026
+Last Updated: January 20, 2026
 
 ## Overview
 
@@ -134,7 +134,8 @@ Goal Setter is a web application that helps users plan their annual goals for 20
 ### Domains
 | Domain | Points To | Purpose |
 |--------|-----------|---------|
-| manofwisdom.co | WordPress (Docker) | Main website/blog |
+| manofwisdom.co | WordPress (Docker) | Main website (will become Next.js homepage) |
+| blog.manofwisdom.co | WordPress (Docker) | Blog (migrated Jan 20, 2026) |
 | goals.manofwisdom.co | Next.js (PM2, port 3002) | Goal Setter app |
 
 ### Process Management
