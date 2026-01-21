@@ -14,17 +14,18 @@ export default function Newsletter() {
 
     setStatus("loading");
 
-    // For MVP: Open mailto link or link to newsletter signup page
+    // For MVP: Open newsletter signup page
     // Replace with actual newsletter API (ConvertKit, etc.) when ready
-    try {
-      // Placeholder - redirect to newsletter signup
-      window.open(
-        `https://blog.manofwisdom.co/newsletter?email=${encodeURIComponent(email)}`,
-        "_blank"
-      );
+    const popup = window.open(
+      `https://blog.manofwisdom.co/newsletter?email=${encodeURIComponent(email)}`,
+      "_blank"
+    );
+
+    // window.open returns null if popup was blocked
+    if (popup) {
       setStatus("success");
       setEmail("");
-    } catch {
+    } else {
       setStatus("error");
     }
   };
