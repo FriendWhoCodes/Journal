@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Goal Setter Deployment Script for Hetzner
+# Time Views Deployment Script for Hetzner
 # This script should be run on the Hetzner server
 
 set -e # Exit on any error
@@ -9,9 +9,9 @@ echo "Starting deployment..."
 
 # Configuration
 REPO_DIR="/var/www/Journal"
-APP_DIR="/var/www/Journal/goal-setter"
+APP_DIR="/var/www/Journal/time-views"
 BRANCH="main"
-APP_NAME="goal-setter"
+APP_NAME="time-views"
 
 # Navigate to repo root and pull
 cd "$REPO_DIR" || exit 1
@@ -24,7 +24,7 @@ git reset --hard "origin/$BRANCH"
 echo "Installing root dependencies..."
 npm install --legacy-peer-deps
 
-# Navigate to goal-setter app directory
+# Navigate to time-views app directory
 cd "$APP_DIR" || exit 1
 
 echo "Installing app dependencies..."

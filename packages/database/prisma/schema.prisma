@@ -1,0 +1,153 @@
+// Shared Prisma schema for all Man of Wisdom applications
+// This is the single source of truth for database models
+// Both goal-setter and time-views apps reference this schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================
+// SHARED AUTH TABLES
+// Used by all MoW applications for authentication
+// ============================================
+
+model AuthUser {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  name          String?
+  emailVerified DateTime? @map("email_verified")
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @updatedAt @map("updated_at")
+
+  sessions         AuthSession[]
+  magicLinks       AuthMagicLink[]
+  goalSetterUser   GoalSetterUser?
+  timeViewsEntries TimeViewsEntry[]
+
+  @@map("auth_users")
+}
+
+model AuthSession {
+  id        String   @id @default(cuid())
+  userId    String   @map("user_id")
+  token     String   @unique
+  expiresAt DateTime @map("expires_at")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user AuthUser @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([expiresAt])
+  @@map("auth_sessions")
+}
+
+model AuthMagicLink {
+  id        String    @id @default(cuid())
+  userId    String    @map("user_id")
+  token     String    @unique
+  expiresAt DateTime  @map("expires_at")
+  usedAt    DateTime? @map("used_at")
+  createdAt DateTime  @default(now()) @map("created_at")
+
+  user AuthUser @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([expiresAt])
+  @@map("auth_magic_links")
+}
+
+// ============================================
+// GOAL SETTER TABLES
+// ============================================
+
+model GoalSetterUser {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique @db.VarChar(255)
+  name      String   @db.VarChar(255)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  // Link to shared auth
+  authUserId String?   @unique @map("auth_user_id")
+  authUser   AuthUser? @relation(fields: [authUserId], references: [id], onDelete: SetNull)
+
+  submissions GoalSetterSubmission[]
+
+  @@index([email])
+  @@map("goal_setter_users")
+}
+
+model GoalSetterSubmission {
+  id     Int    @id @default(autoincrement())
+  userId Int    @map("user_id")
+  mode   String @db.VarChar(10) // 'quick' | 'deep'
+
+  // Top 3 Goals (both modes)
+  goal1 String? @map("goal_1") @db.Text
+  goal2 String? @map("goal_2") @db.Text
+  goal3 String? @map("goal_3") @db.Text
+
+  // Habits (arrays as JSONB)
+  habitsToBuild Json? @map("habits_to_build") @db.JsonB
+  habitsToBreak Json? @map("habits_to_break") @db.JsonB
+
+  // Theme
+  mainTheme String? @map("main_theme") @db.Text
+
+  // Deep Mode Category Data (stored as JSONB)
+  deepModeData Json? @map("deep_mode_data") @db.JsonB
+
+  // Fun Section
+  placesToVisit     String? @map("places_to_visit") @db.Text
+  booksToRead       String? @map("books_to_read") @db.Text
+  moviesToWatch     String? @map("movies_to_watch") @db.Text
+  experiencesToHave String? @map("experiences_to_have") @db.Text
+
+  // Metadata
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  user GoalSetterUser @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([createdAt])
+  @@map("goal_setter_submissions")
+}
+
+// ============================================
+// TIME VIEWS TABLES
+// ============================================
+
+model TimeViewsEntry {
+  id        String   @id @default(cuid())
+  userId    String   @map("user_id")
+  year      Int
+  week      Int // 1-52
+  category  String // Code, Writing, Design, Business, Personal
+  hours     Float    @default(0)
+  notes     String?
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  user            AuthUser                  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accomplishments TimeViewsAccomplishment[]
+
+  @@unique([userId, year, week, category])
+  @@index([userId, year])
+  @@map("time_views_entries")
+}
+
+model TimeViewsAccomplishment {
+  id        String   @id @default(cuid())
+  entryId   String   @map("entry_id")
+  content   String
+  completed Boolean  @default(false)
+  createdAt DateTime @default(now()) @map("created_at")
+
+  entry TimeViewsEntry @relation(fields: [entryId], references: [id], onDelete: Cascade)
+
+  @@map("time_views_accomplishments")
+}

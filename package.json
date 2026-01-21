@@ -1,5 +1,16 @@
 {
-  "dependencies": {
-    "@react-pdf/renderer": "^4.3.1"
+  "name": "mow-monorepo",
+  "private": true,
+  "workspaces": [
+    "packages/*",
+    "goal-setter",
+    "time-views",
+    "homepage"
+  ],
+  "scripts": {
+    "dev:goal-setter": "npm run dev --workspace=goal-setter",
+    "dev:time-views": "npm run dev --workspace=time-views",
+    "build:goal-setter": "npm run build --workspace=goal-setter",
+    "build:time-views": "npm run build --workspace=time-views"
   }
 }
