@@ -13,10 +13,16 @@ const footerLinks = {
     { label: "Newsletter", href: "#newsletter" },
   ],
   connect: [
-    { label: "Facebook", href: "https://facebook.com/manofwisdom" },
-    { label: "Instagram", href: "https://instagram.com/manofwisdoms" },
-    { label: "Twitter", href: "https://twitter.com/ManofWisdoms" },
-    { label: "LinkedIn", href: "https://linkedin.com/company/manofwisdom" },
+    { label: "Facebook", href: "https://facebook.com/ManofWisdoms" },
+    { label: "Instagram", href: "https://www.instagram.com/ManofWisdoms/" },
+    { label: "Twitter", href: "https://twitter.com/ManofWisdoms/" },
+    { label: "LinkedIn", href: "https://www.linkedin.com/company/manofwisdom" },
+  ],
+  music: [
+    { label: "Spotify", href: "https://open.spotify.com/artist/59S9iaGBrrWXl242r9hLpm" },
+    { label: "Apple Music", href: "https://music.apple.com/us/artist/man-of-wisdom/1523099981" },
+    { label: "Amazon Music", href: "https://www.amazon.com/music/player/artists/B08CS9MHB8/man-of-wisdom" },
+    { label: "YouTube", href: "https://www.youtube.com/user/ManofWisdom17" },
   ],
   legal: [
     { label: "Privacy", href: "/privacy" },
@@ -28,7 +34,7 @@ export default function Footer() {
   return (
     <footer id="about" className="py-16 px-6 md:px-12 bg-[#0a0a0a] border-t border-gray-800">
       <div className="max-w-6xl mx-auto">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8 mb-12">
           {/* Products */}
           <div>
             <h3 className="text-white font-semibold mb-4">Products</h3>
@@ -75,6 +81,25 @@ export default function Footer() {
             <h3 className="text-white font-semibold mb-4">Connect</h3>
             <ul className="space-y-2">
               {footerLinks.connect.map((link) => (
+                <li key={link.label}>
+                  <Link
+                    href={link.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-sm text-gray-400 hover:text-[#D4AF37] transition-colors"
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Music */}
+          <div>
+            <h3 className="text-white font-semibold mb-4">Music</h3>
+            <ul className="space-y-2">
+              {footerLinks.music.map((link) => (
                 <li key={link.label}>
                   <Link
                     href={link.href}
