@@ -24,7 +24,10 @@ jobs:
           key: ${{ secrets.HETZNER_SSH_KEY }}
           port: 22
           script: |
-            cd /var/www/Journal/homepage
+            cd /var/www/Journal
+            git fetch origin
+            git reset --hard origin/main
+            cd homepage
             bash scripts/deploy.sh
 
       - name: Notify deployment status

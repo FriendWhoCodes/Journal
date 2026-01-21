@@ -8,19 +8,10 @@ set -e # Exit on any error
 echo "Starting deployment..."
 
 # Configuration
-REPO_DIR="/var/www/Journal"
 APP_DIR="/var/www/Journal/homepage"
-BRANCH="main"
 APP_NAME="mow-homepage"
 
-# Navigate to repo root and pull
-cd $REPO_DIR || exit 1
-
-echo "Pulling latest code..."
-git fetch origin
-git reset --hard origin/$BRANCH
-
-# Navigate to homepage app directory
+# Navigate to homepage app directory (git pull already done by workflow)
 cd $APP_DIR || exit 1
 
 echo "Installing dependencies..."
