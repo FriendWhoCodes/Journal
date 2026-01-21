@@ -1,5 +1,6 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
+// Shared Prisma schema for all Man of Wisdom applications
+// This is the single source of truth for database models
+// Both goal-setter and time-views apps reference this schema
 
 generator client {
   provider = "prisma-client-js"
@@ -10,7 +11,11 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// === SHARED AUTH TABLES ===
+// ============================================
+// SHARED AUTH TABLES
+// Used by all MoW applications for authentication
+// ============================================
+
 model AuthUser {
   id            String    @id @default(cuid())
   email         String    @unique
@@ -36,6 +41,7 @@ model AuthSession {
 
   user AuthUser @relation(fields: [userId], references: [id], onDelete: Cascade)
 
+  @@index([expiresAt])
   @@map("auth_sessions")
 }
 
@@ -49,10 +55,14 @@ model AuthMagicLink {
 
   user AuthUser @relation(fields: [userId], references: [id], onDelete: Cascade)
 
+  @@index([expiresAt])
   @@map("auth_magic_links")
 }
 
-// === GOAL SETTER TABLES ===
+// ============================================
+// GOAL SETTER TABLES
+// ============================================
+
 model GoalSetterUser {
   id        Int      @id @default(autoincrement())
   email     String   @unique @db.VarChar(255)
@@ -107,7 +117,10 @@ model GoalSetterSubmission {
   @@map("goal_setter_submissions")
 }
 
-// === TIME VIEWS TABLES ===
+// ============================================
+// TIME VIEWS TABLES
+// ============================================
+
 model TimeViewsEntry {
   id        String   @id @default(cuid())
   userId    String   @map("user_id")
@@ -123,6 +136,7 @@ model TimeViewsEntry {
   accomplishments TimeViewsAccomplishment[]
 
   @@unique([userId, year, week, category])
+  @@index([userId, year])
   @@map("time_views_entries")
 }
 
