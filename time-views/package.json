@@ -1,9 +1,9 @@
 {
-  "name": "goal-setter",
+  "name": "time-views",
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --port 3002",
+    "dev": "next dev --port 3004",
     "build": "prisma generate && next build",
     "start": "next start",
     "lint": "eslint",
@@ -11,19 +11,13 @@
     "postinstall": "prisma generate"
   },
   "dependencies": {
-    "@hookform/resolvers": "^5.2.2",
     "@mow/auth": "workspace:*",
     "@prisma/client": "^6.1.0",
-    "@radix-ui/react-progress": "^1.1.8",
-    "@radix-ui/react-radio-group": "^1.3.8",
-    "@react-pdf/renderer": "^4.2.0",
     "framer-motion": "^12.23.26",
     "next": "16.1.1",
     "prisma": "^6.1.0",
     "react": "19.2.3",
-    "react-dom": "19.2.3",
-    "react-hook-form": "^7.69.0",
-    "zod": "^4.2.1"
+    "react-dom": "19.2.3"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",

@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { GoalSetterProvider } from "@/lib/context/GoalSetterContext";
+import { AuthProvider } from "@mow/auth/components";
+import { getCurrentUser } from "@/lib/auth";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -44,37 +46,41 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const user = await getCurrentUser();
+
   return (
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen flex flex-col`}
       >
-        <GoalSetterProvider>
-          <main className="flex-grow">
-            {children}
-          </main>
-          <footer className="w-full py-6 px-4 border-t border-gray-800 bg-black/50">
-            <div className="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-gray-400">
-              <p>
-                Part of{" "}
-                <a
-                  href="https://manofwisdom.co"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-amber-400 hover:text-amber-300 transition-colors"
-                >
-                  Man of Wisdom
-                </a>
-              </p>
-              <p>&copy; {new Date().getFullYear()} Man of Wisdom. All rights reserved.</p>
-            </div>
-          </footer>
-        </GoalSetterProvider>
+        <AuthProvider initialUser={user}>
+          <GoalSetterProvider>
+            <main className="flex-grow">
+              {children}
+            </main>
+            <footer className="w-full py-6 px-4 border-t border-gray-800 bg-black/50">
+              <div className="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-gray-400">
+                <p>
+                  Part of{" "}
+                  <a
+                    href="https://manofwisdom.co"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-amber-400 hover:text-amber-300 transition-colors"
+                  >
+                    Man of Wisdom
+                  </a>
+                </p>
+                <p>&copy; {new Date().getFullYear()} Man of Wisdom. All rights reserved.</p>
+              </div>
+            </footer>
+          </GoalSetterProvider>
+        </AuthProvider>
       </body>
     </html>
   );

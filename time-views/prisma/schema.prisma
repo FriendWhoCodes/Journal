@@ -21,7 +21,6 @@ model AuthUser {
 
   sessions         AuthSession[]
   magicLinks       AuthMagicLink[]
-  goalSetterUser   GoalSetterUser?
   timeViewsEntries TimeViewsEntry[]
 
   @@map("auth_users")
@@ -50,61 +49,6 @@ model AuthMagicLink {
   user AuthUser @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("auth_magic_links")
-}
-
-// === GOAL SETTER TABLES ===
-model GoalSetterUser {
-  id        Int      @id @default(autoincrement())
-  email     String   @unique @db.VarChar(255)
-  name      String   @db.VarChar(255)
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
-
-  // Link to shared auth
-  authUserId String?   @unique @map("auth_user_id")
-  authUser   AuthUser? @relation(fields: [authUserId], references: [id], onDelete: SetNull)
-
-  submissions GoalSetterSubmission[]
-
-  @@index([email])
-  @@map("goal_setter_users")
-}
-
-model GoalSetterSubmission {
-  id     Int    @id @default(autoincrement())
-  userId Int    @map("user_id")
-  mode   String @db.VarChar(10) // 'quick' | 'deep'
-
-  // Top 3 Goals (both modes)
-  goal1 String? @map("goal_1") @db.Text
-  goal2 String? @map("goal_2") @db.Text
-  goal3 String? @map("goal_3") @db.Text
-
-  // Habits (arrays as JSONB)
-  habitsToBuild Json? @map("habits_to_build") @db.JsonB
-  habitsToBreak Json? @map("habits_to_break") @db.JsonB
-
-  // Theme
-  mainTheme String? @map("main_theme") @db.Text
-
-  // Deep Mode Category Data (stored as JSONB)
-  deepModeData Json? @map("deep_mode_data") @db.JsonB
-
-  // Fun Section
-  placesToVisit     String? @map("places_to_visit") @db.Text
-  booksToRead       String? @map("books_to_read") @db.Text
-  moviesToWatch     String? @map("movies_to_watch") @db.Text
-  experiencesToHave String? @map("experiences_to_have") @db.Text
-
-  // Metadata
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
-
-  user GoalSetterUser @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@index([userId])
-  @@index([createdAt])
-  @@map("goal_setter_submissions")
 }
 
 // === TIME VIEWS TABLES ===
