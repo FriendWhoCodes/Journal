@@ -20,16 +20,20 @@ export function LoginForm({ onSuccess, className = '' }: LoginFormProps) {
     setIsLoading(true);
     setError(null);
 
-    const result = await login(email);
+    try {
+      const result = await login(email);
 
-    if (result.success) {
-      setSuccess(true);
-      onSuccess?.();
-    } else {
-      setError(result.error || 'Something went wrong');
+      if (result.success) {
+        setSuccess(true);
+        onSuccess?.();
+      } else {
+        setError(result.error || 'Something went wrong');
+      }
+    } catch {
+      setError('Something went wrong');
+    } finally {
+      setIsLoading(false);
     }
-
-    setIsLoading(false);
   };
 
   if (success) {

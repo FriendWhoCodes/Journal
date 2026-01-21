@@ -3,11 +3,18 @@
 import { useEffect, useState, useCallback, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 
+function getSafeRedirect(url: string | null, defaultPath: string): string {
+  if (!url) return defaultPath;
+  // Only allow relative paths that start with / but not //
+  if (url.startsWith('/') && !url.startsWith('//')) return url;
+  return defaultPath;
+}
+
 function VerifyContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const token = searchParams.get('token');
-  const redirect = searchParams.get('redirect') || '/week';
+  const redirect = getSafeRedirect(searchParams.get('redirect'), '/week');
 
   const [status, setStatus] = useState<'loading' | 'success' | 'error'>('loading');
   const [error, setError] = useState<string | null>(null);

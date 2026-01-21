@@ -6,9 +6,16 @@ import { useAuth } from '@mow/auth';
 import { useEffect, Suspense } from 'react';
 import { useRouter } from 'next/navigation';
 
+function getSafeRedirect(url: string | null, defaultPath: string): string {
+  if (!url) return defaultPath;
+  // Only allow relative paths that start with / but not //
+  if (url.startsWith('/') && !url.startsWith('//')) return url;
+  return defaultPath;
+}
+
 function LoginContent() {
   const searchParams = useSearchParams();
-  const redirect = searchParams.get('redirect') || '/';
+  const redirect = getSafeRedirect(searchParams.get('redirect'), '/');
   const { isAuthenticated, isLoading } = useAuth();
   const router = useRouter();
 

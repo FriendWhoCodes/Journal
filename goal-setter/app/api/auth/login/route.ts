@@ -26,8 +26,15 @@ export async function POST(request: NextRequest) {
     // Create magic link
     const { token } = await createMagicLink(prisma, email, authConfig);
 
-    // Send email
-    const baseUrl = authConfig.baseUrl || process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3002';
+    // Send email - require explicit URL in production
+    const baseUrl = authConfig.baseUrl || process.env.NEXT_PUBLIC_APP_URL;
+    if (!baseUrl || (process.env.NODE_ENV === 'production' && baseUrl.includes('localhost'))) {
+      console.error('NEXT_PUBLIC_APP_URL must be configured for production');
+      return NextResponse.json(
+        { error: 'Email service not configured' },
+        { status: 500 }
+      );
+    }
     const result = await sendMagicLinkEmail(email, token, baseUrl);
 
     if (!result.success) {
