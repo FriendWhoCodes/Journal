@@ -1,0 +1,37 @@
+name: Deploy Homepage to Hetzner
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "homepage/**"
+      - ".github/workflows/deploy-homepage.yml"
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Deploy to Hetzner via SSH
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.HETZNER_HOST }}
+          username: ${{ secrets.HETZNER_USER }}
+          key: ${{ secrets.HETZNER_SSH_KEY }}
+          port: 22
+          script: |
+            cd /var/www/Journal/homepage
+            bash scripts/deploy.sh
+
+      - name: Notify deployment status
+        if: always()
+        run: |
+          if [ "${{ job.status }}" == "success" ]; then
+            echo "Homepage deployment successful!"
+          else
+            echo "Homepage deployment failed!"
+          fi
