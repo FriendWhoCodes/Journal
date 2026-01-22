@@ -11,8 +11,8 @@
     "postinstall": "prisma generate --schema=../packages/database/prisma/schema.prisma"
   },
   "dependencies": {
-    "@mow/auth": "workspace:*",
-    "@mow/database": "workspace:*",
+    "@mow/auth": "file:../packages/auth",
+    "@mow/database": "file:../packages/database",
     "@prisma/client": "^6.1.0",
     "framer-motion": "^12.23.26",
     "next": "16.1.1",

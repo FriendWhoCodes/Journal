@@ -12,8 +12,8 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
-    "@mow/auth": "workspace:*",
-    "@mow/database": "workspace:*",
+    "@mow/auth": "file:../packages/auth",
+    "@mow/database": "file:../packages/database",
     "@prisma/client": "^6.1.0",
     "@radix-ui/react-progress": "^1.1.8",
     "@radix-ui/react-radio-group": "^1.3.8",
