@@ -21,7 +21,7 @@ export default async function RootLayout({
 
   return (
     <html lang="en">
-      <body className="antialiased min-h-screen bg-gray-50">
+      <body className="antialiased min-h-screen">
         <AuthProvider initialUser={user}>
           {children}
         </AuthProvider>
