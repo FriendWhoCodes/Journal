@@ -27,29 +27,31 @@ function LoginContent() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-black"></div>
+      <div className="min-h-screen flex items-center justify-center bg-black">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-amber-400"></div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
+    <div className="min-h-screen flex items-center justify-center bg-black px-4">
       <div className="max-w-md w-full">
-        <div className="bg-white rounded-2xl shadow-lg p-8">
+        <div className="bg-gray-900 rounded-2xl border border-gray-800 p-8">
           <div className="text-center mb-8">
-            <h1 className="text-2xl font-bold text-gray-900 mb-2">Time Views</h1>
-            <p className="text-gray-600">Track your time across life categories</p>
+            <h1 className="text-2xl font-bold text-white mb-2">Time Views</h1>
+            <p className="text-gray-400">Track your time across life categories</p>
           </div>
 
-          <LoginForm />
+          <div className="[&_input]:bg-gray-800 [&_input]:border-gray-700 [&_input]:text-white [&_input]:placeholder-gray-500 [&_label]:text-gray-300 [&_button]:bg-amber-500 [&_button]:hover:bg-amber-600 [&_p]:text-gray-400">
+            <LoginForm />
+          </div>
 
           <div className="mt-6 text-center">
             <p className="text-xs text-gray-500">
               Part of the{' '}
               <a
                 href="https://manofwisdom.co"
-                className="text-blue-600 hover:underline"
+                className="text-amber-400 hover:underline"
                 target="_blank"
                 rel="noopener noreferrer"
               >
@@ -67,8 +69,8 @@ function LoginContent() {
 export default function LoginPage() {
   return (
     <Suspense fallback={
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-black"></div>
+      <div className="min-h-screen flex items-center justify-center bg-black">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-amber-400"></div>
       </div>
     }>
       <LoginContent />
