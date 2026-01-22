@@ -56,7 +56,7 @@ export interface AuthContextValue {
   user: AuthUser | null;
   isLoading: boolean;
   isAuthenticated: boolean;
-  login: (email: string) => Promise<SendMagicLinkResult>;
+  login: (email: string, name?: string) => Promise<SendMagicLinkResult>;
   logout: () => Promise<void>;
   refreshUser: () => Promise<void>;
 }

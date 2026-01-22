@@ -18,6 +18,7 @@ function LoginContent() {
   const { isAuthenticated, isLoading: authLoading, login } = useAuth();
   const router = useRouter();
 
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -35,7 +36,8 @@ function LoginContent() {
     setError(null);
 
     try {
-      const result = await login(email);
+      const trimmedName = name.trim();
+      const result = await login(email, trimmedName || undefined);
       if (result.success) {
         setSuccess(true);
       } else {
@@ -98,6 +100,23 @@ function LoginContent() {
         <div className="bg-white rounded-2xl shadow-2xl p-6 md:p-8">
           <form onSubmit={handleSubmit}>
             <div className="mb-5">
+              <label htmlFor="name" className="block text-lg font-semibold text-gray-800 mb-2">
+                What&apos;s your name?
+              </label>
+              <input
+                id="name"
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="Your name"
+                className="w-full px-4 py-3 text-lg text-gray-900 placeholder-gray-500 border-2 border-gray-300 rounded-xl focus:border-blue-500 focus:outline-none transition-colors"
+                autoFocus
+                required
+                disabled={isLoading}
+              />
+            </div>
+
+            <div className="mb-5">
               <label htmlFor="email" className="block text-lg font-semibold text-gray-800 mb-2">
                 Your email
               </label>
@@ -108,7 +127,6 @@ function LoginContent() {
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="you@example.com"
                 className="w-full px-4 py-3 text-lg text-gray-900 placeholder-gray-500 border-2 border-gray-300 rounded-xl focus:border-blue-500 focus:outline-none transition-colors"
-                autoFocus
                 required
                 disabled={isLoading}
               />
@@ -126,10 +144,10 @@ function LoginContent() {
 
             <button
               type="submit"
-              disabled={isLoading || !email}
+              disabled={isLoading || !email || !name.trim()}
               className="w-full bg-gradient-to-r from-slate-700 to-blue-600 text-white py-3 rounded-xl font-semibold text-lg hover:from-slate-800 hover:to-blue-700 transition-all transform hover:scale-[1.02] shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
             >
-              {isLoading ? 'Sending...' : 'Continue with Email →'}
+              {isLoading ? 'Sending...' : 'Continue →'}
             </button>
           </form>
         </div>

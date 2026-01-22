@@ -10,7 +10,8 @@ export function generateToken(): string {
 export async function createMagicLink(
   prisma: PrismaClient,
   email: string,
-  config: AuthConfig = {}
+  config: AuthConfig = {},
+  name?: string
 ): Promise<{ token: string; userId: string }> {
   const { magicLinkExpiryMinutes } = { ...DEFAULT_AUTH_CONFIG, ...config };
 
@@ -23,7 +24,14 @@ export async function createMagicLink(
     user = await (prisma as any).authUser.create({
       data: {
         email: email.toLowerCase(),
+        name: name || null,
       },
+    });
+  } else if (name && !user.name) {
+    // Update name if provided and user doesn't have one
+    user = await (prisma as any).authUser.update({
+      where: { id: user.id },
+      data: { name },
     });
   }
 
