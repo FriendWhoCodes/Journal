@@ -5,7 +5,7 @@ import { createMagicLink, sendMagicLinkEmail } from '@mow/auth';
 
 export async function POST(request: NextRequest) {
   try {
-    const { email } = await request.json();
+    const { email, name } = await request.json();
 
     if (!email || typeof email !== 'string') {
       return NextResponse.json(
@@ -24,7 +24,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Create magic link
-    const { token } = await createMagicLink(prisma, email, authConfig);
+    const { token } = await createMagicLink(prisma, email, authConfig, name);
 
     // Send email - require explicit URL in production
     const baseUrl = authConfig.baseUrl || process.env.NEXT_PUBLIC_APP_URL;

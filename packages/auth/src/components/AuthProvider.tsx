@@ -37,12 +37,12 @@ export function AuthProvider({ children, initialUser = null }: AuthProviderProps
     }
   }, [initialUser, refreshUser]);
 
-  const login = useCallback(async (email: string): Promise<SendMagicLinkResult> => {
+  const login = useCallback(async (email: string, name?: string): Promise<SendMagicLinkResult> => {
     try {
       const response = await fetch('/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ email, name }),
       });
 
       const data = await response.json();
