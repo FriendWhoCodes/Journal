@@ -7,6 +7,38 @@ export function generateToken(): string {
   return randomBytes(32).toString('hex');
 }
 
+/**
+ * Sync a new contact to Resend newsletter segment.
+ * This is called when a new user signs up via any MoW app.
+ * Non-blocking - failures are logged but don't affect the signup flow.
+ */
+async function syncContactToResend(email: string, name?: string): Promise<void> {
+  const apiKey = process.env.RESEND_API_KEY;
+  const segmentId = process.env.RESEND_SEGMENT_ID;
+
+  if (!apiKey || !segmentId) {
+    return; // Newsletter sync not configured, skip silently
+  }
+
+  const response = await fetch('https://api.resend.com/contacts', {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${apiKey}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      email,
+      first_name: name || undefined,
+      segments: [segmentId],
+    }),
+  });
+
+  if (!response.ok) {
+    const error = await response.text();
+    throw new Error(`Resend API error: ${error}`);
+  }
+}
+
 export async function createMagicLink(
   prisma: PrismaClient,
   email: string,
@@ -26,6 +58,11 @@ export async function createMagicLink(
         email: email.toLowerCase(),
         name: name || null,
       },
+    });
+
+    // Add new user to Resend newsletter segment (non-blocking)
+    syncContactToResend(email.toLowerCase(), name).catch((err) => {
+      console.error('Failed to sync contact to Resend:', err);
     });
   } else if (name && !user.name) {
     // Update name if provided and user doesn't have one
