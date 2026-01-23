@@ -2,13 +2,14 @@
 
 ## Current Sprint
 
-### Unified Auth Migration (PR #41 - in progress)
-- [x] Create `user_products` table schema
-- [ ] Run database migration
-- [ ] Migrate `goal_setter_users` to `auth_users`
-- [ ] Populate `user_products` for existing users
-- [ ] Update Goal Setter to use shared auth
-- [ ] Link existing Goal Setter users to their auth_users records
+### Unified Auth Migration
+- [x] Create `user_products` table schema (PR #41)
+- [x] Run database migration
+- [x] Migrate `goal_setter_users` to `auth_users` (4 users)
+- [x] Link existing Goal Setter users to their auth_users records
+- [x] Populate `user_products` for existing users (5 records)
+- [ ] Update Goal Setter app to use shared auth
+- [ ] Update Time Views to check `user_products` for access
 
 ### Time Views Redesign
 - [ ] Landing page showing available "views" (products)
