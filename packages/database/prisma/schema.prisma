@@ -26,10 +26,28 @@ model AuthUser {
 
   sessions         AuthSession[]
   magicLinks       AuthMagicLink[]
+  products         UserProduct[]
   goalSetterUser   GoalSetterUser?
   timeViewsEntries TimeViewsEntry[]
 
   @@map("auth_users")
+}
+
+// Tracks which products a user has access to
+model UserProduct {
+  id         String    @id @default(cuid())
+  userId     String    @map("user_id")
+  product    String    // goal_setter, time_views, journal, wallpaper_pack_1, etc.
+  accessType String    @map("access_type") // free, purchased, trial, subscription
+  grantedAt  DateTime  @default(now()) @map("granted_at")
+  expiresAt  DateTime? @map("expires_at") // null for lifetime/free access
+
+  user AuthUser @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, product])
+  @@index([userId])
+  @@index([product])
+  @@map("user_products")
 }
 
 model AuthSession {
