@@ -20,7 +20,8 @@ async function syncContactToResend(email: string, name?: string): Promise<void> 
     return; // Newsletter sync not configured, skip silently
   }
 
-  const response = await fetch('https://api.resend.com/contacts', {
+  // Step 1: Create contact
+  const createResponse = await fetch('https://api.resend.com/contacts', {
     method: 'POST',
     headers: {
       'Authorization': `Bearer ${apiKey}`,
@@ -29,13 +30,30 @@ async function syncContactToResend(email: string, name?: string): Promise<void> 
     body: JSON.stringify({
       email,
       first_name: name || undefined,
-      segments: [segmentId],
     }),
   });
 
-  if (!response.ok) {
-    const error = await response.text();
-    throw new Error(`Resend API error: ${error}`);
+  if (!createResponse.ok) {
+    const error = await createResponse.text();
+    throw new Error(`Resend create contact error: ${error}`);
+  }
+
+  const { id: contactId } = await createResponse.json();
+
+  // Step 2: Add contact to segment
+  const segmentResponse = await fetch(
+    `https://api.resend.com/contacts/${contactId}/segments/${segmentId}`,
+    {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${apiKey}`,
+      },
+    }
+  );
+
+  if (!segmentResponse.ok) {
+    const error = await segmentResponse.text();
+    throw new Error(`Resend add to segment error: ${error}`);
   }
 }
 
