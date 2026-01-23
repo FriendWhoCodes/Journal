@@ -1,0 +1,100 @@
+# Roadmap
+
+## Current Sprint
+
+### Unified Auth Migration
+- [ ] Create `user_products` table
+- [ ] Migrate `goal_setter_users` to `auth_users`
+- [ ] Update Goal Setter to use shared auth
+- [ ] Link existing Goal Setter users to their auth_users records
+
+### Time Views Redesign
+- [ ] Landing page showing available "views" (products)
+- [ ] Purchased/free access gating
+- [ ] Simpler week view design
+- [ ] User can click and open views they have access to
+
+---
+
+## Completed
+
+### January 2026
+
+#### Time Views MVP + Shared Auth
+- [x] Create `@mow/auth` package
+- [x] Create `@mow/database` package (shared Prisma schema)
+- [x] Implement magic link authentication
+- [x] Cross-subdomain session cookies
+- [x] Time Views app with week view
+- [x] Deploy to time.manofwisdom.co
+- [x] UFW firewall rule for port 3004
+
+#### Newsletter Integration
+- [x] Resend account setup
+- [x] Domain verification (manofwisdom.co)
+- [x] Create newsletter segment
+- [x] Migrate 4 existing users to Resend
+- [x] Auto-sync new signups to newsletter segment
+
+#### UI/UX Improvements
+- [x] Time Views login page - match Goal Setter style
+- [x] Add favicon to Time Views
+- [x] Add name field to Time Views login
+
+---
+
+## Backlog
+
+### Authentication
+- [ ] Add Google OAuth
+- [ ] Add GitHub OAuth
+- [ ] Account linking (magic link + OAuth same user)
+- [ ] Email change flow
+- [ ] Account deletion (GDPR)
+
+### Goal Setter
+- [ ] Migrate to shared auth
+- [ ] Improve PDF generation
+- [ ] Email goals PDF to user
+
+### Time Views
+- [ ] Multiple "view" types (week, month, year, life)
+- [ ] Data visualization improvements
+- [ ] Export functionality
+- [ ] Goals integration
+
+### Journal
+- [ ] Create journal app
+- [ ] Daily entry interface
+- [ ] Mood tracking
+- [ ] Integration with Goal Setter goals
+
+### Payments (Future)
+- [ ] Stripe integration
+- [ ] Subscription management
+- [ ] Product purchase flow
+- [ ] User billing portal
+
+### Infrastructure
+- [ ] GitHub Actions for auto-deploy
+- [ ] Staging environment
+- [ ] Database backups
+- [ ] Error monitoring (Sentry?)
+
+---
+
+## Product Ideas
+
+### Wallpaper Packs
+- Downloadable wallpaper collections
+- One-time purchase
+- Delivered via email or download page
+
+### Life Calendar View
+- Visual life-in-weeks calendar
+- Part of Time Views product
+
+### Habit Tracker
+- Daily habit check-ins
+- Streaks and statistics
+- Could be standalone or part of Journal
