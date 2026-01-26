@@ -13,7 +13,7 @@ export async function GET() {
       return NextResponse.json({ error: 'Not authenticated' }, { status: 401 });
     }
 
-    const session = await getSessionByToken(prisma, sessionToken, authConfig);
+    const session = await getSessionByToken(prisma, sessionToken);
     if (!session) {
       return NextResponse.json({ error: 'Invalid session' }, { status: 401 });
     }
