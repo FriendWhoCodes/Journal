@@ -28,6 +28,7 @@ const allProducts = [
     description: "Set your 2026 goals with clarity and purpose",
     price: "FREE",
     link: "https://goals.manofwisdom.co",
+    isFree: true,
     comingSoon: false,
   },
   {
@@ -37,6 +38,7 @@ const allProducts = [
     description: "Track your life in weeks, months & years",
     price: "FREE",
     link: "/week",
+    isFree: true,
     comingSoon: false,
   },
   {
@@ -46,6 +48,7 @@ const allProducts = [
     description: "Daily reflection, habits & wisdom prompts",
     price: "From $5/mo",
     link: "#",
+    isFree: false,
     comingSoon: true,
   },
   {
@@ -55,6 +58,7 @@ const allProducts = [
     description: "Beautiful wisdom for your screens",
     price: "From $9",
     link: "#",
+    isFree: false,
     comingSoon: true,
   },
   {
@@ -64,6 +68,7 @@ const allProducts = [
     description: "Ebooks & wisdom stories",
     price: "From $5",
     link: "#",
+    isFree: false,
     comingSoon: true,
   },
 ];
@@ -129,8 +134,8 @@ export default function Dashboard({ user }: DashboardProps) {
         {/* Products Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
           {allProducts.map((product, index) => {
-            const accessible = hasAccess(product.id) || !product.comingSoon;
-            const badge = getAccessBadge(product.id);
+            const accessible = product.isFree || hasAccess(product.id);
+            const badge = product.isFree ? "FREE" : getAccessBadge(product.id);
 
             return (
               <motion.div
@@ -175,13 +180,17 @@ export default function Dashboard({ user }: DashboardProps) {
                     <span className="px-4 py-2 bg-gray-800 text-gray-400 text-sm font-semibold rounded-lg">
                       Coming Soon
                     </span>
-                  ) : (
+                  ) : accessible ? (
                     <Link
                       href={product.link}
                       className="px-4 py-2 bg-[#D4AF37] hover:bg-[#E8C547] text-black text-sm font-semibold rounded-lg transition-colors"
                     >
                       Open
                     </Link>
+                  ) : (
+                    <span className="px-4 py-2 bg-gray-800 text-gray-400 text-sm font-semibold rounded-lg">
+                      Purchase
+                    </span>
                   )}
                 </div>
               </motion.div>

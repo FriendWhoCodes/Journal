@@ -19,7 +19,7 @@ export async function GET() {
     }
 
     // Fetch user's products
-    const userProducts = await (prisma as any).userProduct.findMany({
+    const userProducts = await prisma.userProduct.findMany({
       where: { userId: session.userId },
       select: {
         product: true,
