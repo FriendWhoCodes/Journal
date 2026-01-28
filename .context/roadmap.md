@@ -17,6 +17,17 @@
 - [ ] Simpler week view design
 - [x] User can click and open views they have access to (PR #43)
 
+### Journal SaaS (Target: Feb 17)
+- [ ] Scaffold journal app (Next.js + auth)
+- [ ] Database schema (entries, habits, goals, subscriptions)
+- [ ] Daily entry page (mood, prompts, notes)
+- [ ] Habit check-ins with streaks
+- [ ] Goal import from Goal Setter
+- [ ] Weekly/monthly review pages
+- [ ] 14-day trial system
+- [ ] Stripe + Razorpay payments
+- [ ] Deploy to journal.manofwisdom.co
+
 ---
 
 ## Completed
