@@ -135,7 +135,7 @@ model JournalSubscription {
 
 ## App Structure
 
-```
+```text
 journal/
 ├── app/
 │   ├── layout.tsx              # Root layout with AuthProvider
@@ -184,7 +184,8 @@ journal/
 
 ### Week 1: Jan 28 - Feb 3 (Foundation + Daily Entry)
 
-**Day 1-2 (Jan 28-29): Scaffold**
+#### Day 1-2 (Jan 28-29): Scaffold
+
 - [ ] Create journal app in monorepo
 - [ ] Setup Next.js 15 + TypeScript + Tailwind
 - [ ] Add @mow/auth, @mow/database dependencies
@@ -192,7 +193,8 @@ journal/
 - [ ] Create login/verify pages (copy from time-views)
 - [ ] Setup Nginx proxy for journal.manofwisdom.co
 
-**Day 3-4 (Jan 30-31): Database + Daily Entry**
+#### Day 3-4 (Jan 30-31): Database + Daily Entry
+
 - [ ] Add new models to Prisma schema
 - [ ] Run migration
 - [ ] Create /today page with:
@@ -203,7 +205,8 @@ journal/
   - Free-form notes
 - [ ] Create entries API routes
 
-**Day 5-7 (Feb 1-3): Habits**
+#### Day 5-7 (Feb 1-3): Habits
+
 - [ ] Create habits management page
 - [ ] Create habit check-in component
 - [ ] Add habits to /today page
@@ -212,20 +215,23 @@ journal/
 
 ### Week 2: Feb 4 - Feb 10 (Goals + Reviews)
 
-**Day 8-9 (Feb 4-5): Goals**
+#### Day 8-9 (Feb 4-5): Goals
+
 - [ ] Create goals page
 - [ ] Implement Goal Setter import
 - [ ] Create goal progress update UI
 - [ ] Create goals API routes
 
-**Day 10-11 (Feb 6-7): Weekly Review**
+#### Day 10-11 (Feb 6-7): Weekly Review
+
 - [ ] Create /review/week page
 - [ ] Show mood trends (chart)
 - [ ] Show habit completion rates
 - [ ] Show goal progress summary
 - [ ] Highlight best/worst days
 
-**Day 12-14 (Feb 8-10): Monthly Review + Polish**
+#### Day 12-14 (Feb 8-10): Monthly Review + Polish
+
 - [ ] Create /review/month page
 - [ ] Dashboard homepage with summary
 - [ ] Navigation/layout polish
@@ -233,26 +239,29 @@ journal/
 
 ### Week 3: Feb 11 - Feb 17 (Payments + Launch)
 
-**Day 15-16 (Feb 11-12): Trial System**
+#### Day 15-16 (Feb 11-12): Trial System
+
 - [ ] Create JournalSubscription table
 - [ ] Auto-create trial on first login (14 days)
 - [ ] Trial banner component
 - [ ] Lock-out logic for expired trials
 - [ ] "Upgrade" CTA
 
-**Day 17-18 (Feb 13-14): Stripe Integration**
+#### Day 17-18 (Feb 13-14): Stripe Integration
+
 - [ ] Stripe account setup
 - [ ] Create checkout session API
 - [ ] Webhook handling
 - [ ] Subscription activation on success
 
-**Day 19 (Feb 15): Razorpay Integration**
+#### Day 19 (Feb 15): Razorpay Integration
+
 - [ ] Razorpay account setup
 - [ ] Create subscription API
 - [ ] Webhook handling
 - [ ] Currency detection (INR vs USD)
 
-**Day 20-21 (Feb 16-17): Testing + Launch**
+#### Day 20-21 (Feb 16-17): Testing + Launch
 - [ ] End-to-end testing
 - [ ] Fix bugs
 - [ ] Deploy to production
