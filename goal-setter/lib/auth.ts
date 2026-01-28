@@ -36,3 +36,27 @@ export async function requireAuth(): Promise<AuthUser> {
 
   return user;
 }
+
+export async function ensureProductAccess(
+  userId: string,
+  product: string,
+  accessType: string = 'free'
+) {
+  const existing = await prisma.userProduct.findUnique({
+    where: {
+      userId_product: { userId, product },
+    },
+  });
+
+  if (existing) {
+    return existing;
+  }
+
+  return prisma.userProduct.create({
+    data: {
+      userId,
+      product,
+      accessType,
+    },
+  });
+}

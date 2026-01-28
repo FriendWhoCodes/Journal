@@ -13,25 +13,20 @@
 - `lib/validation.ts` - Validation utilities
 - `app/api/submissions/route.ts` - Server-side validation
 
-### 2. **Rate Limiting**
-- ✅ 60 requests per minute per IP address
-- ✅ Applied to all API routes
-- ✅ Returns `429 Too Many Requests` when exceeded
-- ✅ Includes `Retry-After` headers
+### 2. **Authentication Middleware**
+- ✅ Shared auth via `@mow/auth` package (`createAuthMiddleware`)
+- ✅ All pages require authentication (redirects to /login)
+- ✅ Public paths: `/login`, `/verify`, `/api/auth`
+- ✅ Cross-subdomain session cookies (`.manofwisdom.co`)
+- ✅ Product access gating via `user_products` table
 
 **Files:**
-- `middleware.ts` - Rate limiting implementation
+- `middleware.ts` - Auth middleware (uses `createAuthMiddleware` from `@mow/auth`)
+- `lib/auth.ts` - `getCurrentUser()`, `ensureProductAccess()`
 
 ### 3. **Security Headers**
-- ✅ `X-Frame-Options: DENY` - Prevents clickjacking
-- ✅ `X-Content-Type-Options: nosniff` - Prevents MIME sniffing
-- ✅ `X-XSS-Protection: 1; mode=block` - Legacy XSS protection
-- ✅ `Content-Security-Policy` - Strict CSP policy
-- ✅ `Referrer-Policy` - Controls referrer information
-- ✅ `Permissions-Policy` - Disables unnecessary browser features
-
-**Files:**
-- `middleware.ts` - Security headers implementation
+- 🔄 Previously handled by custom middleware; now delegated to Nginx Proxy Manager / Cloudflare
+- 🔄 Consider adding security headers back via `next.config.js` `headers()` or Nginx config
 
 ### 4. **SQL Injection Prevention**
 - ✅ Using Prisma ORM (parameterized queries)
@@ -123,8 +118,8 @@ Expected: Should return validation error for input too long
 ## Security Checklist
 
 - [x] Input validation and sanitization
-- [x] Rate limiting
-- [x] Security headers
+- [x] Authentication middleware (`@mow/auth`)
+- [ ] Security headers (moved to Nginx/Cloudflare - verify in production)
 - [x] SQL injection prevention (Prisma)
 - [x] XSS prevention
 - [x] Error handling (no information leakage)

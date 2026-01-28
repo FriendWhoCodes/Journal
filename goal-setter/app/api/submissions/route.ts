@@ -1,30 +1,32 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/db';
+import { getCurrentUser, ensureProductAccess } from '@/lib/auth';
 import { Mode, QuickModeData, DeepModeData } from '@/lib/types';
 import {
-  validateEmail,
   validateName,
   validateMode,
   validateTextField,
   validateStringArray,
-  sanitizeString,
 } from '@/lib/validation';
 
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json();
-    const { name, email, mode, quickModeData, deepModeData } = body;
+    const authUser = await getCurrentUser();
 
-    // Validate and sanitize email
-    const emailValidation = validateEmail(email);
-    if (!emailValidation.valid) {
+    if (!authUser) {
       return NextResponse.json(
-        { error: emailValidation.error },
-        { status: 400 }
+        { error: 'Unauthorized' },
+        { status: 401 }
       );
     }
 
-    // Validate and sanitize name
+    // Auto-grant free access to goal_setter product
+    await ensureProductAccess(authUser.id, 'goal_setter');
+
+    const body = await request.json();
+    const { name, mode, quickModeData, deepModeData } = body;
+
+    // Validate and sanitize name (still from body for display/PDF purposes)
     const nameValidation = validateName(name);
     if (!nameValidation.valid) {
       return NextResponse.json(
@@ -51,17 +53,24 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Find or create user (use sanitized values)
+    // Find or create GoalSetterUser using auth user's email
     let user = await prisma.goalSetterUser.findUnique({
-      where: { email: emailValidation.sanitized },
+      where: { email: authUser.email },
     });
 
     if (!user) {
       user = await prisma.goalSetterUser.create({
         data: {
           name: nameValidation.sanitized,
-          email: emailValidation.sanitized,
+          email: authUser.email,
+          authUserId: authUser.id,
         },
+      });
+    } else if (!user.authUserId) {
+      // Link existing GoalSetterUser to AuthUser if not already linked
+      user = await prisma.goalSetterUser.update({
+        where: { id: user.id },
+        data: { authUserId: authUser.id },
       });
     }
 

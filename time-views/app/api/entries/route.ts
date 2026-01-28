@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getCurrentUser } from '@/lib/auth';
+import { getCurrentUser, ensureProductAccess } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { CATEGORIES } from '@/lib/utils';
 
@@ -13,6 +13,8 @@ export async function POST(request: NextRequest) {
         { status: 401 }
       );
     }
+
+    await ensureProductAccess(user.id, 'time_views');
 
     const { year, week, category, hours, notes } = await request.json();
 
