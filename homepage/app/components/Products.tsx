@@ -18,7 +18,7 @@ const products = [
     title: "Journal",
     description: "Daily reflection, habits & wisdom prompts",
     price: "From $5/mo",
-    cta: "Coming Feb 1",
+    cta: "Coming Feb 17",
     link: "#",
     available: false,
   },
