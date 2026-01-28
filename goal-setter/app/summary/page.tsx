@@ -457,18 +457,18 @@ export default function Summary() {
           </div>
         </div>
 
-        {/* Digital Journal Launch - February 1st */}
+        {/* Digital Journal Launch - February 17th */}
         <div className="bg-gradient-to-r from-slate-700 to-amber-600 rounded-2xl shadow-2xl p-8 md:p-12 text-white">
           <div className="text-center mb-8">
             <div className="inline-block bg-white/20 backdrop-blur-sm rounded-full px-6 py-2 mb-6">
-              <p className="text-sm font-semibold text-white">✨ COMING SOON - February 1st</p>
+              <p className="text-sm font-semibold text-white">✨ COMING SOON - February 17th</p>
             </div>
 
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
               Man of Wisdom Digital Journal (SaaS)
             </h2>
             <p className="text-xl text-amber-100 mb-6">
-              Track these goals daily starting <strong>February 1st</strong> with <strong>1 month FREE</strong> Pro access
+              Track these goals daily starting <strong>February 17th</strong> with <strong>1 month FREE</strong> Pro access
             </p>
           </div>
 
@@ -477,7 +477,7 @@ export default function Summary() {
             <ul className="space-y-3 text-amber-50">
               <li className="flex items-start">
                 <span className="text-emerald-300 mr-3 text-xl flex-shrink-0">✓</span>
-                <span>We&apos;ll email you on <strong className="text-white">February 1st</strong> when the journal launches</span>
+                <span>We&apos;ll email you on <strong className="text-white">February 17th</strong> when the journal launches</span>
               </li>
               <li className="flex items-start">
                 <span className="text-emerald-300 mr-3 text-xl flex-shrink-0">✓</span>
