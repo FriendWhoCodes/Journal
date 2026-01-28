@@ -36,7 +36,8 @@ function LoginContent() {
 
     try {
       const trimmedName = name.trim();
-      const result = await login(email, trimmedName || undefined);
+      const trimmedEmail = email.trim();
+      const result = await login(trimmedEmail, trimmedName || undefined);
       if (result.success) {
         setSuccess(true);
       } else {

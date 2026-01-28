@@ -54,22 +54,22 @@ export default async function TodayPage() {
           <PromptCard
             title="Gratitude"
             placeholder="What are you grateful for today?"
-            icon="&#128591;"
+            icon="🙏"
           />
           <PromptCard
             title="Wins"
             placeholder="What went well today? What are you proud of?"
-            icon="&#127942;"
+            icon="🏆"
           />
           <PromptCard
             title="Lessons"
             placeholder="What did you learn today? What could be better?"
-            icon="&#128161;"
+            icon="💡"
           />
           <PromptCard
             title="Free Writing"
             placeholder="Anything else on your mind..."
-            icon="&#9998;"
+            icon="✎"
           />
         </section>
 
@@ -92,7 +92,7 @@ function PromptCard({ title, placeholder, icon }: { title: string; placeholder: 
     <div className="bg-white rounded-xl border border-gray-200 p-4">
       <label className="block">
         <span className="text-sm font-medium text-gray-700 flex items-center gap-2 mb-2">
-          <span dangerouslySetInnerHTML={{ __html: icon }} />
+          <span aria-hidden="true">{icon}</span>
           {title}
         </span>
         <textarea

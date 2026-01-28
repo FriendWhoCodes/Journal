@@ -5,15 +5,14 @@ import { authConfig } from '@/lib/auth';
 import { deleteSession, deleteSessionCookie, getSessionTokenFromCookies } from '@mow/auth';
 
 export async function POST() {
+  const cookieStore = await cookies();
+
   try {
-    const cookieStore = await cookies();
     const token = getSessionTokenFromCookies(cookieStore, authConfig);
 
     if (token) {
       await deleteSession(prisma, token);
     }
-
-    deleteSessionCookie(cookieStore, authConfig);
 
     return NextResponse.json({ success: true });
   } catch (error) {
@@ -22,5 +21,8 @@ export async function POST() {
       { error: 'Internal server error' },
       { status: 500 }
     );
+  } finally {
+    // Always clear the cookie, even if session deletion fails
+    deleteSessionCookie(cookieStore, authConfig);
   }
 }

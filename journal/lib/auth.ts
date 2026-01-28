@@ -42,18 +42,12 @@ export async function ensureProductAccess(
   product: string,
   accessType: string = 'free'
 ) {
-  const existing = await prisma.userProduct.findUnique({
+  return prisma.userProduct.upsert({
     where: {
       userId_product: { userId, product },
     },
-  });
-
-  if (existing) {
-    return existing;
-  }
-
-  return prisma.userProduct.create({
-    data: {
+    update: {},
+    create: {
       userId,
       product,
       accessType,
