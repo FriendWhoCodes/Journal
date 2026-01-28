@@ -56,7 +56,7 @@
 - [ ] Account deletion (GDPR)
 
 ### Goal Setter
-- [ ] Migrate to shared auth
+- [x] Migrate to shared auth
 - [ ] Improve PDF generation
 - [ ] Email goals PDF to user
 

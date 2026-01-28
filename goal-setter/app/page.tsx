@@ -43,6 +43,9 @@ export default function Home() {
           {/* Quick Mode */}
           <div
             onClick={() => handleModeSelection('quick')}
+            onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleModeSelection('quick'); } }}
+            role="button"
+            tabIndex={0}
             className="bg-white rounded-2xl shadow-lg p-8 cursor-pointer transform transition-all duration-300 hover:scale-105 hover:shadow-2xl border-2 border-transparent hover:border-amber-500"
           >
             <div className="flex items-center justify-between mb-6">
@@ -83,6 +86,9 @@ export default function Home() {
           {/* Deep Mode */}
           <div
             onClick={() => handleModeSelection('deep')}
+            onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleModeSelection('deep'); } }}
+            role="button"
+            tabIndex={0}
             className="bg-white rounded-2xl shadow-lg p-8 cursor-pointer transform transition-all duration-300 hover:scale-105 hover:shadow-2xl border-2 border-transparent hover:border-slate-500"
           >
             <div className="flex items-center justify-between mb-6">
