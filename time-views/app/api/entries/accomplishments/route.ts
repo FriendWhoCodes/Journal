@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getCurrentUser } from '@/lib/auth';
+import { getCurrentUser, ensureProductAccess } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { CATEGORIES } from '@/lib/utils';
 
@@ -14,6 +14,8 @@ export async function POST(request: NextRequest) {
         { status: 401 }
       );
     }
+
+    await ensureProductAccess(user.id, 'time_views');
 
     const { year, week, category, content } = await request.json();
 
@@ -86,6 +88,8 @@ export async function PATCH(request: NextRequest) {
       );
     }
 
+    await ensureProductAccess(user.id, 'time_views');
+
     const { id, content, completed } = await request.json();
 
     if (!id) {
@@ -142,6 +146,8 @@ export async function DELETE(request: NextRequest) {
         { status: 401 }
       );
     }
+
+    await ensureProductAccess(user.id, 'time_views');
 
     const { searchParams } = new URL(request.url);
     const id = searchParams.get('id');

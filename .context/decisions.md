@@ -178,7 +178,7 @@ Use Nginx Proxy Manager (Docker) for reverse proxy and SSL.
 ## D007: User Products Table for Access Control
 
 **Date:** January 2026
-**Status:** Planned
+**Status:** Implemented
 
 **Context:**
 Need to track which products each user has access to (free, purchased, subscription).
@@ -225,3 +225,30 @@ Design auth system to support multiple providers.
 Identity (auth_users) is separate from authentication method. Can add provider columns or a separate providers table without changing core auth flow.
 
 **No changes needed now** - current magic link system is compatible with adding OAuth later.
+
+---
+
+## D009: Goal Setter Auth Enforcement
+
+**Date:** January 2026
+**Status:** Implemented
+
+**Context:**
+Goal Setter previously used its own name/email form for user identification, separate from the shared auth system. This meant users could submit goals without being authenticated.
+
+**Decision:**
+Require shared auth (`@mow/auth`) for all Goal Setter pages. Replace the name/email entry form with automatic population from the authenticated user. Auto-grant `goal_setter` product access in `user_products` on first submission.
+
+**Rationale:**
+- Consistent authentication across all MoW products
+- Users already authenticated via magic link (no extra friction)
+- Enables linking GoalSetterUser records to AuthUser
+- Product access tracking via `user_products` table
+- Removes duplicate email collection
+
+**Consequences:**
+- Goal Setter now requires login before use (middleware redirects to /login)
+- Home page shows mode selection immediately (no name/email form)
+- Submissions API uses auth user's email, not request body
+- GoalSetterUser records are linked to AuthUser via `authUserId`
+- `user_products` gets a `goal_setter` record on first submission

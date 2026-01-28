@@ -3,13 +3,15 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useGoalSetter } from '@/lib/context/GoalSetterContext';
+import { useAuth } from '@mow/auth';
 import { DeepModeCategory } from '@/lib/types';
 import { pdf } from '@react-pdf/renderer';
 import { GoalsPDF } from '@/lib/pdf/GoalsPDF';
 
 export default function Summary() {
   const router = useRouter();
-  const { name, email, mode, quickModeData, deepModeData } = useGoalSetter();
+  const { name, mode, quickModeData, deepModeData } = useGoalSetter();
+  const { isAuthenticated } = useAuth();
   const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
@@ -22,7 +24,7 @@ export default function Summary() {
   // Save to database on mount (once)
   useEffect(() => {
     const saveSubmission = async () => {
-      if (isSaved || !email) return; // Skip if already saved or no email
+      if (isSaved || !isAuthenticated) return;
 
       try {
         const response = await fetch('/api/submissions', {
@@ -30,7 +32,6 @@ export default function Summary() {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             name,
-            email,
             mode,
             quickModeData,
             deepModeData,

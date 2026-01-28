@@ -8,14 +8,14 @@
 - [x] Migrate `goal_setter_users` to `auth_users` (4 users)
 - [x] Link existing Goal Setter users to their auth_users records
 - [x] Populate `user_products` for existing users (5 records)
-- [ ] Update Goal Setter app to use shared auth
-- [ ] Update Time Views to check `user_products` for access
+- [x] Update Goal Setter app to use shared auth
+- [x] Update Time Views to check `user_products` for access
 
 ### Time Views Redesign
-- [ ] Landing page showing available "views" (products)
-- [ ] Purchased/free access gating
+- [x] Landing page showing available "views" (products) (PR #43 - Dashboard)
+- [x] Purchased/free access gating
 - [ ] Simpler week view design
-- [ ] User can click and open views they have access to
+- [x] User can click and open views they have access to (PR #43)
 
 ---
 
