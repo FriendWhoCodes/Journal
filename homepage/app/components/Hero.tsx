@@ -20,6 +20,12 @@ export default function Hero() {
               Products
             </Link>
             <Link
+              href="/music"
+              className="text-gray-300 hover:text-white transition-colors"
+            >
+              Music
+            </Link>
+            <Link
               href="https://blog.manofwisdom.co"
               className="text-gray-300 hover:text-white transition-colors"
             >

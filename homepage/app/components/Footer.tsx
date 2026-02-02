@@ -9,6 +9,7 @@ const footerLinks = {
     { label: "Books", href: "#", comingSoon: true },
   ],
   content: [
+    { label: "Music", href: "/music" },
     { label: "Blog", href: "https://blog.manofwisdom.co" },
     { label: "Newsletter", href: "#newsletter" },
   ],
