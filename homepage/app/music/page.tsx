@@ -89,19 +89,20 @@ const tracks = [
 // Coming soon tracks
 const comingSoon = [
   {
+    title: "A Debt That Cannot Be Paid",
+    composer: "Man of Wisdom",
+    description: "A heartfelt tribute to parents and the immeasurable love they give.",
+    releaseDate: "March 1, 2025",
+  },
+  {
     title: "If—",
     composer: "Rudyard Kipling",
     description: "The ultimate guide to stoic manhood, rendered in powerful spoken word.",
   },
   {
-    title: "Desiderata",
-    composer: "Max Ehrmann",
-    description: "Words of wisdom for finding peace in a chaotic world.",
-  },
-  {
-    title: "The Road Not Taken",
-    composer: "Robert Frost",
-    description: "A meditation on choice, individuality, and the paths we choose.",
+    title: "The Will To Win",
+    composer: "Berton Braley",
+    description: "A powerful call to perseverance and the relentless pursuit of victory.",
   },
 ];
 
@@ -189,10 +190,10 @@ function ComingSoonCard({ track, index }: { track: typeof comingSoon[0]; index: 
     >
       <div className="flex items-start justify-between">
         <div>
-          <div className="flex items-center gap-3 mb-2">
+          <div className="flex items-center gap-3 mb-2 flex-wrap">
             <h3 className="text-lg font-semibold text-white">{track.title}</h3>
             <span className="text-xs px-2 py-1 rounded-full bg-[#D4AF37]/20 text-[#D4AF37]">
-              Coming Soon
+              {track.releaseDate || "Coming Soon"}
             </span>
           </div>
           <p className="text-sm text-gray-500 mb-2">By {track.composer}</p>

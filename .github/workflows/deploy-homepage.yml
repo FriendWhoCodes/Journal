@@ -24,7 +24,6 @@ jobs:
           key: ${{ secrets.HETZNER_SSH_KEY }}
           port: 22
           script: |
-            script: |
             set -euo pipefail
             cd /var/www/Journal
             git fetch origin
