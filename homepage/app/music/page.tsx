@@ -142,7 +142,7 @@ function TrackCard({ track, index }: { track: typeof tracks[0]; index: number })
             target="_blank"
             rel="noopener noreferrer"
             className="p-2 rounded-full bg-[#1DB954]/20 text-[#1DB954] hover:bg-[#1DB954]/30 transition-colors"
-            title="Listen on Spotify"
+            aria-label={`Listen to ${track.title} on Spotify`}
           >
             <SpotifyIcon />
           </Link>
@@ -151,7 +151,7 @@ function TrackCard({ track, index }: { track: typeof tracks[0]; index: number })
             target="_blank"
             rel="noopener noreferrer"
             className="p-2 rounded-full bg-[#FA243C]/20 text-[#FA243C] hover:bg-[#FA243C]/30 transition-colors"
-            title="Listen on Apple Music"
+            aria-label={`Listen to ${track.title} on Apple Music`}
           >
             <AppleMusicIcon />
           </Link>
@@ -160,7 +160,7 @@ function TrackCard({ track, index }: { track: typeof tracks[0]; index: number })
             target="_blank"
             rel="noopener noreferrer"
             className="p-2 rounded-full bg-[#FF9900]/20 text-[#FF9900] hover:bg-[#FF9900]/30 transition-colors"
-            title="Listen on Amazon Music"
+            aria-label={`Listen to ${track.title} on Amazon Music`}
           >
             <AmazonMusicIcon />
           </Link>
@@ -169,7 +169,7 @@ function TrackCard({ track, index }: { track: typeof tracks[0]; index: number })
             target="_blank"
             rel="noopener noreferrer"
             className="p-2 rounded-full bg-[#FF0000]/20 text-[#FF0000] hover:bg-[#FF0000]/30 transition-colors"
-            title="Watch on YouTube"
+            aria-label={`Watch ${track.title} on YouTube`}
           >
             <YouTubeIcon />
           </Link>
@@ -274,7 +274,7 @@ export default function MusicPage() {
               target="_blank"
               rel="noopener noreferrer"
               className="p-3 rounded-full bg-[#1DB954]/10 text-[#1DB954] hover:bg-[#1DB954]/20 transition-colors"
-              title="Follow on Spotify"
+              aria-label="Follow Man of Wisdom on Spotify"
             >
               <SpotifyIcon />
             </Link>
@@ -283,7 +283,7 @@ export default function MusicPage() {
               target="_blank"
               rel="noopener noreferrer"
               className="p-3 rounded-full bg-[#FA243C]/10 text-[#FA243C] hover:bg-[#FA243C]/20 transition-colors"
-              title="Follow on Apple Music"
+              aria-label="Follow Man of Wisdom on Apple Music"
             >
               <AppleMusicIcon />
             </Link>
@@ -292,7 +292,7 @@ export default function MusicPage() {
               target="_blank"
               rel="noopener noreferrer"
               className="p-3 rounded-full bg-[#FF9900]/10 text-[#FF9900] hover:bg-[#FF9900]/20 transition-colors"
-              title="Follow on Amazon Music"
+              aria-label="Follow Man of Wisdom on Amazon Music"
             >
               <AmazonMusicIcon />
             </Link>
@@ -301,7 +301,7 @@ export default function MusicPage() {
               target="_blank"
               rel="noopener noreferrer"
               className="p-3 rounded-full bg-[#FF0000]/10 text-[#FF0000] hover:bg-[#FF0000]/20 transition-colors"
-              title="Subscribe on YouTube"
+              aria-label="Subscribe to Man of Wisdom on YouTube"
             >
               <YouTubeIcon />
             </Link>
@@ -390,7 +390,7 @@ export default function MusicPage() {
               Listen on Spotify
             </Link>
             <Link
-              href="/"
+              href="/#products"
               className="px-8 py-3 border border-white/30 hover:border-white text-white font-semibold rounded-lg transition-colors"
             >
               Explore Products
