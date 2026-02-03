@@ -29,13 +29,34 @@ export default function ReviewPage() {
   const handleFinalize = async () => {
     setIsSubmitting(true);
 
-    // TODO: Save to database via API
-    // For now, just finalize locally
-    finalize();
+    try {
+      // Save to database
+      const response = await fetch('/api/priority', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          priorities: data.priorities,
+          identity: data.identity,
+          finalize: true,
+          year: 2026,
+        }),
+      });
 
-    // Navigate to complete page
-    setCurrentStep(PRIORITY_MODE_STEPS.COMPLETE);
-    router.push('/priority/complete');
+      if (!response.ok) {
+        throw new Error('Failed to save');
+      }
+
+      // Update local state
+      finalize();
+
+      // Navigate to complete page
+      setCurrentStep(PRIORITY_MODE_STEPS.COMPLETE);
+      router.push('/priority/complete');
+    } catch (error) {
+      console.error('Error finalizing:', error);
+      alert('There was an error saving your blueprint. Please try again.');
+      setIsSubmitting(false);
+    }
   };
 
   const handleEdit = (section: string) => {
