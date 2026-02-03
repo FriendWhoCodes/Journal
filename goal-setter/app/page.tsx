@@ -138,14 +138,14 @@ export default function Home() {
             Premium
           </h3>
           <div className="grid md:grid-cols-2 gap-8">
-            {/* Priority Mode - Coming Soon */}
-            <div className="bg-white rounded-2xl shadow-lg p-8 border-2 border-gray-200 opacity-60 relative">
-              <div className="absolute top-4 right-4">
-                <span className="bg-indigo-100 text-indigo-700 px-3 py-1 rounded-full text-xs font-semibold">
-                  Coming Soon
-                </span>
-              </div>
-
+            {/* Priority Mode - Now Available for Testing */}
+            <div
+              onClick={() => router.push('/priority')}
+              onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); router.push('/priority'); } }}
+              role="button"
+              tabIndex={0}
+              className="bg-white rounded-2xl shadow-lg p-8 cursor-pointer transform transition-all duration-300 hover:scale-105 hover:shadow-2xl border-2 border-transparent hover:border-indigo-500"
+            >
               <div className="flex items-center justify-between mb-6">
                 <h2 className="text-3xl font-bold text-slate-800">Priority Mode</h2>
                 <div className="bg-indigo-100 text-indigo-800 px-4 py-2 rounded-full text-sm font-semibold">
@@ -176,9 +176,9 @@ export default function Home() {
                 </li>
               </ul>
 
-              <div className="w-full bg-gray-300 text-gray-500 py-4 rounded-xl font-semibold text-lg text-center cursor-not-allowed">
-                $9.99 - Coming Soon
-              </div>
+              <button className="w-full bg-indigo-600 text-white py-4 rounded-xl font-semibold text-lg hover:bg-indigo-700 transition-colors">
+                Start Priority Planning →
+              </button>
             </div>
 
             {/* Priority + Personal Analysis Mode - Coming Soon */}
