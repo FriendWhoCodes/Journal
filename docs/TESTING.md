@@ -150,44 +150,119 @@ BASE_URL=https://manofwisdom.co npm run test:smoke
 
 ## CI/CD Integration
 
-Tests run automatically via GitHub Actions:
+We use a multi-stage CI/CD pipeline that **blocks deployment if any test fails**.
+
+### Pipeline Stages
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                        PR / Push to Main                        │
+└─────────────────────────────────────────────────────────────────┘
+                               │
+                               ▼
+┌─────────────────────────────────────────────────────────────────┐
+│  STAGE 1: Lint & Type Check                                     │
+│  - ESLint                                                       │
+│  - TypeScript type checking                                     │
+└─────────────────────────────────────────────────────────────────┘
+                               │
+                               ▼
+┌─────────────────────────────────────────────────────────────────┐
+│  STAGE 2: Unit & Integration Tests                              │
+│  - Vitest unit tests                                            │
+│  - Component tests                                              │
+│  - Health check API tests                                       │
+└─────────────────────────────────────────────────────────────────┘
+                               │
+                               ▼
+┌─────────────────────────────────────────────────────────────────┐
+│  STAGE 3: Build Verification                                    │
+│  - Next.js production build                                     │
+│  - Verify build output exists                                   │
+└─────────────────────────────────────────────────────────────────┘
+                               │
+                    ┌──────────┴──────────┐
+                    │                     │
+              (Pull Request)        (Push to Main)
+                    │                     │
+                    ▼                     ▼
+┌─────────────────────────┐  ┌────────────────────────────────────┐
+│  PR Check Complete      │  │  STAGE 4: Deploy to Production     │
+│  Ready for review       │  │  - SSH to Hetzner                  │
+└─────────────────────────┘  │  - Zero-downtime deployment        │
+                             │  - Health check verification       │
+                             └────────────────────────────────────┘
+                                          │
+                                          ▼
+                             ┌────────────────────────────────────┐
+                             │  STAGE 5: Production Smoke Tests   │
+                             │  - Verify homepage loads           │
+                             │  - Verify /music page              │
+                             │  - Verify /api/health              │
+                             │  - Performance checks              │
+                             └────────────────────────────────────┘
+```
 
 ### On Pull Request
-1. Lint code
-2. Run unit tests
-3. Build application
+1. ✅ Lint & type check
+2. ✅ Run unit tests
+3. ✅ Build verification
+4. ❌ **No deployment** (PRs don't deploy)
 
 ### On Push to Main
-1. All PR checks
-2. Deploy to production
-3. Run smoke tests against production
+1. ✅ All PR checks run first
+2. ✅ Deploy only if all tests pass
+3. ✅ Post-deployment smoke tests
+4. 🚨 Alert if smoke tests fail
 
 ### Workflow File
 ```yaml
-# .github/workflows/test-homepage.yml
-name: Test Homepage
-
-on:
-  push:
-    branches: [main]
-    paths: ["homepage/**"]
-  pull_request:
-    branches: [main]
-    paths: ["homepage/**"]
-
-jobs:
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: "20"
-      - run: npm ci
-      - run: npm run lint
-      - run: npm test
-      - run: npm run build
+# .github/workflows/homepage-ci.yml
+# See full file in repository
 ```
+
+## Branch Protection Rules (REQUIRED)
+
+To prevent broken code from reaching production, configure branch protection on GitHub:
+
+### Setup Instructions
+
+1. Go to **Repository Settings** → **Branches**
+2. Click **Add branch protection rule**
+3. Set **Branch name pattern**: `main`
+4. Enable these settings:
+
+| Setting | Value |
+|---------|-------|
+| **Require a pull request before merging** | ✅ Enabled |
+| **Require approvals** | 1 (recommended) |
+| **Dismiss stale PR approvals** | ✅ Enabled |
+| **Require status checks to pass** | ✅ Enabled |
+| **Require branches to be up to date** | ✅ Enabled |
+| **Status checks required** | `Lint & Type Check`, `Run Tests`, `Build Application`, `PR Check` |
+| **Require conversation resolution** | ✅ Enabled |
+| **Do not allow bypassing** | ✅ Enabled (even for admins) |
+
+### Required Status Checks
+
+Add these exact check names:
+- `Lint & Type Check`
+- `Run Tests`
+- `Build Application`
+- `PR Check`
+
+### Why This Matters
+
+Without branch protection:
+- ❌ Anyone can push directly to main
+- ❌ Broken code can reach production
+- ❌ Tests can be skipped
+
+With branch protection:
+- ✅ All changes go through PRs
+- ✅ Tests MUST pass before merge
+- ✅ Code review required
+- ✅ Production stays stable
 
 ## Deployment Verification
 
