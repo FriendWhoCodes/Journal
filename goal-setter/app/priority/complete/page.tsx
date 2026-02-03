@@ -6,10 +6,14 @@ import { isPriorityValid, isGoalValid } from '@/lib/types/priority';
 import { motion } from 'framer-motion';
 import { useState } from 'react';
 import Link from 'next/link';
+import { pdf } from '@react-pdf/renderer';
+import { PriorityPDF } from '@/lib/pdf/PriorityPDF';
+import { useAuth } from '@mow/auth';
 
 export default function CompletePage() {
   const router = useRouter();
   const { data, isLoaded } = usePriorityMode();
+  const { user } = useAuth();
 
   const [downloadingPdf, setDownloadingPdf] = useState(false);
   const [downloadingWallpaper, setDownloadingWallpaper] = useState<string | null>(null);
@@ -20,13 +24,26 @@ export default function CompletePage() {
     0
   );
 
+  const userName = user?.name || 'Goal Setter';
+
   const handleDownloadPdf = async () => {
     setDownloadingPdf(true);
-    // TODO: Implement PDF generation
-    // For now, simulate download
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    setDownloadingPdf(false);
-    alert('PDF generation coming soon! Your data is saved and ready.');
+    try {
+      const blob = await pdf(<PriorityPDF name={userName} data={data} />).toBlob();
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `2026-Blueprint-${userName.replace(/\s+/g, '-')}.pdf`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error('PDF generation error:', error);
+      alert('There was an error generating your PDF. Please try again.');
+    } finally {
+      setDownloadingPdf(false);
+    }
   };
 
   const handleDownloadWallpaper = async (type: 'phone' | 'desktop') => {
