@@ -20,38 +20,50 @@ export async function GET(request: NextRequest) {
     const year = parseInt(searchParams.get('year') || '2026', 10);
 
     // Find existing submission
-    const submission = await prisma.priorityModeSubmission.findUnique({
-      where: {
-        userId_year: {
-          userId: authUser.id,
-          year,
+    try {
+      const submission = await prisma.priorityModeSubmission.findUnique({
+        where: {
+          userId_year: {
+            userId: authUser.id,
+            year,
+          },
         },
-      },
-    });
+      });
 
-    if (!submission) {
+      if (!submission) {
+        return NextResponse.json(
+          { exists: false, data: null },
+          { status: 200 }
+        );
+      }
+
       return NextResponse.json(
-        { exists: false, data: null },
+        {
+          exists: true,
+          data: {
+            id: submission.id,
+            priorities: submission.priorities,
+            identity: submission.identity,
+            year: submission.year,
+            finalizedAt: submission.finalizedAt,
+            editCount: submission.editCount,
+            createdAt: submission.createdAt,
+            updatedAt: submission.updatedAt,
+          },
+        },
         { status: 200 }
       );
+    } catch (dbError: any) {
+      // Handle case where table doesn't exist yet (migration not run)
+      if (dbError?.code === 'P2021' || dbError?.message?.includes('does not exist')) {
+        console.warn('PriorityModeSubmission table does not exist. Run migrations.');
+        return NextResponse.json(
+          { exists: false, data: null, warning: 'Database table not yet created' },
+          { status: 200 }
+        );
+      }
+      throw dbError;
     }
-
-    return NextResponse.json(
-      {
-        exists: true,
-        data: {
-          id: submission.id,
-          priorities: submission.priorities,
-          identity: submission.identity,
-          year: submission.year,
-          finalizedAt: submission.finalizedAt,
-          editCount: submission.editCount,
-          createdAt: submission.createdAt,
-          updatedAt: submission.updatedAt,
-        },
-      },
-      { status: 200 }
-    );
   } catch (error) {
     console.error('Error loading Priority Mode submission:', error);
     return NextResponse.json(
@@ -95,65 +107,81 @@ export async function POST(request: NextRequest) {
     }
 
     // Check for existing submission
-    const existing = await prisma.priorityModeSubmission.findUnique({
-      where: {
-        userId_year: {
-          userId: authUser.id,
-          year,
+    try {
+      const existing = await prisma.priorityModeSubmission.findUnique({
+        where: {
+          userId_year: {
+            userId: authUser.id,
+            year,
+          },
         },
-      },
-    });
-
-    let submission;
-
-    if (existing) {
-      // Update existing submission
-      const updateData: any = {
-        priorities,
-        identity,
-      };
-
-      // If finalizing, set the timestamp
-      if (finalize && !existing.finalizedAt) {
-        updateData.finalizedAt = new Date();
-      } else if (finalize && existing.finalizedAt) {
-        // Re-finalizing (editing after finalize)
-        updateData.editCount = existing.editCount + 1;
-        updateData.finalizedAt = new Date();
-      }
-
-      submission = await prisma.priorityModeSubmission.update({
-        where: { id: existing.id },
-        data: updateData,
       });
-    } else {
-      // Create new submission
-      submission = await prisma.priorityModeSubmission.create({
-        data: {
-          userId: authUser.id,
+
+      let submission;
+
+      if (existing) {
+        // Update existing submission
+        const updateData: any = {
           priorities,
           identity,
-          year,
-          finalizedAt: finalize ? new Date() : null,
-        },
-      });
-    }
+        };
 
-    return NextResponse.json(
-      {
-        success: true,
-        submissionId: submission.id,
-        message: finalize
-          ? 'Your 2026 Blueprint has been finalized!'
-          : 'Progress saved successfully',
-        data: {
-          id: submission.id,
-          finalizedAt: submission.finalizedAt,
-          editCount: submission.editCount,
+        // If finalizing, set the timestamp
+        if (finalize && !existing.finalizedAt) {
+          updateData.finalizedAt = new Date();
+        } else if (finalize && existing.finalizedAt) {
+          // Re-finalizing (editing after finalize)
+          updateData.editCount = existing.editCount + 1;
+          updateData.finalizedAt = new Date();
+        }
+
+        submission = await prisma.priorityModeSubmission.update({
+          where: { id: existing.id },
+          data: updateData,
+        });
+      } else {
+        // Create new submission
+        submission = await prisma.priorityModeSubmission.create({
+          data: {
+            userId: authUser.id,
+            priorities,
+            identity,
+            year,
+            finalizedAt: finalize ? new Date() : null,
+          },
+        });
+      }
+
+      return NextResponse.json(
+        {
+          success: true,
+          submissionId: submission.id,
+          message: finalize
+            ? 'Your 2026 Blueprint has been finalized!'
+            : 'Progress saved successfully',
+          data: {
+            id: submission.id,
+            finalizedAt: submission.finalizedAt,
+            editCount: submission.editCount,
+          },
         },
-      },
-      { status: existing ? 200 : 201 }
-    );
+        { status: existing ? 200 : 201 }
+      );
+    } catch (dbError: any) {
+      // Handle case where table doesn't exist yet (migration not run)
+      if (dbError?.code === 'P2021' || dbError?.message?.includes('does not exist')) {
+        console.warn('PriorityModeSubmission table does not exist. Run migrations.');
+        return NextResponse.json(
+          {
+            success: false,
+            error: 'Database table not yet created. Please run migrations.',
+            warning: 'Database migration required'
+          },
+          { status: 503 }
+        );
+      }
+      throw dbError;
+    }
   } catch (error) {
     console.error('Error saving Priority Mode submission:', error);
     return NextResponse.json(
