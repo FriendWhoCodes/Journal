@@ -238,14 +238,12 @@ export default function MilestonesPage() {
                               <div key={quarter} className="bg-gray-50 rounded-xl p-4">
                                 <div className="flex items-center justify-between mb-3">
                                   <span className="text-sm font-semibold text-gray-700">{quarter} 2026</span>
-                                  {(milestone.description || milestone.tasks.length > 0) && (
-                                    <button
-                                      onClick={() => removeMilestone(goal.priorityId, goal.id, milestone.id)}
-                                      className="text-gray-400 hover:text-red-500 text-xs"
-                                    >
-                                      Clear
-                                    </button>
-                                  )}
+                                  <button
+                                    onClick={() => removeMilestone(goal.priorityId, goal.id, milestone.id)}
+                                    className="text-gray-400 hover:text-red-500 text-xs"
+                                  >
+                                    Clear
+                                  </button>
                                 </div>
 
                                 {/* Milestone Description */}

@@ -55,8 +55,9 @@ export default function CompletePage() {
   };
 
   const handleViewInJournal = () => {
-    // Redirect to Journal app
-    window.open('https://journal.manofwisdom.co', '_blank');
+    // Redirect to Journal app (with noopener/noreferrer for security)
+    const newWindow = window.open('https://journal.manofwisdom.co', '_blank', 'noopener,noreferrer');
+    if (newWindow) newWindow.opener = null;
   };
 
   if (!isLoaded) {

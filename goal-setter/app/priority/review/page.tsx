@@ -271,7 +271,9 @@ export default function ReviewPage() {
 
             {!data.identity.iAmSomeoneWho &&
               !data.identity.habitsToBuild &&
-              !data.identity.habitsToEliminate && (
+              !data.identity.habitsToEliminate &&
+              !data.identity.beliefsToHold &&
+              !data.identity.personWhoAchieves && (
                 <p className="text-gray-500 text-center py-4">
                   No identity statements added yet.{' '}
                   <button

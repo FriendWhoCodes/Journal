@@ -17,7 +17,15 @@ export async function GET(request: NextRequest) {
 
     // Get year from query params (default to current year)
     const searchParams = request.nextUrl.searchParams;
-    const year = parseInt(searchParams.get('year') || '2026', 10);
+    const yearParam = searchParams.get('year');
+    const year = yearParam ? parseInt(yearParam, 10) : 2026;
+
+    if (isNaN(year)) {
+      return NextResponse.json(
+        { error: 'Invalid year parameter' },
+        { status: 400 }
+      );
+    }
 
     // Find existing submission
     try {
@@ -90,7 +98,16 @@ export async function POST(request: NextRequest) {
     // await ensureProductAccess(authUser.id, 'priority_mode');
 
     const body = await request.json();
-    const { priorities, identity, finalize, year = 2026 } = body;
+    const { priorities, identity, finalize, year: yearInput = 2026 } = body;
+
+    // Validate year
+    const year = typeof yearInput === 'number' ? yearInput : parseInt(yearInput, 10);
+    if (isNaN(year) || year < 2000 || year > 2100) {
+      return NextResponse.json(
+        { error: 'Invalid year parameter' },
+        { status: 400 }
+      );
+    }
 
     if (!priorities || !Array.isArray(priorities)) {
       return NextResponse.json(
@@ -157,7 +174,7 @@ export async function POST(request: NextRequest) {
           success: true,
           submissionId: submission.id,
           message: finalize
-            ? 'Your 2026 Blueprint has been finalized!'
+            ? `Your ${year} Blueprint has been finalized!`
             : 'Progress saved successfully',
           data: {
             id: submission.id,

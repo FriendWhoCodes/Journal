@@ -11,6 +11,7 @@ import {
   createEmptyGoal,
 } from '@/lib/types/priority';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useEffect } from 'react';
 
 const DEADLINE_OPTIONS = [
   { value: 'Q1 2026', label: 'Q1 2026 (Jan-Mar)' },
@@ -40,7 +41,9 @@ export default function GoalsPage() {
   const currentStep = PRIORITY_MODE_STEPS.GOALS;
   // Progress includes sub-steps for each priority
   const baseProgress = (currentStep / TOTAL_PRIORITY_MODE_STEPS) * 100;
-  const priorityProgress = ((data.currentPriorityIndex + 1) / validPriorities.length) * (100 / TOTAL_PRIORITY_MODE_STEPS);
+  const priorityProgress = validPriorities.length
+    ? ((data.currentPriorityIndex + 1) / validPriorities.length) * (100 / TOTAL_PRIORITY_MODE_STEPS)
+    : 0;
   const progressPercentage = Math.round(baseProgress + priorityProgress * 0.5);
 
   // Validation - at least one valid goal for current priority
@@ -84,14 +87,16 @@ export default function GoalsPage() {
     );
   }
 
+  // Ensure there's at least one goal (in useEffect to avoid Strict Mode duplicates)
+  useEffect(() => {
+    if (currentPriority && currentPriority.goals.length === 0) {
+      addGoal(currentPriority.id);
+    }
+  }, [addGoal, currentPriority]);
+
   if (!currentPriority) {
     router.push('/priority/priorities');
     return null;
-  }
-
-  // Ensure there's at least one goal
-  if (currentPriority.goals.length === 0) {
-    addGoal(currentPriority.id);
   }
 
   return (
