@@ -79,6 +79,14 @@ export default function GoalsPage() {
     }
   };
 
+  // Ensure there's at least one goal (in useEffect to avoid Strict Mode duplicates)
+  // Must be before early returns to comply with React Rules of Hooks
+  useEffect(() => {
+    if (currentPriority && currentPriority.goals.length === 0) {
+      addGoal(currentPriority.id);
+    }
+  }, [addGoal, currentPriority]);
+
   if (!isLoaded) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 flex items-center justify-center">
@@ -86,13 +94,6 @@ export default function GoalsPage() {
       </div>
     );
   }
-
-  // Ensure there's at least one goal (in useEffect to avoid Strict Mode duplicates)
-  useEffect(() => {
-    if (currentPriority && currentPriority.goals.length === 0) {
-      addGoal(currentPriority.id);
-    }
-  }, [addGoal, currentPriority]);
 
   if (!currentPriority) {
     router.push('/priority/priorities');
