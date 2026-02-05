@@ -24,11 +24,12 @@ model AuthUser {
   createdAt     DateTime  @default(now()) @map("created_at")
   updatedAt     DateTime  @updatedAt @map("updated_at")
 
-  sessions         AuthSession[]
-  magicLinks       AuthMagicLink[]
-  products         UserProduct[]
-  goalSetterUser   GoalSetterUser?
-  timeViewsEntries TimeViewsEntry[]
+  sessions                 AuthSession[]
+  magicLinks               AuthMagicLink[]
+  products                 UserProduct[]
+  goalSetterUser           GoalSetterUser?
+  timeViewsEntries         TimeViewsEntry[]
+  priorityModeSubmissions  PriorityModeSubmission[]
 
   @@map("auth_users")
 }
@@ -133,6 +134,41 @@ model GoalSetterSubmission {
   @@index([userId])
   @@index([createdAt])
   @@map("goal_setter_submissions")
+}
+
+// ============================================
+// PRIORITY MODE TABLES
+// ============================================
+
+model PriorityModeSubmission {
+  id        String   @id @default(cuid())
+  userId    String   @map("user_id")
+
+  // Priorities with nested goals and milestones (stored as JSONB)
+  // Structure: Array of Priority objects, each with goals array
+  priorities Json @db.JsonB
+
+  // Identity transformation data
+  identity Json @db.JsonB
+
+  // Year this blueprint is for
+  year Int @default(2026)
+
+  // Status
+  finalizedAt DateTime? @map("finalized_at")
+  editCount   Int       @default(0) @map("edit_count")
+
+  // Metadata
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  // Link to auth user (direct link, not through GoalSetterUser)
+  user AuthUser @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, year])
+  @@index([userId])
+  @@index([year])
+  @@map("priority_mode_submissions")
 }
 
 // ============================================

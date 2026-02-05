@@ -32,7 +32,8 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 12,
     color: '#4F46E5',
-    borderBottom: '2px solid #E5E7EB',
+    borderBottomWidth: 2,
+    borderBottomColor: '#E5E7EB',
     paddingBottom: 4,
   },
   goal: {
@@ -50,7 +51,8 @@ const styles = StyleSheet.create({
     padding: 12,
     borderRadius: 4,
     marginBottom: 12,
-    border: '1px solid #E5E7EB',
+    borderWidth: 1,
+    borderColor: '#E5E7EB',
   },
   habitTitle: {
     fontSize: 12,
@@ -98,7 +100,8 @@ const styles = StyleSheet.create({
   },
   categorySection: {
     marginBottom: 20,
-    border: '1px solid #E5E7EB',
+    borderWidth: 1,
+    borderColor: '#E5E7EB',
     borderRadius: 4,
     padding: 12,
   },
@@ -130,7 +133,8 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 9,
     color: '#9CA3AF',
-    borderTop: '1px solid #E5E7EB',
+    borderTopWidth: 1,
+    borderTopColor: '#E5E7EB',
     paddingTop: 10,
   },
 });
