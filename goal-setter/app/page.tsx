@@ -133,12 +133,12 @@ export default function Home() {
         </div>
 
         {/* Premium Modes Section */}
-        <div className="max-w-5xl mx-auto">
+        <div className="max-w-7xl mx-auto">
           <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-4 text-center">
             Premium
           </h3>
-          <div className="grid md:grid-cols-2 gap-8">
-            {/* Priority Mode - Now Available for Testing */}
+          <div className="grid md:grid-cols-3 gap-8">
+            {/* Priority Mode */}
             <div
               onClick={() => router.push('/priority')}
               onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); router.push('/priority'); } }}
@@ -147,13 +147,13 @@ export default function Home() {
               className="bg-white rounded-2xl shadow-lg p-8 cursor-pointer transform transition-all duration-300 hover:scale-105 hover:shadow-2xl border-2 border-transparent hover:border-indigo-500"
             >
               <div className="flex items-center justify-between mb-6">
-                <h2 className="text-3xl font-bold text-slate-800">Priority Mode</h2>
-                <div className="bg-indigo-100 text-indigo-800 px-4 py-2 rounded-full text-sm font-semibold">
+                <h2 className="text-2xl font-bold text-slate-800">Priority Mode</h2>
+                <div className="bg-indigo-100 text-indigo-800 px-3 py-1 rounded-full text-sm font-semibold">
                   ~1 hour
                 </div>
               </div>
 
-              <p className="text-gray-700 mb-6 text-lg">
+              <p className="text-gray-700 mb-6">
                 Define your top priorities first. Goals become a natural extension.
               </p>
 
@@ -172,7 +172,7 @@ export default function Home() {
                 </li>
                 <li className="flex items-start">
                   <span className="text-indigo-600 mr-2 text-xl">•</span>
-                  <span className="text-gray-700">PDF + printable infographic + phone/desktop wallpaper</span>
+                  <span className="text-gray-700">PDF + infographic + wallpapers</span>
                 </li>
               </ul>
 
@@ -181,23 +181,23 @@ export default function Home() {
               </button>
             </div>
 
-            {/* Priority + Wisdom Mode */}
+            {/* Priority + AI Wisdom ($29.99) */}
             <div
-              onClick={() => router.push('/priority?wisdom=true')}
-              onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); router.push('/priority?wisdom=true'); } }}
+              onClick={() => router.push('/priority?wisdom=true&type=ai')}
+              onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); router.push('/priority?wisdom=true&type=ai'); } }}
               role="button"
               tabIndex={0}
               className="bg-white rounded-2xl shadow-lg p-8 cursor-pointer transform transition-all duration-300 hover:scale-105 hover:shadow-2xl border-2 border-transparent hover:border-emerald-500"
             >
               <div className="flex items-center justify-between mb-6">
-                <h2 className="text-3xl font-bold text-slate-800">Priority + Wisdom</h2>
-                <div className="bg-emerald-100 text-emerald-800 px-4 py-2 rounded-full text-sm font-semibold">
-                  ~1 hour
+                <h2 className="text-2xl font-bold text-slate-800">Priority + AI Wisdom</h2>
+                <div className="bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full text-sm font-semibold">
+                  $29.99
                 </div>
               </div>
 
-              <p className="text-gray-700 mb-6 text-lg">
-                Everything in Priority Mode, plus personalized guidance.
+              <p className="text-gray-700 mb-6">
+                Everything in Priority Mode, plus instant AI-powered feedback.
               </p>
 
               <ul className="space-y-3 mb-8">
@@ -207,11 +207,11 @@ export default function Home() {
                 </li>
                 <li className="flex items-start">
                   <span className="text-emerald-600 mr-2 text-xl">•</span>
-                  <span className="text-gray-700">Personal feedback from Man of Wisdom</span>
+                  <span className="text-gray-700">Instant AI analysis of your blueprint</span>
                 </li>
                 <li className="flex items-start">
                   <span className="text-emerald-600 mr-2 text-xl">•</span>
-                  <span className="text-gray-700">Analysis of your priorities & goals</span>
+                  <span className="text-gray-700">Priority & goal feedback</span>
                 </li>
                 <li className="flex items-start">
                   <span className="text-emerald-600 mr-2 text-xl">•</span>
@@ -220,7 +220,56 @@ export default function Home() {
               </ul>
 
               <button className="w-full bg-emerald-600 text-white py-4 rounded-xl font-semibold text-lg hover:bg-emerald-700 transition-colors">
-                Start Priority + Wisdom →
+                Start with AI Wisdom →
+              </button>
+            </div>
+
+            {/* Priority + Man of Wisdom ($99) */}
+            <div
+              onClick={() => router.push('/priority?wisdom=true&type=manual')}
+              onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); router.push('/priority?wisdom=true&type=manual'); } }}
+              role="button"
+              tabIndex={0}
+              className="bg-white rounded-2xl shadow-lg p-8 cursor-pointer transform transition-all duration-300 hover:scale-105 hover:shadow-2xl border-2 border-transparent hover:border-amber-500 relative"
+            >
+              <div className="absolute -top-3 left-1/2 -translate-x-1/2">
+                <span className="bg-amber-500 text-white px-4 py-1 rounded-full text-xs font-bold uppercase tracking-wide">
+                  Personal Touch
+                </span>
+              </div>
+
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-2xl font-bold text-slate-800">Priority + Wisdom</h2>
+                <div className="bg-amber-100 text-amber-800 px-3 py-1 rounded-full text-sm font-semibold">
+                  $99
+                </div>
+              </div>
+
+              <p className="text-gray-700 mb-6">
+                Everything in Priority Mode, plus personal guidance from Man of Wisdom.
+              </p>
+
+              <ul className="space-y-3 mb-8">
+                <li className="flex items-start">
+                  <span className="text-amber-600 mr-2 text-xl">•</span>
+                  <span className="text-gray-700">All Priority Mode features included</span>
+                </li>
+                <li className="flex items-start">
+                  <span className="text-amber-600 mr-2 text-xl">•</span>
+                  <span className="text-gray-700">Personal review by Man of Wisdom</span>
+                </li>
+                <li className="flex items-start">
+                  <span className="text-amber-600 mr-2 text-xl">•</span>
+                  <span className="text-gray-700">Hand-written analysis & feedback</span>
+                </li>
+                <li className="flex items-start">
+                  <span className="text-amber-600 mr-2 text-xl">•</span>
+                  <span className="text-gray-700">Personalized suggestions & wisdom</span>
+                </li>
+              </ul>
+
+              <button className="w-full bg-amber-600 text-white py-4 rounded-xl font-semibold text-lg hover:bg-amber-700 transition-colors">
+                Start with Personal Wisdom →
               </button>
             </div>
           </div>

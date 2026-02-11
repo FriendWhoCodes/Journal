@@ -7,6 +7,7 @@ import {
   Goal,
   Milestone,
   Identity,
+  WisdomType,
   createInitialPriorityModeData,
   createEmptyPriority,
   createEmptyGoal,
@@ -46,7 +47,7 @@ interface PriorityModeContextType {
   updateIdentity: (updates: Partial<Identity>) => void;
 
   // Wisdom mode
-  setWisdomMode: (enabled: boolean) => void;
+  setWisdomMode: (enabled: boolean, type?: WisdomType) => void;
 
   // Finalization
   finalize: () => void;
@@ -378,8 +379,8 @@ export function PriorityModeProvider({ children }: { children: React.ReactNode }
   }, []);
 
   // Wisdom mode
-  const setWisdomMode = useCallback((enabled: boolean) => {
-    updateData({ wisdomMode: enabled });
+  const setWisdomMode = useCallback((enabled: boolean, type?: WisdomType) => {
+    updateData({ wisdomMode: enabled, wisdomType: type || null });
   }, [updateData]);
 
   // Finalization

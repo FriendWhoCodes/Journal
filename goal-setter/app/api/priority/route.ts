@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/db';
 import { getCurrentUser, ensureProductAccess } from '@/lib/auth';
-import { PriorityModeData } from '@/lib/types/priority';
+import { PriorityModeData, Priority, Identity, WisdomType } from '@/lib/types/priority';
+import { generateAIFeedback } from '@/lib/ai-feedback';
 
 // GET - Load existing Priority Mode submission
 export async function GET(request: NextRequest) {
@@ -54,6 +55,7 @@ export async function GET(request: NextRequest) {
             identity: submission.identity,
             year: submission.year,
             wisdomMode: submission.wisdomMode,
+            wisdomType: submission.wisdomType,
             finalizedAt: submission.finalizedAt,
             editCount: submission.editCount,
             createdAt: submission.createdAt,
@@ -99,7 +101,7 @@ export async function POST(request: NextRequest) {
     // await ensureProductAccess(authUser.id, 'priority_mode');
 
     const body = await request.json();
-    const { priorities, identity, wisdomMode, finalize, year: yearInput = 2026 } = body;
+    const { priorities, identity, wisdomMode, wisdomType, finalize, year: yearInput = 2026 } = body;
 
     // Validate year
     const year = typeof yearInput === 'number' ? yearInput : parseInt(yearInput, 10);
@@ -143,6 +145,7 @@ export async function POST(request: NextRequest) {
           priorities,
           identity,
           wisdomMode: !!wisdomMode,
+          wisdomType: wisdomType || null,
         };
 
         // If finalizing, set the timestamp
@@ -167,6 +170,7 @@ export async function POST(request: NextRequest) {
             identity,
             year,
             wisdomMode: !!wisdomMode,
+            wisdomType: wisdomType || null,
             finalizedAt: finalize ? new Date() : null,
           },
         });
@@ -177,13 +181,35 @@ export async function POST(request: NextRequest) {
         const existingFeedback = await prisma.wisdomFeedback.findUnique({
           where: { submissionId: submission.id },
         });
+
         if (!existingFeedback) {
-          await prisma.wisdomFeedback.create({
-            data: {
-              submissionId: submission.id,
-              status: 'pending',
-            },
-          });
+          if (wisdomType === 'ai') {
+            // AI mode: generate feedback immediately
+            const aiFeedback = await generateAIFeedback(
+              priorities as Priority[],
+              identity as Identity
+            );
+            await prisma.wisdomFeedback.create({
+              data: {
+                submissionId: submission.id,
+                status: 'reviewed',
+                reviewedAt: new Date(),
+                priorityAnalysis: aiFeedback.priorityAnalysis,
+                goalFeedback: aiFeedback.goalFeedback,
+                suggestions: aiFeedback.suggestions,
+                identityInsights: aiFeedback.identityInsights,
+                overallWisdom: aiFeedback.overallWisdom,
+              },
+            });
+          } else {
+            // Manual mode: create pending feedback for Man of Wisdom review
+            await prisma.wisdomFeedback.create({
+              data: {
+                submissionId: submission.id,
+                status: 'pending',
+              },
+            });
+          }
         }
       }
 

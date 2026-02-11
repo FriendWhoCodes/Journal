@@ -38,6 +38,7 @@ export interface PriorityModeData {
   currentStep: number;
   currentPriorityIndex: number; // For tracking which priority we're setting goals for
   wisdomMode: boolean;
+  wisdomType: WisdomType | null; // 'ai' ($29.99) or 'manual' ($99)
   createdAt: string;
   updatedAt: string;
   finalizedAt: string | null;
@@ -104,6 +105,7 @@ export const createInitialPriorityModeData = (): PriorityModeData => ({
   currentStep: PRIORITY_MODE_STEPS.ONBOARDING,
   currentPriorityIndex: 0,
   wisdomMode: false,
+  wisdomType: null,
   createdAt: new Date().toISOString(),
   updatedAt: new Date().toISOString(),
   finalizedAt: null,
@@ -127,6 +129,7 @@ export const canAddMoreGoals = (goals: Goal[]): boolean => {
 };
 
 // Wisdom Mode Types
+export type WisdomType = 'ai' | 'manual';
 export type WisdomFeedbackStatus = 'pending' | 'in_progress' | 'reviewed';
 
 export interface WisdomFeedback {

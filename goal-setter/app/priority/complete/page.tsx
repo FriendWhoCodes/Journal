@@ -125,17 +125,21 @@ export default function CompletePage() {
             className="bg-emerald-50 rounded-2xl shadow-xl p-6 md:p-8 mb-8 border border-emerald-200"
           >
             <div className="flex items-center gap-3 mb-4">
-              <span className="text-3xl">🦉</span>
+              <span className="text-3xl">{data.wisdomType === 'ai' ? '🤖' : '🦉'}</span>
               <h2 className="text-xl font-bold text-emerald-900">
                 {feedbackStatus?.status === 'reviewed'
-                  ? 'Your Wisdom Feedback is Ready!'
+                  ? data.wisdomType === 'ai'
+                    ? 'Your AI Wisdom Feedback is Ready!'
+                    : 'Your Wisdom Feedback is Ready!'
                   : 'Wisdom Feedback Pending'}
               </h2>
             </div>
             {feedbackStatus?.status === 'reviewed' ? (
               <div>
                 <p className="text-emerald-800 mb-4">
-                  The Man of Wisdom has reviewed your blueprint and prepared personalized feedback for you.
+                  {data.wisdomType === 'ai'
+                    ? 'Your blueprint has been analyzed and personalized AI feedback is ready for you.'
+                    : 'The Man of Wisdom has reviewed your blueprint and prepared personalized feedback for you.'}
                 </p>
                 <Link
                   href="/priority/feedback"
@@ -147,12 +151,13 @@ export default function CompletePage() {
             ) : (
               <div>
                 <p className="text-emerald-800 mb-4">
-                  Your blueprint has been submitted for personal review by the Man of Wisdom.
-                  You&apos;ll receive an email notification when your personalized feedback is ready.
+                  {data.wisdomType === 'ai'
+                    ? 'Your AI feedback is being generated. This should be ready momentarily.'
+                    : 'Your blueprint has been submitted for personal review by the Man of Wisdom. You\'ll receive an email notification when your personalized feedback is ready.'}
                 </p>
                 <div className="flex items-center gap-2 text-sm text-emerald-600">
                   <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></span>
-                  Awaiting review
+                  {data.wisdomType === 'ai' ? 'Generating...' : 'Awaiting review'}
                 </div>
               </div>
             )}

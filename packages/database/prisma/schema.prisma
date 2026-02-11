@@ -156,6 +156,7 @@ model PriorityModeSubmission {
 
   // Wisdom mode flag
   wisdomMode Boolean @default(false) @map("wisdom_mode")
+  wisdomType String? @map("wisdom_type") // 'ai' or 'manual'
 
   // Status
   finalizedAt DateTime? @map("finalized_at")

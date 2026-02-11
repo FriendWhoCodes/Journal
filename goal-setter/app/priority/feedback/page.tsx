@@ -10,14 +10,20 @@ export default function FeedbackPage() {
   const [feedback, setFeedback] = useState<WisdomFeedback | null>(null);
   const [loading, setLoading] = useState(true);
   const [exists, setExists] = useState(false);
+  const [wisdomType, setWisdomType] = useState<string | null>(null);
 
   useEffect(() => {
-    fetch('/api/priority/feedback')
-      .then(res => res.json())
-      .then(data => {
-        setExists(data.exists);
-        if (data.exists) {
-          setFeedback(data.feedback);
+    Promise.all([
+      fetch('/api/priority/feedback').then(res => res.json()),
+      fetch('/api/priority').then(res => res.json()),
+    ])
+      .then(([feedbackData, submissionData]) => {
+        setExists(feedbackData.exists);
+        if (feedbackData.exists) {
+          setFeedback(feedbackData.feedback);
+        }
+        if (submissionData.exists) {
+          setWisdomType(submissionData.data?.wisdomType || null);
         }
         setLoading(false);
       })
@@ -87,13 +93,15 @@ export default function FeedbackPage() {
           className="text-center mb-12"
         >
           <div className="inline-block bg-emerald-100 text-emerald-700 px-4 py-2 rounded-full text-sm font-semibold mb-6">
-            Personal Wisdom Feedback
+            {wisdomType === 'ai' ? 'AI Wisdom Feedback' : 'Personal Wisdom Feedback'}
           </div>
           <h1 className="text-4xl font-bold text-gray-900 mb-4">
             Your Personalized Guidance
           </h1>
           <p className="text-lg text-gray-600 max-w-xl mx-auto">
-            The Man of Wisdom has reviewed your 2026 Blueprint and prepared these insights for you.
+            {wisdomType === 'ai'
+              ? 'Your 2026 Blueprint has been analyzed and these insights have been prepared for you.'
+              : 'The Man of Wisdom has reviewed your 2026 Blueprint and prepared these insights for you.'}
           </p>
         </motion.div>
 

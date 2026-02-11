@@ -4,7 +4,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect } from 'react';
 import { useAuth } from '@mow/auth';
 import { usePriorityMode } from '@/lib/context/PriorityModeContext';
-import { PRIORITY_MODE_STEPS } from '@/lib/types/priority';
+import { PRIORITY_MODE_STEPS, WisdomType } from '@/lib/types/priority';
 import { motion } from 'framer-motion';
 
 export default function PriorityOnboarding() {
@@ -13,10 +13,11 @@ export default function PriorityOnboarding() {
   const { user } = useAuth();
   const { data, setCurrentStep, setWisdomMode, isLoaded } = usePriorityMode();
 
-  // Set wisdom mode from URL param
+  // Set wisdom mode from URL params
   useEffect(() => {
     if (searchParams.get('wisdom') === 'true') {
-      setWisdomMode(true);
+      const type = searchParams.get('type') as WisdomType | null;
+      setWisdomMode(true, type || 'manual');
     }
   }, [searchParams, setWisdomMode]);
 
@@ -72,7 +73,9 @@ export default function PriorityOnboarding() {
               ? 'bg-emerald-100 text-emerald-700'
               : 'bg-indigo-100 text-indigo-700'
           }`}>
-            {data.wisdomMode ? 'Priority + Wisdom Mode' : 'Priority Mode'}
+            {data.wisdomMode
+              ? data.wisdomType === 'ai' ? 'Priority + AI Wisdom' : 'Priority + Wisdom Mode'
+              : 'Priority Mode'}
           </div>
           <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
             Welcome, {displayName}
@@ -91,7 +94,13 @@ export default function PriorityOnboarding() {
             className="bg-emerald-50 border border-emerald-200 rounded-2xl p-6 mb-8 text-center"
           >
             <p className="text-emerald-800">
-              <span className="font-semibold">Wisdom Mode Active</span> — After completing your blueprint, you&apos;ll receive personal feedback and analysis from the Man of Wisdom.
+              <span className="font-semibold">
+                {data.wisdomType === 'ai' ? 'AI Wisdom Active' : 'Wisdom Mode Active'}
+              </span>
+              {' — '}
+              {data.wisdomType === 'ai'
+                ? 'After completing your blueprint, you\'ll receive instant AI-powered analysis and feedback.'
+                : 'After completing your blueprint, you\'ll receive personal feedback and analysis from the Man of Wisdom.'}
             </p>
           </motion.div>
         )}

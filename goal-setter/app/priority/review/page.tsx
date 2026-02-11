@@ -38,6 +38,7 @@ export default function ReviewPage() {
           priorities: data.priorities,
           identity: data.identity,
           wisdomMode: data.wisdomMode,
+          wisdomType: data.wisdomType,
           finalize: true,
           year: 2026,
         }),
