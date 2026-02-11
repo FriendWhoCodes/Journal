@@ -1,7 +1,7 @@
 import { createAuthMiddleware } from '@mow/auth';
 
 export const middleware = createAuthMiddleware({
-  publicPaths: ['/login', '/verify', '/api/auth'],
+  publicPaths: ['/login', '/verify', '/api/auth', '/api/priority/slots'],
   loginPath: '/login',
 });
 
