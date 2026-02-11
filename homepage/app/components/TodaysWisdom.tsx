@@ -1,5 +1,6 @@
 "use client";
 
+import { useMemo } from "react";
 import { motion } from "framer-motion";
 
 // Rotate quotes weekly - one for each day
@@ -36,11 +37,14 @@ const quotes = [
 
 export default function TodaysWisdom() {
   // Get quote based on day of year for consistency
-  const dayOfYear = Math.floor(
-    (Date.now() - new Date(new Date().getFullYear(), 0, 0).getTime()) /
-      (1000 * 60 * 60 * 24)
-  );
-  const quote = quotes[dayOfYear % quotes.length];
+  const quote = useMemo(() => {
+    const now = new Date();
+    const dayOfYear = Math.floor(
+      (now.getTime() - new Date(now.getFullYear(), 0, 0).getTime()) /
+        (1000 * 60 * 60 * 24)
+    );
+    return quotes[dayOfYear % quotes.length];
+  }, []);
 
   return (
     <section className="py-20 px-6 md:px-12 bg-[#1A1A2E]">
