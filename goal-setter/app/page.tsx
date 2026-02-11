@@ -65,8 +65,13 @@ export default function Home() {
             >
               <div className="flex items-center justify-between mb-6">
                 <h2 className="text-3xl font-bold text-slate-800">Quick Mode</h2>
-                <div className="bg-amber-100 text-amber-800 px-4 py-2 rounded-full text-sm font-semibold">
-                  ~5 minutes
+                <div className="flex items-center gap-2">
+                  <div className="bg-amber-100 text-amber-800 px-3 py-1 rounded-full text-sm font-semibold">
+                    ~5 min
+                  </div>
+                  <div className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-semibold">
+                    Free
+                  </div>
                 </div>
               </div>
 
@@ -108,8 +113,13 @@ export default function Home() {
             >
               <div className="flex items-center justify-between mb-6">
                 <h2 className="text-3xl font-bold text-slate-800">Deep Mode</h2>
-                <div className="bg-slate-100 text-slate-800 px-4 py-2 rounded-full text-sm font-semibold">
-                  ~30 minutes
+                <div className="flex items-center gap-2">
+                  <div className="bg-slate-100 text-slate-800 px-3 py-1 rounded-full text-sm font-semibold">
+                    ~30 min
+                  </div>
+                  <div className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-semibold">
+                    Free
+                  </div>
                 </div>
               </div>
 
@@ -159,8 +169,13 @@ export default function Home() {
             >
               <div className="flex items-center justify-between mb-6">
                 <h2 className="text-2xl font-bold text-slate-800">Priority Mode</h2>
-                <div className="bg-indigo-100 text-indigo-800 px-3 py-1 rounded-full text-sm font-semibold">
-                  ~1 hour
+                <div className="flex items-center gap-2">
+                  <div className="bg-indigo-100 text-indigo-800 px-3 py-1 rounded-full text-sm font-semibold">
+                    ~1 hour
+                  </div>
+                  <div className="bg-indigo-100 text-indigo-800 px-3 py-1 rounded-full text-sm font-semibold">
+                    $9.99
+                  </div>
                 </div>
               </div>
 
@@ -202,8 +217,13 @@ export default function Home() {
             >
               <div className="flex items-center justify-between mb-6">
                 <h2 className="text-2xl font-bold text-slate-800">Priority + AI Wisdom</h2>
-                <div className="bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full text-sm font-semibold">
-                  $29.99
+                <div className="flex items-center gap-2">
+                  <div className="bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full text-sm font-semibold">
+                    ~1 hour
+                  </div>
+                  <div className="bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full text-sm font-semibold">
+                    $29.99
+                  </div>
                 </div>
               </div>
 
@@ -255,8 +275,13 @@ export default function Home() {
 
               <div className="flex items-center justify-between mb-6">
                 <h2 className="text-2xl font-bold text-slate-800">Priority + Wisdom</h2>
-                <div className="bg-amber-100 text-amber-800 px-3 py-1 rounded-full text-sm font-semibold">
-                  $99
+                <div className="flex items-center gap-2">
+                  <div className="bg-amber-100 text-amber-800 px-3 py-1 rounded-full text-sm font-semibold">
+                    ~1 hour
+                  </div>
+                  <div className="bg-amber-100 text-amber-800 px-3 py-1 rounded-full text-sm font-semibold">
+                    $99
+                  </div>
                 </div>
               </div>
 
