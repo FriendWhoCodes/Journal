@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useGoalSetter } from '@/lib/context/GoalSetterContext';
 import { useAuth } from '@mow/auth';
@@ -23,7 +23,18 @@ export default function Home() {
     router.push(mode === 'quick' ? '/quick' : '/deep');
   };
 
+  const [manualSlots, setManualSlots] = useState<number | null>(null);
+
+  // Fetch available manual wisdom slots
+  useEffect(() => {
+    fetch('/api/priority/slots')
+      .then(res => res.json())
+      .then(data => setManualSlots(data.remaining))
+      .catch(() => setManualSlots(null));
+  }, []);
+
   const displayName = user?.name || 'there';
+  const manualSoldOut = manualSlots === 0;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-amber-50">
@@ -226,11 +237,15 @@ export default function Home() {
 
             {/* Priority + Man of Wisdom ($99) */}
             <div
-              onClick={() => router.push('/priority?wisdom=true&type=manual')}
-              onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); router.push('/priority?wisdom=true&type=manual'); } }}
+              onClick={() => { if (!manualSoldOut) router.push('/priority?wisdom=true&type=manual'); }}
+              onKeyDown={(e) => { if (!manualSoldOut && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); router.push('/priority?wisdom=true&type=manual'); } }}
               role="button"
-              tabIndex={0}
-              className="bg-white rounded-2xl shadow-lg p-8 cursor-pointer transform transition-all duration-300 hover:scale-105 hover:shadow-2xl border-2 border-transparent hover:border-amber-500 relative"
+              tabIndex={manualSoldOut ? -1 : 0}
+              className={`bg-white rounded-2xl shadow-lg p-8 relative ${
+                manualSoldOut
+                  ? 'opacity-75 cursor-not-allowed'
+                  : 'cursor-pointer transform transition-all duration-300 hover:scale-105 hover:shadow-2xl border-2 border-transparent hover:border-amber-500'
+              }`}
             >
               <div className="absolute -top-3 left-1/2 -translate-x-1/2">
                 <span className="bg-amber-500 text-white px-4 py-1 rounded-full text-xs font-bold uppercase tracking-wide">
@@ -268,9 +283,25 @@ export default function Home() {
                 </li>
               </ul>
 
-              <button className="w-full bg-amber-600 text-white py-4 rounded-xl font-semibold text-lg hover:bg-amber-700 transition-colors">
-                Start with Personal Wisdom →
-              </button>
+              {manualSoldOut ? (
+                <button disabled className="w-full bg-gray-400 text-white py-4 rounded-xl font-semibold text-lg cursor-not-allowed">
+                  Sold Out This Month
+                </button>
+              ) : (
+                <button className="w-full bg-amber-600 text-white py-4 rounded-xl font-semibold text-lg hover:bg-amber-700 transition-colors">
+                  Start with Personal Wisdom →
+                </button>
+              )}
+
+              {manualSlots !== null && (
+                <p className={`text-center text-sm mt-3 font-medium ${
+                  manualSoldOut ? 'text-gray-400' : manualSlots <= 3 ? 'text-red-600' : 'text-amber-700'
+                }`}>
+                  {manualSoldOut
+                    ? 'All slots taken — check back next month'
+                    : `Only ${manualSlots} slot${manualSlots === 1 ? '' : 's'} available this month`}
+                </p>
+              )}
             </div>
           </div>
         </div>

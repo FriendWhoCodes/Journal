@@ -177,6 +177,27 @@ export async function POST(request: NextRequest) {
       }
 
       // Create WisdomFeedback record if finalizing a wisdom mode submission
+      if (finalize && submission.wisdomMode && wisdomType === 'manual') {
+        // Check slot availability for manual wisdom
+        const now = new Date();
+        const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+        const monthEnd = new Date(now.getFullYear(), now.getMonth() + 1, 1);
+        const usedSlots = await prisma.priorityModeSubmission.count({
+          where: {
+            wisdomType: 'manual',
+            wisdomMode: true,
+            finalizedAt: { gte: monthStart, lt: monthEnd },
+            id: { not: submission.id }, // exclude current submission
+          },
+        });
+        if (usedSlots >= 10) {
+          return NextResponse.json(
+            { error: 'All personal wisdom slots for this month are taken. Please try again next month or choose AI Wisdom.' },
+            { status: 409 }
+          );
+        }
+      }
+
       if (finalize && submission.wisdomMode) {
         const existingFeedback = await prisma.wisdomFeedback.findUnique({
           where: { submissionId: submission.id },
