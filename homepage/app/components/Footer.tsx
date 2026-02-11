@@ -1,4 +1,7 @@
+"use client";
+
 import Link from "next/link";
+import NewsletterForm from "./NewsletterForm";
 
 const footerLinks = {
   products: [
@@ -11,7 +14,6 @@ const footerLinks = {
   content: [
     { label: "Music", href: "/music" },
     { label: "Blog", href: "https://blog.manofwisdom.co" },
-    { label: "Newsletter", href: "#newsletter" },
   ],
   connect: [
     { label: "Facebook", href: "https://facebook.com/ManofWisdoms" },
@@ -130,6 +132,17 @@ export default function Footer() {
                 </li>
               ))}
             </ul>
+          </div>
+        </div>
+
+        {/* Newsletter signup */}
+        <div className="py-8 border-t border-gray-800 mb-8">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+            <div>
+              <h3 className="text-white font-semibold">Weekly Wisdom</h3>
+              <p className="text-gray-400 text-sm">Philosophy, updates, and exclusive offers.</p>
+            </div>
+            <NewsletterForm variant="compact" />
           </div>
         </div>
 
