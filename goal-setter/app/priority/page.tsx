@@ -1,6 +1,7 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useEffect } from 'react';
 import { useAuth } from '@mow/auth';
 import { usePriorityMode } from '@/lib/context/PriorityModeContext';
 import { PRIORITY_MODE_STEPS } from '@/lib/types/priority';
@@ -8,8 +9,16 @@ import { motion } from 'framer-motion';
 
 export default function PriorityOnboarding() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { user } = useAuth();
-  const { data, setCurrentStep, isLoaded } = usePriorityMode();
+  const { data, setCurrentStep, setWisdomMode, isLoaded } = usePriorityMode();
+
+  // Set wisdom mode from URL param
+  useEffect(() => {
+    if (searchParams.get('wisdom') === 'true') {
+      setWisdomMode(true);
+    }
+  }, [searchParams, setWisdomMode]);
 
   const displayName = user?.name?.split(' ')[0] || 'there';
 
@@ -58,8 +67,12 @@ export default function PriorityOnboarding() {
           transition={{ duration: 0.6 }}
           className="text-center mb-12"
         >
-          <div className="inline-block bg-indigo-100 text-indigo-700 px-4 py-2 rounded-full text-sm font-semibold mb-6">
-            Priority Mode
+          <div className={`inline-block px-4 py-2 rounded-full text-sm font-semibold mb-6 ${
+            data.wisdomMode
+              ? 'bg-emerald-100 text-emerald-700'
+              : 'bg-indigo-100 text-indigo-700'
+          }`}>
+            {data.wisdomMode ? 'Priority + Wisdom Mode' : 'Priority Mode'}
           </div>
           <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
             Welcome, {displayName}
@@ -68,6 +81,20 @@ export default function PriorityOnboarding() {
             You&apos;re about to embark on a meaningful journey of self-discovery and intentional planning.
           </p>
         </motion.div>
+
+        {/* Wisdom Mode Banner */}
+        {data.wisdomMode && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.15 }}
+            className="bg-emerald-50 border border-emerald-200 rounded-2xl p-6 mb-8 text-center"
+          >
+            <p className="text-emerald-800">
+              <span className="font-semibold">Wisdom Mode Active</span> — After completing your blueprint, you&apos;ll receive personal feedback and analysis from the Man of Wisdom.
+            </p>
+          </motion.div>
+        )}
 
         {/* Philosophy Card */}
         <motion.div

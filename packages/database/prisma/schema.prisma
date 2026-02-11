@@ -154,6 +154,9 @@ model PriorityModeSubmission {
   // Year this blueprint is for
   year Int @default(2026)
 
+  // Wisdom mode flag
+  wisdomMode Boolean @default(false) @map("wisdom_mode")
+
   // Status
   finalizedAt DateTime? @map("finalized_at")
   editCount   Int       @default(0) @map("edit_count")
@@ -165,10 +168,46 @@ model PriorityModeSubmission {
   // Link to auth user (direct link, not through GoalSetterUser)
   user AuthUser @relation(fields: [userId], references: [id], onDelete: Cascade)
 
+  // Wisdom feedback relation
+  wisdomFeedback WisdomFeedback?
+
   @@unique([userId, year])
   @@index([userId])
   @@index([year])
   @@map("priority_mode_submissions")
+}
+
+// ============================================
+// WISDOM FEEDBACK TABLE
+// ============================================
+
+model WisdomFeedback {
+  id           String @id @default(cuid())
+  submissionId String @unique @map("submission_id")
+
+  // Structured feedback sections
+  priorityAnalysis String? @map("priority_analysis") @db.Text
+  goalFeedback     String? @map("goal_feedback") @db.Text
+  suggestions      String? @db.Text
+  identityInsights String? @map("identity_insights") @db.Text
+  overallWisdom    String? @map("overall_wisdom") @db.Text
+
+  // Status tracking
+  status     String    @default("pending") // pending, in_progress, reviewed
+  reviewedAt DateTime? @map("reviewed_at")
+
+  // Email notification tracking
+  notificationSentAt DateTime? @map("notification_sent_at")
+
+  // Metadata
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  // Relation
+  submission PriorityModeSubmission @relation(fields: [submissionId], references: [id], onDelete: Cascade)
+
+  @@index([status])
+  @@map("wisdom_feedback")
 }
 
 // ============================================

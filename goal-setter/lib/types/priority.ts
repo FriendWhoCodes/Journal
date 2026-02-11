@@ -37,6 +37,7 @@ export interface PriorityModeData {
   identity: Identity;
   currentStep: number;
   currentPriorityIndex: number; // For tracking which priority we're setting goals for
+  wisdomMode: boolean;
   createdAt: string;
   updatedAt: string;
   finalizedAt: string | null;
@@ -102,6 +103,7 @@ export const createInitialPriorityModeData = (): PriorityModeData => ({
   identity: createEmptyIdentity(),
   currentStep: PRIORITY_MODE_STEPS.ONBOARDING,
   currentPriorityIndex: 0,
+  wisdomMode: false,
   createdAt: new Date().toISOString(),
   updatedAt: new Date().toISOString(),
   finalizedAt: null,
@@ -123,3 +125,29 @@ export const canAddMorePriorities = (priorities: Priority[]): boolean => {
 export const canAddMoreGoals = (goals: Goal[]): boolean => {
   return goals.length < 5;
 };
+
+// Wisdom Mode Types
+export type WisdomFeedbackStatus = 'pending' | 'in_progress' | 'reviewed';
+
+export interface WisdomFeedback {
+  id: string;
+  submissionId: string;
+  priorityAnalysis: string | null;
+  goalFeedback: string | null;
+  suggestions: string | null;
+  identityInsights: string | null;
+  overallWisdom: string | null;
+  status: WisdomFeedbackStatus;
+  reviewedAt: string | null;
+  notificationSentAt: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export const WISDOM_FEEDBACK_SECTIONS = [
+  { key: 'priorityAnalysis' as const, title: 'Priority Analysis', description: 'Analysis of how well their priorities are defined and ordered', icon: '🎯' },
+  { key: 'goalFeedback' as const, title: 'Goal Feedback', description: 'Feedback on specific goals under each priority', icon: '📝' },
+  { key: 'suggestions' as const, title: 'Suggestions', description: 'Concrete suggestions for improvement or refinement', icon: '💡' },
+  { key: 'identityInsights' as const, title: 'Identity Insights', description: 'Observations about their identity transformation section', icon: '🦋' },
+  { key: 'overallWisdom' as const, title: 'Overall Wisdom', description: 'High-level guidance and encouragement', icon: '🦉' },
+];

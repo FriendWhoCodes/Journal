@@ -37,6 +37,7 @@ export default function ReviewPage() {
         body: JSON.stringify({
           priorities: data.priorities,
           identity: data.identity,
+          wisdomMode: data.wisdomMode,
           finalize: true,
           year: 2026,
         }),

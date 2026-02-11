@@ -181,14 +181,14 @@ export default function Home() {
               </button>
             </div>
 
-            {/* Priority + Personal Analysis Mode - Coming Soon */}
-            <div className="bg-white rounded-2xl shadow-lg p-8 border-2 border-gray-200 opacity-60 relative">
-              <div className="absolute top-4 right-4">
-                <span className="bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full text-xs font-semibold">
-                  Coming Soon
-                </span>
-              </div>
-
+            {/* Priority + Wisdom Mode */}
+            <div
+              onClick={() => router.push('/priority?wisdom=true')}
+              onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); router.push('/priority?wisdom=true'); } }}
+              role="button"
+              tabIndex={0}
+              className="bg-white rounded-2xl shadow-lg p-8 cursor-pointer transform transition-all duration-300 hover:scale-105 hover:shadow-2xl border-2 border-transparent hover:border-emerald-500"
+            >
               <div className="flex items-center justify-between mb-6">
                 <h2 className="text-3xl font-bold text-slate-800">Priority + Wisdom</h2>
                 <div className="bg-emerald-100 text-emerald-800 px-4 py-2 rounded-full text-sm font-semibold">
@@ -219,9 +219,9 @@ export default function Home() {
                 </li>
               </ul>
 
-              <div className="w-full bg-gray-300 text-gray-500 py-4 rounded-xl font-semibold text-lg text-center cursor-not-allowed">
-                $29.99 - Coming Soon
-              </div>
+              <button className="w-full bg-emerald-600 text-white py-4 rounded-xl font-semibold text-lg hover:bg-emerald-700 transition-colors">
+                Start Priority + Wisdom →
+              </button>
             </div>
           </div>
         </div>

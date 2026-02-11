@@ -45,6 +45,9 @@ interface PriorityModeContextType {
   // Identity operations
   updateIdentity: (updates: Partial<Identity>) => void;
 
+  // Wisdom mode
+  setWisdomMode: (enabled: boolean) => void;
+
   // Finalization
   finalize: () => void;
 
@@ -374,6 +377,11 @@ export function PriorityModeProvider({ children }: { children: React.ReactNode }
     }));
   }, []);
 
+  // Wisdom mode
+  const setWisdomMode = useCallback((enabled: boolean) => {
+    updateData({ wisdomMode: enabled });
+  }, [updateData]);
+
   // Finalization
   const finalize = useCallback(() => {
     updateData({ finalizedAt: new Date().toISOString() });
@@ -405,6 +413,7 @@ export function PriorityModeProvider({ children }: { children: React.ReactNode }
         addTask,
         removeTask,
         updateIdentity,
+        setWisdomMode,
         finalize,
         resetAll,
       }}

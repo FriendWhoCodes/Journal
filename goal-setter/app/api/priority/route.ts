@@ -53,6 +53,7 @@ export async function GET(request: NextRequest) {
             priorities: submission.priorities,
             identity: submission.identity,
             year: submission.year,
+            wisdomMode: submission.wisdomMode,
             finalizedAt: submission.finalizedAt,
             editCount: submission.editCount,
             createdAt: submission.createdAt,
@@ -98,7 +99,7 @@ export async function POST(request: NextRequest) {
     // await ensureProductAccess(authUser.id, 'priority_mode');
 
     const body = await request.json();
-    const { priorities, identity, finalize, year: yearInput = 2026 } = body;
+    const { priorities, identity, wisdomMode, finalize, year: yearInput = 2026 } = body;
 
     // Validate year
     const year = typeof yearInput === 'number' ? yearInput : parseInt(yearInput, 10);
@@ -141,6 +142,7 @@ export async function POST(request: NextRequest) {
         const updateData: any = {
           priorities,
           identity,
+          wisdomMode: !!wisdomMode,
         };
 
         // If finalizing, set the timestamp
@@ -164,9 +166,25 @@ export async function POST(request: NextRequest) {
             priorities,
             identity,
             year,
+            wisdomMode: !!wisdomMode,
             finalizedAt: finalize ? new Date() : null,
           },
         });
+      }
+
+      // Create WisdomFeedback record if finalizing a wisdom mode submission
+      if (finalize && submission.wisdomMode) {
+        const existingFeedback = await prisma.wisdomFeedback.findUnique({
+          where: { submissionId: submission.id },
+        });
+        if (!existingFeedback) {
+          await prisma.wisdomFeedback.create({
+            data: {
+              submissionId: submission.id,
+              status: 'pending',
+            },
+          });
+        }
       }
 
       return NextResponse.json(

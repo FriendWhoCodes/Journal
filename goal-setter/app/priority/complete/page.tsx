@@ -2,9 +2,9 @@
 
 import { useRouter } from 'next/navigation';
 import { usePriorityMode } from '@/lib/context/PriorityModeContext';
-import { isPriorityValid, isGoalValid } from '@/lib/types/priority';
+import { isPriorityValid, isGoalValid, WisdomFeedback } from '@/lib/types/priority';
 import { motion } from 'framer-motion';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { pdf } from '@react-pdf/renderer';
 import { PriorityPDF } from '@/lib/pdf/PriorityPDF';
@@ -17,6 +17,21 @@ export default function CompletePage() {
 
   const [downloadingPdf, setDownloadingPdf] = useState(false);
   const [downloadingWallpaper, setDownloadingWallpaper] = useState<string | null>(null);
+  const [feedbackStatus, setFeedbackStatus] = useState<WisdomFeedback | null>(null);
+
+  // Fetch wisdom feedback status if wisdom mode
+  useEffect(() => {
+    if (data.wisdomMode && data.finalizedAt) {
+      fetch('/api/priority/feedback')
+        .then(res => res.json())
+        .then(result => {
+          if (result.exists) {
+            setFeedbackStatus(result.feedback);
+          }
+        })
+        .catch(() => {});
+    }
+  }, [data.wisdomMode, data.finalizedAt]);
 
   const validPriorities = data.priorities.filter(isPriorityValid);
   const totalGoals = validPriorities.reduce(
@@ -100,6 +115,49 @@ export default function CompletePage() {
             Now it&apos;s time to live it.
           </p>
         </motion.div>
+
+        {/* Wisdom Feedback Status */}
+        {data.wisdomMode && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.25 }}
+            className="bg-emerald-50 rounded-2xl shadow-xl p-6 md:p-8 mb-8 border border-emerald-200"
+          >
+            <div className="flex items-center gap-3 mb-4">
+              <span className="text-3xl">🦉</span>
+              <h2 className="text-xl font-bold text-emerald-900">
+                {feedbackStatus?.status === 'reviewed'
+                  ? 'Your Wisdom Feedback is Ready!'
+                  : 'Wisdom Feedback Pending'}
+              </h2>
+            </div>
+            {feedbackStatus?.status === 'reviewed' ? (
+              <div>
+                <p className="text-emerald-800 mb-4">
+                  The Man of Wisdom has reviewed your blueprint and prepared personalized feedback for you.
+                </p>
+                <Link
+                  href="/priority/feedback"
+                  className="inline-block bg-emerald-600 text-white px-6 py-3 rounded-xl font-semibold hover:bg-emerald-700 transition-colors"
+                >
+                  View Your Feedback →
+                </Link>
+              </div>
+            ) : (
+              <div>
+                <p className="text-emerald-800 mb-4">
+                  Your blueprint has been submitted for personal review by the Man of Wisdom.
+                  You&apos;ll receive an email notification when your personalized feedback is ready.
+                </p>
+                <div className="flex items-center gap-2 text-sm text-emerald-600">
+                  <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></span>
+                  Awaiting review
+                </div>
+              </div>
+            )}
+          </motion.div>
+        )}
 
         {/* Summary Stats */}
         <motion.div
