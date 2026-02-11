@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start -p 3003",
     "lint": "eslint",
-    "test": "vitest run",
+    "test": "vitest run --exclude tests/smoke.test.ts",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
     "test:smoke": "vitest run tests/smoke.test.ts",
