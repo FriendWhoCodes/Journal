@@ -45,6 +45,8 @@ interface PriorityModeContextType {
 
   // Identity operations
   updateIdentity: (updates: Partial<Identity>) => void;
+  addIdentityItem: (field: 'habitsToBuild' | 'habitsToEliminate' | 'beliefsToHold', item: string) => void;
+  removeIdentityItem: (field: 'habitsToBuild' | 'habitsToEliminate' | 'beliefsToHold', index: number) => void;
 
   // Wisdom mode
   setWisdomMode: (enabled: boolean, type?: WisdomType) => void;
@@ -378,6 +380,31 @@ export function PriorityModeProvider({ children }: { children: React.ReactNode }
     }));
   }, []);
 
+  const addIdentityItem = useCallback((field: 'habitsToBuild' | 'habitsToEliminate' | 'beliefsToHold', item: string) => {
+    setData(prev => {
+      const currentArray = prev.identity[field];
+      const arr = Array.isArray(currentArray) ? currentArray : [];
+      if (arr.includes(item)) return prev;
+      return {
+        ...prev,
+        identity: { ...prev.identity, [field]: [...arr, item] },
+        updatedAt: new Date().toISOString(),
+      };
+    });
+  }, []);
+
+  const removeIdentityItem = useCallback((field: 'habitsToBuild' | 'habitsToEliminate' | 'beliefsToHold', index: number) => {
+    setData(prev => {
+      const currentArray = prev.identity[field];
+      const arr = Array.isArray(currentArray) ? currentArray : [];
+      return {
+        ...prev,
+        identity: { ...prev.identity, [field]: arr.filter((_, i) => i !== index) },
+        updatedAt: new Date().toISOString(),
+      };
+    });
+  }, []);
+
   // Wisdom mode
   const setWisdomMode = useCallback((enabled: boolean, type?: WisdomType) => {
     updateData({ wisdomMode: enabled, wisdomType: type || null });
@@ -414,6 +441,8 @@ export function PriorityModeProvider({ children }: { children: React.ReactNode }
         addTask,
         removeTask,
         updateIdentity,
+        addIdentityItem,
+        removeIdentityItem,
         setWisdomMode,
         finalize,
         resetAll,

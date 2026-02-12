@@ -11,6 +11,13 @@ import {
 import { motion } from 'framer-motion';
 import { useState } from 'react';
 
+// Helper for backward compat: handle both string and string[] identity fields
+function toArray(val: unknown): string[] {
+  if (Array.isArray(val)) return val;
+  if (typeof val === 'string' && val.trim()) return [val];
+  return [];
+}
+
 export default function ReviewPage() {
   const router = useRouter();
   const { data, setCurrentStep, finalize, isLoaded } = usePriorityMode();
@@ -242,39 +249,57 @@ export default function ReviewPage() {
             )}
 
             <div className="grid md:grid-cols-2 gap-4">
-              {data.identity.habitsToBuild && (
+              {toArray(data.identity.habitsToBuild).length > 0 && (
                 <div className="bg-green-50 rounded-lg p-4">
-                  <h3 className="text-sm font-semibold text-green-700 mb-2">🌱 Habits to Build</h3>
-                  <p className="text-gray-700 text-sm">{data.identity.habitsToBuild}</p>
+                  <h3 className="text-sm font-semibold text-green-700 mb-2">Habits to Build</h3>
+                  <div className="flex flex-wrap gap-1.5">
+                    {toArray(data.identity.habitsToBuild).map((item, i) => (
+                      <span key={i} className="inline-block bg-green-100 text-green-800 px-2.5 py-1 rounded-full text-xs font-medium">
+                        {item}
+                      </span>
+                    ))}
+                  </div>
                 </div>
               )}
 
-              {data.identity.habitsToEliminate && (
+              {toArray(data.identity.habitsToEliminate).length > 0 && (
                 <div className="bg-red-50 rounded-lg p-4">
-                  <h3 className="text-sm font-semibold text-red-700 mb-2">🚫 Habits to Eliminate</h3>
-                  <p className="text-gray-700 text-sm">{data.identity.habitsToEliminate}</p>
+                  <h3 className="text-sm font-semibold text-red-700 mb-2">Habits to Eliminate</h3>
+                  <div className="flex flex-wrap gap-1.5">
+                    {toArray(data.identity.habitsToEliminate).map((item, i) => (
+                      <span key={i} className="inline-block bg-red-100 text-red-800 px-2.5 py-1 rounded-full text-xs font-medium">
+                        {item}
+                      </span>
+                    ))}
+                  </div>
                 </div>
               )}
 
-              {data.identity.beliefsToHold && (
+              {toArray(data.identity.beliefsToHold).length > 0 && (
                 <div className="bg-blue-50 rounded-lg p-4">
-                  <h3 className="text-sm font-semibold text-blue-700 mb-2">💭 Beliefs to Hold</h3>
-                  <p className="text-gray-700 text-sm">{data.identity.beliefsToHold}</p>
+                  <h3 className="text-sm font-semibold text-blue-700 mb-2">Beliefs to Hold</h3>
+                  <div className="flex flex-wrap gap-1.5">
+                    {toArray(data.identity.beliefsToHold).map((item, i) => (
+                      <span key={i} className="inline-block bg-blue-100 text-blue-800 px-2.5 py-1 rounded-full text-xs font-medium">
+                        {item}
+                      </span>
+                    ))}
+                  </div>
                 </div>
               )}
 
               {data.identity.personWhoAchieves && (
                 <div className="bg-purple-50 rounded-lg p-4">
-                  <h3 className="text-sm font-semibold text-purple-700 mb-2">🦋 Person Who Achieves</h3>
+                  <h3 className="text-sm font-semibold text-purple-700 mb-2">Person Who Achieves</h3>
                   <p className="text-gray-700 text-sm">{data.identity.personWhoAchieves}</p>
                 </div>
               )}
             </div>
 
             {!data.identity.iAmSomeoneWho &&
-              !data.identity.habitsToBuild &&
-              !data.identity.habitsToEliminate &&
-              !data.identity.beliefsToHold &&
+              toArray(data.identity.habitsToBuild).length === 0 &&
+              toArray(data.identity.habitsToEliminate).length === 0 &&
+              toArray(data.identity.beliefsToHold).length === 0 &&
               !data.identity.personWhoAchieves && (
                 <p className="text-gray-500 text-center py-4">
                   No identity statements added yet.{' '}

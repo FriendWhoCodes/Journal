@@ -3,7 +3,7 @@
 
 export interface Milestone {
   id: string;
-  period: 'Q1' | 'Q2' | 'Q3' | 'Q4' | string; // Quarter or month
+  period: string; // Month name: 'January', 'February', etc.
   description: string;
   tasks: string[];
 }
@@ -25,9 +25,9 @@ export interface Priority {
 }
 
 export interface Identity {
-  habitsToBuild: string;
-  habitsToEliminate: string;
-  beliefsToHold: string;
+  habitsToBuild: string[];
+  habitsToEliminate: string[];
+  beliefsToHold: string[];
   personWhoAchieves: string;
   iAmSomeoneWho: string; // Final identity statement
 }
@@ -92,9 +92,9 @@ export const createEmptyMilestone = (period: string): Milestone => ({
 });
 
 export const createEmptyIdentity = (): Identity => ({
-  habitsToBuild: '',
-  habitsToEliminate: '',
-  beliefsToHold: '',
+  habitsToBuild: [],
+  habitsToEliminate: [],
+  beliefsToHold: [],
   personWhoAchieves: '',
   iAmSomeoneWho: '',
 });

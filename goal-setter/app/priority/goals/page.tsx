@@ -13,11 +13,13 @@ import {
 import { motion, AnimatePresence } from 'framer-motion';
 import { useEffect } from 'react';
 
+const MONTHS = [
+  'January', 'February', 'March', 'April', 'May', 'June',
+  'July', 'August', 'September', 'October', 'November', 'December',
+];
+
 const DEADLINE_OPTIONS = [
-  { value: 'Q1 2026', label: 'Q1 2026 (Jan-Mar)' },
-  { value: 'Q2 2026', label: 'Q2 2026 (Apr-Jun)' },
-  { value: 'Q3 2026', label: 'Q3 2026 (Jul-Sep)' },
-  { value: 'Q4 2026', label: 'Q4 2026 (Oct-Dec)' },
+  ...MONTHS.map(month => ({ value: `${month} 2026`, label: `${month} 2026` })),
   { value: 'Ongoing', label: 'Ongoing (No specific deadline)' },
 ];
 
@@ -271,7 +273,7 @@ export default function GoalsPage() {
           <div className="text-sm text-indigo-800 space-y-1">
             <p><strong>Priority:</strong> Family Health</p>
             <p><strong>Goal:</strong> Ensure wife recovers fully postpartum</p>
-            <p><strong>By When:</strong> Q1 2026</p>
+            <p><strong>By When:</strong> March 2026</p>
             <p><strong>Success:</strong> She&apos;s back to full energy, cleared by doctor, feeling confident</p>
           </div>
         </div>

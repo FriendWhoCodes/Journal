@@ -172,10 +172,70 @@ model PriorityModeSubmission {
   // Wisdom feedback relation
   wisdomFeedback WisdomFeedback?
 
+  // Normalized tracking tables (populated on finalization)
+  goals  PriorityGoal[]
+  habits PriorityHabit[]
+
   @@unique([userId, year])
   @@index([userId])
   @@index([year])
   @@map("priority_mode_submissions")
+}
+
+// Normalized goal records for individual tracking
+model PriorityGoal {
+  id              String    @id @default(cuid())
+  submissionId    String    @map("submission_id")
+  priorityName    String    @map("priority_name")
+  priorityOrder   Int       @map("priority_order")
+  what            String    @db.Text
+  byWhen          String    @map("by_when")
+  successLooksLike String?  @map("success_looks_like") @db.Text
+  status          String    @default("active") // active, completed, abandoned
+  completedAt     DateTime? @map("completed_at")
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime  @updatedAt @map("updated_at")
+
+  submission PriorityModeSubmission @relation(fields: [submissionId], references: [id], onDelete: Cascade)
+  milestones PriorityMilestoneRecord[]
+
+  @@index([submissionId])
+  @@map("priority_goals")
+}
+
+// Normalized milestone records for individual tracking
+model PriorityMilestoneRecord {
+  id          String    @id @default(cuid())
+  goalId      String    @map("goal_id")
+  period      String
+  description String    @db.Text
+  status      String    @default("pending") // pending, completed
+  completedAt DateTime? @map("completed_at")
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+
+  goal PriorityGoal @relation(fields: [goalId], references: [id], onDelete: Cascade)
+
+  @@index([goalId])
+  @@map("priority_milestones")
+}
+
+// Normalized habit records for individual tracking
+model PriorityHabit {
+  id           String    @id @default(cuid())
+  submissionId String    @map("submission_id")
+  habit        String
+  type         String    // 'build' or 'eliminate'
+  status       String    @default("active") // active, completed, abandoned
+  completedAt  DateTime? @map("completed_at")
+  createdAt    DateTime  @default(now()) @map("created_at")
+  updatedAt    DateTime  @updatedAt @map("updated_at")
+
+  submission PriorityModeSubmission @relation(fields: [submissionId], references: [id], onDelete: Cascade)
+
+  @@index([submissionId])
+  @@index([type])
+  @@map("priority_habits")
 }
 
 // ============================================

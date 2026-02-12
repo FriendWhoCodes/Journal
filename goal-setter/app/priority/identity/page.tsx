@@ -3,58 +3,66 @@
 import { useRouter } from 'next/navigation';
 import { usePriorityMode } from '@/lib/context/PriorityModeContext';
 import { PRIORITY_MODE_STEPS, TOTAL_PRIORITY_MODE_STEPS } from '@/lib/types/priority';
+import { HABITS_TO_BUILD, HABITS_TO_BREAK, BELIEFS_TO_HOLD } from '@/lib/constants';
 import { motion } from 'framer-motion';
 import { useState } from 'react';
 
+type ArrayField = 'habitsToBuild' | 'habitsToEliminate' | 'beliefsToHold';
+
 const IDENTITY_QUESTIONS = [
   {
-    key: 'habitsToBuild',
+    key: 'habitsToBuild' as const,
+    type: 'array' as const,
     title: 'What habits must you build?',
     description: 'To achieve your priorities, what new habits or routines do you need to adopt?',
-    placeholder: 'e.g., Wake up at 6am, Exercise daily, Read for 30 minutes, Meditate before bed...',
     icon: '🌱',
+    presets: HABITS_TO_BUILD,
   },
   {
-    key: 'habitsToEliminate',
+    key: 'habitsToEliminate' as const,
+    type: 'array' as const,
     title: 'What habits must you eliminate?',
     description: 'What behaviors or patterns are holding you back from your priorities?',
-    placeholder: 'e.g., Mindless social media scrolling, Late-night snacking, Procrastinating on important tasks...',
     icon: '🚫',
+    presets: HABITS_TO_BREAK,
   },
   {
-    key: 'beliefsToHold',
+    key: 'beliefsToHold' as const,
+    type: 'array' as const,
     title: 'What beliefs must you hold?',
     description: 'What mindset or beliefs will help you succeed? What truths do you need to embrace?',
-    placeholder: 'e.g., My time equals my life. Small daily actions compound. I am capable of change. Progress over perfection...',
     icon: '💭',
+    presets: BELIEFS_TO_HOLD,
   },
   {
-    key: 'personWhoAchieves',
+    key: 'personWhoAchieves' as const,
+    type: 'text' as const,
     title: 'What kind of person achieves these priorities?',
     description: 'Describe the characteristics and traits of someone who successfully achieves what you want.',
     placeholder: 'e.g., A disciplined person who puts family first, who values deep work over busy work, who respects their time...',
     icon: '🦋',
   },
   {
-    key: 'iAmSomeoneWho',
+    key: 'iAmSomeoneWho' as const,
+    type: 'text' as const,
     title: 'Complete this statement: "I am someone who..."',
     description: 'This is your identity statement. Who are you becoming in 2026?',
     placeholder: 'I am someone who prioritizes my family\'s health above all else, who does deep work instead of busy work, who treats time as the most precious resource...',
     icon: '✨',
   },
-] as const;
+];
 
 export default function IdentityPage() {
   const router = useRouter();
-  const { data, setCurrentStep, updateIdentity, isLoaded } = usePriorityMode();
+  const { data, setCurrentStep, updateIdentity, addIdentityItem, removeIdentityItem, isLoaded } = usePriorityMode();
 
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [customInput, setCustomInput] = useState('');
 
   const currentStep = PRIORITY_MODE_STEPS.IDENTITY;
   const progressPercentage = Math.round((currentStep / TOTAL_PRIORITY_MODE_STEPS) * 100);
 
   const currentQuestion = IDENTITY_QUESTIONS[currentQuestionIndex];
-  const currentValue = data.identity[currentQuestion.key as keyof typeof data.identity] || '';
 
   const isLastQuestion = currentQuestionIndex === IDENTITY_QUESTIONS.length - 1;
   const isFirstQuestion = currentQuestionIndex === 0;
@@ -68,6 +76,7 @@ export default function IdentityPage() {
       router.push('/priority/review');
     } else {
       setCurrentQuestionIndex(prev => prev + 1);
+      setCustomInput('');
     }
   };
 
@@ -77,11 +86,24 @@ export default function IdentityPage() {
       router.push('/priority/milestones');
     } else {
       setCurrentQuestionIndex(prev => prev - 1);
+      setCustomInput('');
     }
   };
 
-  const handleInputChange = (value: string) => {
-    updateIdentity({ [currentQuestion.key]: value });
+  const handleAddCustom = () => {
+    const trimmed = customInput.trim();
+    if (trimmed && currentQuestion.type === 'array') {
+      addIdentityItem(currentQuestion.key as ArrayField, trimmed);
+      setCustomInput('');
+    }
+  };
+
+  // Helper to get array value safely (backward compat with old string data from localStorage)
+  const getArrayValue = (field: ArrayField): string[] => {
+    const val: unknown = data.identity[field];
+    if (Array.isArray(val)) return val;
+    if (typeof val === 'string' && val.trim()) return [val];
+    return [];
   };
 
   if (!isLoaded) {
@@ -116,7 +138,7 @@ export default function IdentityPage() {
             {IDENTITY_QUESTIONS.map((_, idx) => (
               <button
                 key={idx}
-                onClick={() => setCurrentQuestionIndex(idx)}
+                onClick={() => { setCurrentQuestionIndex(idx); setCustomInput(''); }}
                 className={`w-2 h-2 rounded-full transition-colors ${
                   idx === currentQuestionIndex
                     ? 'bg-indigo-600'
@@ -174,25 +196,130 @@ export default function IdentityPage() {
             </p>
           </div>
 
-          {/* Text Area */}
-          <textarea
-            value={currentValue}
-            onChange={(e) => handleInputChange(e.target.value)}
-            placeholder={currentQuestion.placeholder}
-            className="w-full px-5 py-4 text-lg text-gray-900 placeholder-gray-400 border-2 border-gray-200 rounded-xl focus:border-indigo-500 focus:outline-none resize-none h-48 transition-colors"
-            autoFocus
-          />
+          {currentQuestion.type === 'array' ? (
+            <>
+              {/* Preset Checkboxes */}
+              {'presets' in currentQuestion && currentQuestion.presets && (
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
+                  {currentQuestion.presets.map((preset) => {
+                    const selected = getArrayValue(currentQuestion.key as ArrayField).includes(preset);
+                    return (
+                      <button
+                        key={preset}
+                        onClick={() => {
+                          if (selected) {
+                            const idx = getArrayValue(currentQuestion.key as ArrayField).indexOf(preset);
+                            removeIdentityItem(currentQuestion.key as ArrayField, idx);
+                          } else {
+                            addIdentityItem(currentQuestion.key as ArrayField, preset);
+                          }
+                        }}
+                        className={`flex items-center gap-3 px-4 py-3 rounded-xl border-2 text-left transition-all ${
+                          selected
+                            ? 'border-indigo-500 bg-indigo-50 text-indigo-800'
+                            : 'border-gray-200 bg-white text-gray-700 hover:border-indigo-200'
+                        }`}
+                      >
+                        <span className={`flex-shrink-0 w-5 h-5 rounded-md border-2 flex items-center justify-center ${
+                          selected ? 'border-indigo-500 bg-indigo-500' : 'border-gray-300'
+                        }`}>
+                          {selected && (
+                            <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                            </svg>
+                          )}
+                        </span>
+                        <span className="text-sm font-medium">{preset}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
 
-          {/* Character hint */}
-          <div className="flex justify-between items-center mt-2 text-sm text-gray-500">
-            <span>Take your time. This is about self-discovery.</span>
-            <span>{currentValue.length} characters</span>
-          </div>
+              {/* Custom Add Input */}
+              <div className="flex gap-2 mb-4">
+                <input
+                  type="text"
+                  value={customInput}
+                  onChange={(e) => setCustomInput(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      e.preventDefault();
+                      handleAddCustom();
+                    }
+                  }}
+                  placeholder="Add your own..."
+                  className="flex-1 px-4 py-3 text-gray-900 placeholder-gray-400 border-2 border-gray-200 rounded-xl focus:border-indigo-500 focus:outline-none"
+                />
+                <button
+                  onClick={handleAddCustom}
+                  disabled={!customInput.trim()}
+                  className="px-6 py-3 bg-indigo-600 text-white rounded-xl font-medium hover:bg-indigo-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  Add
+                </button>
+              </div>
+
+              {/* Selected Items as Tags */}
+              {getArrayValue(currentQuestion.key as ArrayField).length > 0 && (
+                <div className="mt-4">
+                  <p className="text-sm font-medium text-gray-600 mb-2">
+                    Selected ({getArrayValue(currentQuestion.key as ArrayField).length}):
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    {getArrayValue(currentQuestion.key as ArrayField).map((item, idx) => {
+                      const isPreset = 'presets' in currentQuestion && currentQuestion.presets?.includes(item);
+                      return (
+                        <span
+                          key={idx}
+                          className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium ${
+                            currentQuestion.key === 'habitsToBuild'
+                              ? 'bg-green-100 text-green-800'
+                              : currentQuestion.key === 'habitsToEliminate'
+                              ? 'bg-red-100 text-red-800'
+                              : 'bg-blue-100 text-blue-800'
+                          }`}
+                        >
+                          {item}
+                          {!isPreset && (
+                            <span className="text-xs opacity-60 ml-0.5">custom</span>
+                          )}
+                          <button
+                            onClick={() => removeIdentityItem(currentQuestion.key as ArrayField, idx)}
+                            className="ml-1 hover:opacity-70"
+                          >
+                            ×
+                          </button>
+                        </span>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+            </>
+          ) : (
+            <>
+              {/* Text Area for prose questions */}
+              <textarea
+                value={(data.identity[currentQuestion.key as keyof typeof data.identity] as string) || ''}
+                onChange={(e) => updateIdentity({ [currentQuestion.key]: e.target.value })}
+                placeholder={currentQuestion.placeholder}
+                className="w-full px-5 py-4 text-lg text-gray-900 placeholder-gray-400 border-2 border-gray-200 rounded-xl focus:border-indigo-500 focus:outline-none resize-none h-48 transition-colors"
+                autoFocus
+              />
+
+              {/* Character hint */}
+              <div className="flex justify-between items-center mt-2 text-sm text-gray-500">
+                <span>Take your time. This is about self-discovery.</span>
+                <span>{((data.identity[currentQuestion.key as keyof typeof data.identity] as string) || '').length} characters</span>
+              </div>
+            </>
+          )}
         </motion.div>
 
         {/* Priority Reminder */}
         <div className="bg-indigo-50 rounded-xl p-5 mb-8 border border-indigo-200">
-          <h3 className="font-semibold text-indigo-900 mb-2">🎯 Your Top Priorities</h3>
+          <h3 className="font-semibold text-indigo-900 mb-2">Your Top Priorities</h3>
           <div className="flex flex-wrap gap-2">
             {data.priorities.slice(0, 5).map((priority, idx) => (
               priority.name && (

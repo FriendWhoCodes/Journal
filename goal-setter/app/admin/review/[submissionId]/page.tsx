@@ -6,6 +6,13 @@ import Link from 'next/link';
 import { WISDOM_FEEDBACK_SECTIONS, isPriorityValid, isGoalValid } from '@/lib/types/priority';
 import type { Priority, Identity, WisdomFeedback } from '@/lib/types/priority';
 
+// Helper for backward compat: handle both string and string[] identity fields
+function toArray(val: unknown): string[] {
+  if (Array.isArray(val)) return val;
+  if (typeof val === 'string' && val.trim()) return [val];
+  return [];
+}
+
 interface SubmissionData {
   id: string;
   priorities: Priority[];
@@ -184,22 +191,40 @@ export default function AdminReviewPage() {
             )}
 
             <div className="grid grid-cols-2 gap-3">
-              {submission.identity.habitsToBuild && (
+              {toArray(submission.identity.habitsToBuild).length > 0 && (
                 <div className="bg-green-50 rounded-lg p-3">
                   <p className="text-xs font-semibold text-green-700 mb-1">Habits to Build</p>
-                  <p className="text-xs text-gray-700">{submission.identity.habitsToBuild}</p>
+                  <div className="flex flex-wrap gap-1">
+                    {toArray(submission.identity.habitsToBuild).map((item, i) => (
+                      <span key={i} className="inline-block bg-green-100 text-green-800 px-2 py-0.5 rounded-full text-xs">
+                        {item}
+                      </span>
+                    ))}
+                  </div>
                 </div>
               )}
-              {submission.identity.habitsToEliminate && (
+              {toArray(submission.identity.habitsToEliminate).length > 0 && (
                 <div className="bg-red-50 rounded-lg p-3">
                   <p className="text-xs font-semibold text-red-700 mb-1">Habits to Eliminate</p>
-                  <p className="text-xs text-gray-700">{submission.identity.habitsToEliminate}</p>
+                  <div className="flex flex-wrap gap-1">
+                    {toArray(submission.identity.habitsToEliminate).map((item, i) => (
+                      <span key={i} className="inline-block bg-red-100 text-red-800 px-2 py-0.5 rounded-full text-xs">
+                        {item}
+                      </span>
+                    ))}
+                  </div>
                 </div>
               )}
-              {submission.identity.beliefsToHold && (
+              {toArray(submission.identity.beliefsToHold).length > 0 && (
                 <div className="bg-blue-50 rounded-lg p-3">
                   <p className="text-xs font-semibold text-blue-700 mb-1">Beliefs to Hold</p>
-                  <p className="text-xs text-gray-700">{submission.identity.beliefsToHold}</p>
+                  <div className="flex flex-wrap gap-1">
+                    {toArray(submission.identity.beliefsToHold).map((item, i) => (
+                      <span key={i} className="inline-block bg-blue-100 text-blue-800 px-2 py-0.5 rounded-full text-xs">
+                        {item}
+                      </span>
+                    ))}
+                  </div>
                 </div>
               )}
               {submission.identity.personWhoAchieves && (
