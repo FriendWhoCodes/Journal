@@ -9,6 +9,10 @@ import Link from 'next/link';
 import { pdf } from '@react-pdf/renderer';
 import { PriorityPDF } from '@/lib/pdf/PriorityPDF';
 import { useAuth } from '@mow/auth';
+import { generateAndDownloadGraphic } from '@/lib/graphics/generateGraphic';
+import { InfographicTemplate } from '@/lib/graphics/InfographicTemplate';
+import { PhoneWallpaperTemplate } from '@/lib/graphics/PhoneWallpaperTemplate';
+import { DesktopWallpaperTemplate } from '@/lib/graphics/DesktopWallpaperTemplate';
 
 export default function CompletePage() {
   const router = useRouter();
@@ -16,6 +20,7 @@ export default function CompletePage() {
   const { user } = useAuth();
 
   const [downloadingPdf, setDownloadingPdf] = useState(false);
+  const [downloadingInfographic, setDownloadingInfographic] = useState(false);
   const [downloadingWallpaper, setDownloadingWallpaper] = useState<string | null>(null);
   const [feedbackStatus, setFeedbackStatus] = useState<WisdomFeedback | null>(null);
 
@@ -61,12 +66,56 @@ export default function CompletePage() {
     }
   };
 
+  const handleDownloadInfographic = async () => {
+    setDownloadingInfographic(true);
+    try {
+      await generateAndDownloadGraphic(
+        <InfographicTemplate
+          name={userName}
+          priorities={validPriorities}
+          identity={data.identity}
+        />,
+        1080,
+        1350,
+        `2026-Blueprint-Infographic-${userName.replace(/\s+/g, '-')}.png`,
+      );
+    } catch (error) {
+      console.error('Infographic generation error:', error);
+      alert('There was an error generating your infographic. Please try again.');
+    } finally {
+      setDownloadingInfographic(false);
+    }
+  };
+
   const handleDownloadWallpaper = async (type: 'phone' | 'desktop') => {
     setDownloadingWallpaper(type);
-    // TODO: Implement wallpaper generation
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    setDownloadingWallpaper(null);
-    alert(`${type === 'phone' ? 'Phone' : 'Desktop'} wallpaper coming soon!`);
+    try {
+      const props = {
+        name: userName,
+        priorities: validPriorities,
+        identity: data.identity,
+      };
+      if (type === 'phone') {
+        await generateAndDownloadGraphic(
+          <PhoneWallpaperTemplate {...props} />,
+          1080,
+          1920,
+          `2026-Priorities-Phone-${userName.replace(/\s+/g, '-')}.png`,
+        );
+      } else {
+        await generateAndDownloadGraphic(
+          <DesktopWallpaperTemplate {...props} />,
+          1920,
+          1080,
+          `2026-Priorities-Desktop-${userName.replace(/\s+/g, '-')}.png`,
+        );
+      }
+    } catch (error) {
+      console.error('Wallpaper generation error:', error);
+      alert('There was an error generating your wallpaper. Please try again.');
+    } finally {
+      setDownloadingWallpaper(null);
+    }
   };
 
   const handleViewInJournal = () => {
@@ -214,7 +263,8 @@ export default function CompletePage() {
 
             {/* Infographic Download */}
             <button
-              onClick={() => alert('Infographic coming soon!')}
+              onClick={handleDownloadInfographic}
+              disabled={downloadingInfographic}
               className="flex items-center gap-4 p-4 bg-purple-50 rounded-xl hover:bg-purple-100 transition-colors text-left group"
             >
               <div className="w-12 h-12 bg-purple-600 rounded-lg flex items-center justify-center text-white text-xl">
@@ -222,7 +272,7 @@ export default function CompletePage() {
               </div>
               <div className="flex-1">
                 <h3 className="font-semibold text-gray-900 group-hover:text-purple-600">
-                  Download Infographic
+                  {downloadingInfographic ? 'Generating...' : 'Download Infographic'}
                 </h3>
                 <p className="text-sm text-gray-500">One-page visual summary</p>
               </div>

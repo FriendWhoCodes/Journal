@@ -31,9 +31,9 @@ Last Updated: February 9, 2026
 - [x] Finalization + DB save
 - [x] Normalized DB tables (PriorityGoal, PriorityMilestoneRecord, PriorityHabit)
 - [x] PDF generation & download
-- [ ] **Infographic generation** (shows "coming soon")
-- [ ] **Phone wallpaper generation** (shows "coming soon")
-- [ ] **Desktop wallpaper generation** (shows "coming soon")
+- [x] Infographic generation (1080x1350 PNG, client-side via html-to-image)
+- [x] Phone wallpaper generation (1080x1920 PNG, dark gradient theme)
+- [x] Desktop wallpaper generation (1920x1080 PNG, dark radial gradient)
 - [x] Email summary on finalization
 
 ### Priority + AI Wisdom ($29.99) - PARTIALLY COMPLETE
