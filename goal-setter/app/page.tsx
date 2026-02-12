@@ -167,8 +167,8 @@ export default function Home() {
               tabIndex={0}
               className="bg-white rounded-2xl shadow-lg p-8 cursor-pointer transform transition-all duration-300 hover:scale-105 hover:shadow-2xl border-2 border-transparent hover:border-indigo-500"
             >
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-2xl font-bold text-slate-800">Priority Mode</h2>
+              <div className="mb-6">
+                <h2 className="text-2xl font-bold text-slate-800 mb-3">Priority Mode</h2>
                 <div className="flex items-center gap-2">
                   <div className="bg-indigo-100 text-indigo-800 px-3 py-1 rounded-full text-sm font-semibold">
                     ~1 hour
@@ -215,8 +215,8 @@ export default function Home() {
               tabIndex={0}
               className="bg-white rounded-2xl shadow-lg p-8 cursor-pointer transform transition-all duration-300 hover:scale-105 hover:shadow-2xl border-2 border-transparent hover:border-emerald-500"
             >
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-2xl font-bold text-slate-800">Priority + AI Wisdom</h2>
+              <div className="mb-6">
+                <h2 className="text-2xl font-bold text-slate-800 mb-3">Priority + AI Wisdom</h2>
                 <div className="flex items-center gap-2">
                   <div className="bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full text-sm font-semibold">
                     ~1 hour
@@ -273,8 +273,8 @@ export default function Home() {
                 </span>
               </div>
 
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-2xl font-bold text-slate-800">Priority + Wisdom</h2>
+              <div className="mb-6">
+                <h2 className="text-2xl font-bold text-slate-800 mb-3">Priority + Wisdom</h2>
                 <div className="flex items-center gap-2">
                   <div className="bg-amber-100 text-amber-800 px-3 py-1 rounded-full text-sm font-semibold">
                     ~1 hour
