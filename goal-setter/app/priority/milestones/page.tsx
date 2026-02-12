@@ -11,7 +11,37 @@ import {
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState } from 'react';
 
-const QUARTERS = ['Q1', 'Q2', 'Q3', 'Q4'];
+const ALL_MONTHS = [
+  'January', 'February', 'March', 'April', 'May', 'June',
+  'July', 'August', 'September', 'October', 'November', 'December',
+];
+
+// Quarter-to-months mapping for backward compatibility with legacy "Q1 2026" values
+const QUARTER_TO_MONTHS: Record<string, string[]> = {
+  'Q1': ['January', 'February', 'March'],
+  'Q2': ['January', 'February', 'March', 'April', 'May', 'June'],
+  'Q3': ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September'],
+  'Q4': ALL_MONTHS,
+};
+
+function getMonthsForGoal(byWhen: string): string[] {
+  if (!byWhen || byWhen === 'Ongoing') return ALL_MONTHS;
+
+  // Handle legacy quarter format: "Q1 2026", "Q2 2026", etc.
+  const quarterMatch = byWhen.match(/^(Q[1-4])\s/);
+  if (quarterMatch) {
+    return QUARTER_TO_MONTHS[quarterMatch[1]] || ALL_MONTHS;
+  }
+
+  // Handle month format: "March 2026", "December 2026", etc.
+  const monthName = byWhen.split(' ')[0];
+  const monthIndex = ALL_MONTHS.indexOf(monthName);
+  if (monthIndex !== -1) {
+    return ALL_MONTHS.slice(0, monthIndex + 1);
+  }
+
+  return ALL_MONTHS;
+}
 
 export default function MilestonesPage() {
   const router = useRouter();
@@ -111,10 +141,10 @@ export default function MilestonesPage() {
           className="text-center mb-8"
         >
           <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3">
-            Break Down into Milestones
+            Break Down into Monthly Milestones
           </h1>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Optional: Break your goals into quarterly milestones. This makes big goals feel achievable.
+            Optional: Break your goals into monthly milestones based on your deadline. This makes big goals feel achievable.
             You can also do this later in the Journal.
           </p>
         </motion.div>
@@ -142,6 +172,7 @@ export default function MilestonesPage() {
           {allGoals.map((goal) => {
             const isExpanded = expandedGoals.has(goal.id);
             const hasMilestones = goal.milestones.length > 0;
+            const months = getMonthsForGoal(goal.byWhen);
 
             return (
               <motion.div
@@ -163,7 +194,7 @@ export default function MilestonesPage() {
                       {goal.what}
                     </h3>
                     <p className="text-sm text-gray-500 mt-1">
-                      Target: {goal.byWhen} • {hasMilestones ? `${goal.milestones.length} milestone(s)` : 'No milestones yet'}
+                      Target: {goal.byWhen} • {hasMilestones ? `${goal.milestones.length} milestone(s)` : 'No milestones yet'} • {months.length} month{months.length !== 1 ? 's' : ''}
                     </p>
                   </div>
                   <motion.div
@@ -188,22 +219,22 @@ export default function MilestonesPage() {
                       className="border-t border-gray-100"
                     >
                       <div className="p-5">
-                        {/* Quarterly Timeline */}
-                        <div className="grid grid-cols-4 gap-3 mb-4">
-                          {QUARTERS.map((quarter) => {
-                            const milestone = goal.milestones.find(m => m.period === quarter);
+                        {/* Monthly Timeline */}
+                        <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2 mb-4">
+                          {months.map((month) => {
+                            const milestone = goal.milestones.find(m => m.period === month);
                             const hasContent = milestone && (milestone.description || milestone.tasks.length > 0);
 
                             return (
                               <div
-                                key={quarter}
-                                className={`text-center p-2 rounded-lg text-sm font-medium transition-colors ${
+                                key={month}
+                                className={`text-center p-2 rounded-lg text-xs font-medium transition-colors ${
                                   hasContent
                                     ? 'bg-indigo-100 text-indigo-700'
                                     : 'bg-gray-100 text-gray-500'
                                 }`}
                               >
-                                {quarter}
+                                {month.substring(0, 3)}
                               </div>
                             );
                           })}
@@ -211,23 +242,23 @@ export default function MilestonesPage() {
 
                         {/* Milestone Cards */}
                         <div className="space-y-4">
-                          {QUARTERS.map((quarter) => {
-                            let milestone = goal.milestones.find(m => m.period === quarter);
+                          {months.map((month) => {
+                            const milestone = goal.milestones.find(m => m.period === month);
 
                             // Create milestone if it doesn't exist when user starts typing
                             if (!milestone) {
                               return (
-                                <div key={quarter} className="bg-gray-50 rounded-xl p-4">
+                                <div key={month} className="bg-gray-50 rounded-xl p-4">
                                   <div className="flex items-center gap-2 mb-3">
-                                    <span className="text-sm font-semibold text-gray-700">{quarter} 2026</span>
+                                    <span className="text-sm font-semibold text-gray-700">{month} 2026</span>
                                   </div>
                                   <input
                                     type="text"
-                                    placeholder={`What will you accomplish in ${quarter}?`}
+                                    placeholder={`What will you accomplish in ${month}?`}
                                     className="w-full px-3 py-2 text-gray-700 placeholder-gray-400 border border-gray-200 rounded-lg focus:border-indigo-500 focus:outline-none text-sm"
                                     onFocus={() => {
                                       // Create milestone when user focuses
-                                      addMilestone(goal.priorityId, goal.id, quarter);
+                                      addMilestone(goal.priorityId, goal.id, month);
                                     }}
                                   />
                                 </div>
@@ -235,9 +266,9 @@ export default function MilestonesPage() {
                             }
 
                             return (
-                              <div key={quarter} className="bg-gray-50 rounded-xl p-4">
+                              <div key={month} className="bg-gray-50 rounded-xl p-4">
                                 <div className="flex items-center justify-between mb-3">
-                                  <span className="text-sm font-semibold text-gray-700">{quarter} 2026</span>
+                                  <span className="text-sm font-semibold text-gray-700">{month} 2026</span>
                                   <button
                                     onClick={() => removeMilestone(goal.priorityId, goal.id, milestone.id)}
                                     className="text-gray-400 hover:text-red-500 text-xs"
@@ -255,7 +286,7 @@ export default function MilestonesPage() {
                                       description: e.target.value,
                                     })
                                   }
-                                  placeholder={`What will you accomplish in ${quarter}?`}
+                                  placeholder={`What will you accomplish in ${month}?`}
                                   className="w-full px-3 py-2 text-gray-700 placeholder-gray-400 border border-gray-200 rounded-lg focus:border-indigo-500 focus:outline-none text-sm mb-3"
                                 />
 
@@ -290,7 +321,7 @@ export default function MilestonesPage() {
                                     onChange={(e) =>
                                       setNewTasks(prev => ({ ...prev, [milestone.id]: e.target.value }))
                                     }
-                                    onKeyPress={(e) => {
+                                    onKeyDown={(e) => {
                                       if (e.key === 'Enter') {
                                         e.preventDefault();
                                         handleAddTask(goal.priorityId, goal.id, milestone.id);
@@ -321,11 +352,12 @@ export default function MilestonesPage() {
 
         {/* Tips Card */}
         <div className="bg-amber-50 rounded-xl p-5 mb-8 border border-amber-200">
-          <h3 className="font-semibold text-gray-900 mb-2">💡 Tips for milestones</h3>
+          <h3 className="font-semibold text-gray-900 mb-2">Tips for milestones</h3>
           <ul className="text-sm text-gray-700 space-y-1">
-            <li>• Break big goals into smaller, measurable chunks</li>
-            <li>• Each quarter should have clear progress markers</li>
+            <li>• Break big goals into smaller, measurable monthly chunks</li>
+            <li>• Each month should have a clear progress marker</li>
             <li>• Tasks are specific actions you can check off</li>
+            <li>• Only months up to your deadline are shown</li>
             <li>• It&apos;s okay to skip this — you can plan details in the Journal</li>
           </ul>
         </div>

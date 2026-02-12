@@ -17,3 +17,12 @@ export const HABITS_TO_BREAK = [
   'Saying yes to everything',
   'Skipping breakfast',
 ];
+
+export const BELIEFS_TO_HOLD = [
+  'My time equals my life',
+  'Small daily actions compound',
+  'Progress over perfection',
+  'I am capable of change',
+  'Health is my foundation',
+  'Consistency beats intensity',
+];

@@ -193,6 +193,13 @@ const styles = StyleSheet.create({
   },
 });
 
+// Helper for backward compat: handle both string and string[] identity fields
+function toArray(val: unknown): string[] {
+  if (Array.isArray(val)) return val;
+  if (typeof val === 'string' && val.trim()) return [val];
+  return [];
+}
+
 interface PriorityPDFProps {
   name: string;
   data: PriorityModeData;
@@ -276,9 +283,9 @@ export const PriorityPDF = ({ name, data }: PriorityPDFProps) => {
       </Page>
 
       {/* Page 2: Identity Transformation (if has content) */}
-      {(data.identity.habitsToBuild ||
-        data.identity.habitsToEliminate ||
-        data.identity.beliefsToHold ||
+      {(toArray(data.identity.habitsToBuild).length > 0 ||
+        toArray(data.identity.habitsToEliminate).length > 0 ||
+        toArray(data.identity.beliefsToHold).length > 0 ||
         data.identity.personWhoAchieves) && (
         <Page size="A4" style={styles.page}>
           <View style={styles.header}>
@@ -287,30 +294,36 @@ export const PriorityPDF = ({ name, data }: PriorityPDFProps) => {
           </View>
 
           <View style={styles.identityGrid}>
-            {data.identity.habitsToBuild && (
+            {toArray(data.identity.habitsToBuild).length > 0 && (
               <View style={[styles.identityBox, styles.identityBoxGreen]}>
                 <Text style={[styles.identityBoxTitle, styles.identityBoxTitleGreen]}>
                   HABITS TO BUILD
                 </Text>
-                <Text style={styles.identityBoxText}>{data.identity.habitsToBuild}</Text>
+                {toArray(data.identity.habitsToBuild).map((item, i) => (
+                  <Text key={i} style={styles.identityBoxText}>• {item}</Text>
+                ))}
               </View>
             )}
 
-            {data.identity.habitsToEliminate && (
+            {toArray(data.identity.habitsToEliminate).length > 0 && (
               <View style={[styles.identityBox, styles.identityBoxRed]}>
                 <Text style={[styles.identityBoxTitle, styles.identityBoxTitleRed]}>
                   HABITS TO ELIMINATE
                 </Text>
-                <Text style={styles.identityBoxText}>{data.identity.habitsToEliminate}</Text>
+                {toArray(data.identity.habitsToEliminate).map((item, i) => (
+                  <Text key={i} style={styles.identityBoxText}>• {item}</Text>
+                ))}
               </View>
             )}
 
-            {data.identity.beliefsToHold && (
+            {toArray(data.identity.beliefsToHold).length > 0 && (
               <View style={[styles.identityBox, styles.identityBoxBlue]}>
                 <Text style={[styles.identityBoxTitle, styles.identityBoxTitleBlue]}>
                   BELIEFS TO HOLD
                 </Text>
-                <Text style={styles.identityBoxText}>{data.identity.beliefsToHold}</Text>
+                {toArray(data.identity.beliefsToHold).map((item, i) => (
+                  <Text key={i} style={styles.identityBoxText}>• {item}</Text>
+                ))}
               </View>
             )}
 

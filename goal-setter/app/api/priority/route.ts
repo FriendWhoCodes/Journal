@@ -234,6 +234,85 @@ export async function POST(request: NextRequest) {
         }
       }
 
+      // Populate normalized tracking tables on finalization
+      if (finalize) {
+        try {
+          // Delete existing normalized records (in case of re-finalization)
+          await prisma.priorityHabit.deleteMany({ where: { submissionId: submission.id } });
+          await prisma.priorityGoal.deleteMany({ where: { submissionId: submission.id } });
+
+          // Create PriorityGoal and PriorityMilestoneRecord records
+          const typedPriorities = priorities as Priority[];
+          for (const priority of typedPriorities) {
+            if (!priority.name?.trim()) continue;
+            for (const goal of priority.goals || []) {
+              if (!goal.what?.trim()) continue;
+              const createdGoal = await prisma.priorityGoal.create({
+                data: {
+                  submissionId: submission.id,
+                  priorityName: priority.name,
+                  priorityOrder: priority.order || 1,
+                  what: goal.what,
+                  byWhen: goal.byWhen || '',
+                  successLooksLike: goal.successLooksLike || null,
+                },
+              });
+
+              // Create milestone records
+              for (const milestone of goal.milestones || []) {
+                if (!milestone.description?.trim()) continue;
+                await prisma.priorityMilestoneRecord.create({
+                  data: {
+                    goalId: createdGoal.id,
+                    period: milestone.period,
+                    description: milestone.description,
+                  },
+                });
+              }
+            }
+          }
+
+          // Create PriorityHabit records from identity
+          // Use loose typing since request body may have old string or new string[] format
+          const rawIdentity = identity as Record<string, unknown>;
+          const habitsToBuild = Array.isArray(rawIdentity.habitsToBuild)
+            ? rawIdentity.habitsToBuild as string[]
+            : typeof rawIdentity.habitsToBuild === 'string' && (rawIdentity.habitsToBuild as string).trim()
+              ? [rawIdentity.habitsToBuild as string]
+              : [];
+          const habitsToEliminate = Array.isArray(rawIdentity.habitsToEliminate)
+            ? rawIdentity.habitsToEliminate as string[]
+            : typeof rawIdentity.habitsToEliminate === 'string' && (rawIdentity.habitsToEliminate as string).trim()
+              ? [rawIdentity.habitsToEliminate as string]
+              : [];
+
+          for (const habit of habitsToBuild) {
+            if (!habit.trim()) continue;
+            await prisma.priorityHabit.create({
+              data: {
+                submissionId: submission.id,
+                habit: habit.trim(),
+                type: 'build',
+              },
+            });
+          }
+
+          for (const habit of habitsToEliminate) {
+            if (!habit.trim()) continue;
+            await prisma.priorityHabit.create({
+              data: {
+                submissionId: submission.id,
+                habit: habit.trim(),
+                type: 'eliminate',
+              },
+            });
+          }
+        } catch (normError) {
+          // Log but don't fail the request — JSONB data is already saved
+          console.error('Error populating normalized tables:', normError);
+        }
+      }
+
       return NextResponse.json(
         {
           success: true,
