@@ -3,6 +3,7 @@ import { prisma } from '@/lib/db';
 import { getCurrentUser, ensureProductAccess } from '@/lib/auth';
 import { PriorityModeData, Priority, Identity, WisdomType } from '@/lib/types/priority';
 import { generateAIFeedback } from '@/lib/ai-feedback';
+import { sendBlueprintSummaryEmail } from '@/lib/email';
 
 // GET - Load existing Priority Mode submission
 export async function GET(request: NextRequest) {
@@ -311,6 +312,20 @@ export async function POST(request: NextRequest) {
           // Log but don't fail the request — JSONB data is already saved
           console.error('Error populating normalized tables:', normError);
         }
+      }
+
+      // Send blueprint summary email on first finalization (non-blocking)
+      if (finalize && !existing?.finalizedAt) {
+        const rawIdentity = identity as Record<string, unknown>;
+        sendBlueprintSummaryEmail(
+          authUser.email,
+          authUser.name,
+          priorities as Priority[],
+          typeof rawIdentity.iAmSomeoneWho === 'string' ? rawIdentity.iAmSomeoneWho : null,
+          year,
+        ).catch(err => {
+          console.error('Error sending blueprint summary email:', err);
+        });
       }
 
       return NextResponse.json(
