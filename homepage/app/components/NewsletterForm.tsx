@@ -80,25 +80,33 @@ export default function NewsletterForm({ variant = "full" }: NewsletterFormProps
   }
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
-      <input
-        type="email"
-        value={email}
-        onChange={(e) => {
-          setEmail(e.target.value);
-          if (status !== "idle" && status !== "loading") setStatus("idle");
-        }}
-        placeholder="Enter your email"
-        required
-        className="flex-1 px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-gray-400 focus:outline-none focus:border-[#D4AF37] transition-colors"
-      />
-      <button
-        type="submit"
-        disabled={status === "loading"}
-        className="px-6 py-3 bg-[#D4AF37] hover:bg-[#E8C547] text-black font-semibold rounded-lg transition-colors disabled:opacity-50"
-      >
-        {status === "loading" ? "..." : "Subscribe"}
-      </button>
-    </form>
+    <div className="max-w-md mx-auto">
+      <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-4">
+        <input
+          type="email"
+          value={email}
+          onChange={(e) => {
+            setEmail(e.target.value);
+            if (status !== "idle" && status !== "loading") setStatus("idle");
+          }}
+          placeholder="Enter your email"
+          required
+          className="flex-1 px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-gray-400 focus:outline-none focus:border-[#D4AF37] transition-colors"
+        />
+        <button
+          type="submit"
+          disabled={status === "loading"}
+          className="px-6 py-3 bg-[#D4AF37] hover:bg-[#E8C547] text-black font-semibold rounded-lg transition-colors disabled:opacity-50"
+        >
+          {status === "loading" ? "..." : "Subscribe"}
+        </button>
+      </form>
+      {status === "success" && (
+        <p className="text-green-400 text-sm mt-4 text-center">{message}</p>
+      )}
+      {status === "error" && (
+        <p className="text-red-400 text-sm mt-4 text-center">{message}</p>
+      )}
+    </div>
   );
 }
