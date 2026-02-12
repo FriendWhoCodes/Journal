@@ -40,7 +40,7 @@ export default function NewsletterPage() {
             </p>
 
             <p className="text-gray-400 mb-12">
-              Join 2,000+ wisdom seekers building meaningful lives.
+              Join a growing community of wisdom seekers.
             </p>
           </motion.div>
 
