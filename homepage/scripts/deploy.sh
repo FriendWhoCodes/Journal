@@ -44,6 +44,33 @@ if [ -f "$LOCK_FILE" ]; then
     fi
 fi
 
+# Required environment variables
+REQUIRED_ENV_VARS=(
+  "RESEND_API_KEY"
+  "RESEND_SEGMENT_ID"
+)
+
+# Validate required env vars before doing anything
+ENV_FILE="$APP_DIR/.env"
+if [ -f "$ENV_FILE" ]; then
+    MISSING=()
+    for var in "${REQUIRED_ENV_VARS[@]}"; do
+        if ! grep -q "^${var}=" "$ENV_FILE"; then
+            MISSING+=("$var")
+        fi
+    done
+
+    if [ ${#MISSING[@]} -gt 0 ]; then
+        log_error "Missing required env vars in $ENV_FILE:"
+        for var in "${MISSING[@]}"; do
+            echo "  - $var"
+        done
+        log_error "Aborting deploy. Current version is still running."
+        exit 1
+    fi
+    log_info "All required env vars present."
+fi
+
 # Create lock file
 echo $$ > "$LOCK_FILE"
 log_info "Starting deployment (PID: $$)..."

@@ -12,6 +12,37 @@ REPO_DIR="/var/www/Journal"
 APP_DIR="/var/www/Journal/goal-setter"
 BRANCH="main"
 APP_NAME="goal-setter"
+REQUIRED_ENV_VARS=(
+  "DATABASE_URL"
+  "NEXT_PUBLIC_APP_URL"
+  "RESEND_API_KEY"
+  "RESEND_SEGMENT_ID"
+)
+
+# Validate required env vars before doing anything
+echo "Validating environment variables..."
+ENV_FILE="$APP_DIR/.env"
+if [ ! -f "$ENV_FILE" ]; then
+  echo "ERROR: $ENV_FILE not found! Aborting deploy."
+  exit 1
+fi
+
+MISSING=()
+for var in "${REQUIRED_ENV_VARS[@]}"; do
+  if ! grep -q "^${var}=" "$ENV_FILE"; then
+    MISSING+=("$var")
+  fi
+done
+
+if [ ${#MISSING[@]} -gt 0 ]; then
+  echo "ERROR: Missing required env vars in $ENV_FILE:"
+  for var in "${MISSING[@]}"; do
+    echo "  - $var"
+  done
+  echo "Aborting deploy. Current version is still running."
+  exit 1
+fi
+echo "All required env vars present."
 
 # Navigate to repo root and pull
 cd "$REPO_DIR" || exit 1
