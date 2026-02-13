@@ -1,41 +1,25 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { authConfig } from '@/lib/auth';
-import { createMagicLink, sendMagicLinkEmail } from '@mow/auth';
-
-// Simple in-memory rate limiter for magic link requests
-// Limits: 3 requests per email per 15 minutes
-const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
-const RATE_LIMIT_MAX = 3;
-const RATE_LIMIT_WINDOW_MS = 15 * 60 * 1000; // 15 minutes
-
-function checkRateLimit(email: string): boolean {
-  const now = Date.now();
-  const key = email.toLowerCase();
-  const record = rateLimitMap.get(key);
-
-  // Clean up old entries periodically
-  if (rateLimitMap.size > 10000) {
-    for (const [k, v] of rateLimitMap) {
-      if (v.resetAt < now) rateLimitMap.delete(k);
-    }
-  }
-
-  if (!record || record.resetAt < now) {
-    rateLimitMap.set(key, { count: 1, resetAt: now + RATE_LIMIT_WINDOW_MS });
-    return true;
-  }
-
-  if (record.count >= RATE_LIMIT_MAX) {
-    return false;
-  }
-
-  record.count++;
-  return true;
-}
+import { createMagicLink, sendMagicLinkEmail, loginRateLimiter } from '@mow/auth';
 
 export async function POST(request: NextRequest) {
   try {
+    const ip = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim()
+      || request.headers.get('x-real-ip')
+      || 'unknown';
+
+    const rateCheck = loginRateLimiter.check(ip);
+    if (!rateCheck.allowed) {
+      return NextResponse.json(
+        { error: 'Too many login attempts. Please try again later.' },
+        {
+          status: 429,
+          headers: { 'Retry-After': String(Math.ceil((rateCheck.retryAfterMs || 0) / 1000)) },
+        },
+      );
+    }
+
     const { email, name } = await request.json();
 
     if (!email || typeof email !== 'string') {
@@ -51,14 +35,6 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         { error: 'Invalid email address' },
         { status: 400 }
-      );
-    }
-
-    // Check rate limit before sending magic link
-    if (!checkRateLimit(normalizedEmail)) {
-      return NextResponse.json(
-        { error: 'Too many login attempts. Please try again later.' },
-        { status: 429 }
       );
     }
 

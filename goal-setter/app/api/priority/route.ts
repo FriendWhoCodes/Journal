@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/db';
-import { getCurrentUser, ensureProductAccess } from '@/lib/auth';
+import { getCurrentUser, checkProductAccess, grantProductAccess } from '@/lib/auth';
 import { PriorityModeData, Priority, Identity, WisdomType } from '@/lib/types/priority';
 import { generateAIFeedback } from '@/lib/ai-feedback';
 import { sendBlueprintSummaryEmail } from '@/lib/email';
@@ -99,7 +99,7 @@ export async function POST(request: NextRequest) {
 
     // For now, allow access without payment check (will add payment gate later)
     // TODO: Check if user has purchased priority_mode product
-    // await ensureProductAccess(authUser.id, 'priority_mode');
+    // await checkProductAccess(authUser.id, 'priority_mode');
 
     const body = await request.json();
     const { priorities, identity, wisdomMode, wisdomType, finalize, year: yearInput = 2026 } = body;
