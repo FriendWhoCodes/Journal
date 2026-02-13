@@ -37,10 +37,25 @@ export async function requireAuth(): Promise<AuthUser> {
   return user;
 }
 
-export async function ensureProductAccess(
+/**
+ * Check if a user has access to a product. Read-only, never creates records.
+ */
+export async function checkProductAccess(userId: string, product: string) {
+  return prisma.userProduct.findUnique({
+    where: {
+      userId_product: { userId, product },
+    },
+  });
+}
+
+/**
+ * Grant a user access to a product. For use by admin routes, payment webhooks,
+ * and free-tier auto-grant during the no-payment phase.
+ */
+export async function grantProductAccess(
   userId: string,
   product: string,
-  accessType: string = 'free'
+  accessType: string = 'free',
 ) {
   return prisma.userProduct.upsert({
     where: {

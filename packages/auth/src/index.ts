@@ -52,3 +52,18 @@ export {
   LoginForm,
   ProtectedRoute,
 } from './components';
+
+// Rate Limiting
+export {
+  RateLimiter,
+  loginRateLimiter,
+  verifyRateLimiter,
+} from './rate-limit';
+export type { RateLimitConfig, RateLimitResult } from './rate-limit';
+
+// CSRF
+export { validateOrigin } from './csrf';
+
+// Security Headers
+export { getSecurityHeaders } from './security-headers';
+export type { SecurityHeadersConfig } from './security-headers';

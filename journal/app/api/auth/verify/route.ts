@@ -2,10 +2,25 @@ import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 import { prisma } from '@/lib/prisma';
 import { authConfig } from '@/lib/auth';
-import { verifyMagicLink, setSessionCookie } from '@mow/auth';
+import { verifyMagicLink, setSessionCookie, verifyRateLimiter } from '@mow/auth';
 
 export async function POST(request: NextRequest) {
   try {
+    const ip = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim()
+      || request.headers.get('x-real-ip')
+      || 'unknown';
+
+    const rateCheck = verifyRateLimiter.check(ip);
+    if (!rateCheck.allowed) {
+      return NextResponse.json(
+        { error: 'Too many requests. Please try again later.' },
+        {
+          status: 429,
+          headers: { 'Retry-After': String(Math.ceil((rateCheck.retryAfterMs || 0) / 1000)) },
+        },
+      );
+    }
+
     const { token } = await request.json();
 
     if (!token || typeof token !== 'string') {

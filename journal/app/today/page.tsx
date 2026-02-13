@@ -1,5 +1,5 @@
 import { redirect } from 'next/navigation';
-import { getCurrentUser, ensureProductAccess } from '@/lib/auth';
+import { getCurrentUser, grantProductAccess } from '@/lib/auth';
 import { formatDate, getToday } from '@/lib/utils';
 import Link from 'next/link';
 
@@ -11,7 +11,7 @@ export default async function TodayPage() {
   }
 
   // Auto-grant journal access
-  await ensureProductAccess(user.id, 'journal');
+  await grantProductAccess(user.id, 'journal');
 
   const today = getToday();
 

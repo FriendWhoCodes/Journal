@@ -6,7 +6,8 @@
   "types": "./src/index.ts",
   "exports": {
     ".": "./src/index.ts",
-    "./components": "./src/components/index.ts"
+    "./components": "./src/components/index.ts",
+    "./server": "./src/server.ts"
   },
   "peerDependencies": {
     "@prisma/client": "^6.0.0",

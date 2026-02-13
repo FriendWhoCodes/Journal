@@ -1,4 +1,4 @@
-import { getCurrentUser, ensureProductAccess } from "@/lib/auth";
+import { getCurrentUser, grantProductAccess } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { CATEGORIES, getWeeksInYear } from "@/lib/utils";
@@ -18,7 +18,7 @@ export default async function WeekDetailPage({ params }: PageProps) {
     redirect("/login");
   }
 
-  await ensureProductAccess(user.id, 'time_views');
+  await grantProductAccess(user.id, 'time_views');
 
   const { year: yearStr, week: weekStr } = await params;
   const year = parseInt(yearStr, 10);

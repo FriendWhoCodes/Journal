@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/db';
-import { getCurrentUser, ensureProductAccess } from '@/lib/auth';
+import { getCurrentUser, grantProductAccess } from '@/lib/auth';
 import { Mode, QuickModeData, DeepModeData } from '@/lib/types';
 import {
   validateName,
@@ -21,7 +21,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Auto-grant free access to goal_setter product
-    await ensureProductAccess(authUser.id, 'goal_setter');
+    await grantProductAccess(authUser.id, 'goal_setter');
 
     const body = await request.json();
     const { name, mode, quickModeData, deepModeData } = body;
