@@ -27,6 +27,7 @@ model AuthUser {
   sessions                 AuthSession[]
   magicLinks               AuthMagicLink[]
   products                 UserProduct[]
+  payments                 Payment[]
   goalSetterUser           GoalSetterUser?
   timeViewsEntries         TimeViewsEntry[]
   priorityModeSubmissions  PriorityModeSubmission[]
@@ -76,6 +77,33 @@ model AuthMagicLink {
 
   @@index([expiresAt])
   @@map("auth_magic_links")
+}
+
+// ============================================
+// PAYMENT TABLES
+// ============================================
+
+model Payment {
+  id                String   @id @default(cuid())
+  userId            String   @map("user_id")
+  product           String   // priority_mode, priority_ai_wisdom, priority_personal_wisdom
+  amount            Int      // Amount in smallest currency unit (paise/cents)
+  currency          String   @default("INR") @db.VarChar(3)
+  provider          String   // razorpay, stripe
+  providerPaymentId String?  @map("provider_payment_id") // Razorpay payment_id or Stripe payment_intent
+  providerOrderId   String?  @map("provider_order_id")   // Razorpay order_id or Stripe checkout session
+  status            String   @default("pending") // pending, completed, failed, refunded
+  metadata          Json?    @db.JsonB // Provider-specific data (signature, receipt, etc.)
+  completedAt       DateTime? @map("completed_at")
+  createdAt         DateTime @default(now()) @map("created_at")
+  updatedAt         DateTime @updatedAt @map("updated_at")
+
+  user AuthUser @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([provider, providerPaymentId])
+  @@index([status])
+  @@map("payments")
 }
 
 // ============================================
