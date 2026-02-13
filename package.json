@@ -12,5 +12,11 @@
     "dev:time-views": "npm run dev --workspace=time-views",
     "build:goal-setter": "npm run build --workspace=goal-setter",
     "build:time-views": "npm run build --workspace=time-views"
+  },
+  "devDependencies": {
+    "prisma": "^6.19.2"
+  },
+  "dependencies": {
+    "@prisma/client": "^6.19.2"
   }
 }
