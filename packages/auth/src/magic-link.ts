@@ -3,6 +3,7 @@ import type { PrismaClient } from '@prisma/client';
 import { DEFAULT_AUTH_CONFIG, type AuthConfig, type SendMagicLinkResult, type VerifyMagicLinkResult } from './types';
 import { createSession } from './session';
 import { hashToken } from './crypto';
+import { auditLog } from './audit';
 
 export function generateToken(): string {
   return randomBytes(32).toString('hex');
@@ -62,7 +63,8 @@ export async function createMagicLink(
   prisma: PrismaClient,
   email: string,
   config: AuthConfig = {},
-  name?: string
+  name?: string,
+  ip?: string
 ): Promise<{ token: string; userId: string }> {
   const { magicLinkExpiryMinutes } = { ...DEFAULT_AUTH_CONFIG, ...config };
 
@@ -104,13 +106,18 @@ export async function createMagicLink(
     },
   });
 
+  auditLog({ event: 'auth.login_requested', email: email.toLowerCase(), ip });
+
   return { token, userId: user.id };
 }
+
+const MAX_VERIFY_ATTEMPTS = 10;
 
 export async function verifyMagicLink(
   prisma: PrismaClient,
   token: string,
-  config: AuthConfig = {}
+  config: AuthConfig = {},
+  ip?: string
 ): Promise<VerifyMagicLinkResult> {
   // Find magic link by hash
   const magicLink = await (prisma as any).authMagicLink.findUnique({
@@ -119,16 +126,32 @@ export async function verifyMagicLink(
   });
 
   if (!magicLink) {
+    auditLog({ event: 'auth.login_verified', success: false, reason: 'not_found', ip });
+    return { success: false, error: 'Invalid or expired link' };
+  }
+
+  // Increment attempts atomically
+  const updated = await (prisma as any).authMagicLink.update({
+    where: { id: magicLink.id },
+    data: { attempts: { increment: 1 } },
+    select: { attempts: true },
+  });
+
+  // Reject if attempt cap exceeded
+  if (updated.attempts > MAX_VERIFY_ATTEMPTS) {
+    auditLog({ event: 'auth.login_verified', success: false, reason: 'attempts_exceeded', ip });
     return { success: false, error: 'Invalid or expired link' };
   }
 
   // Check if already used
   if (magicLink.usedAt) {
+    auditLog({ event: 'auth.login_verified', success: false, reason: 'already_used', ip });
     return { success: false, error: 'Link has already been used' };
   }
 
   // Check expiration
   if (new Date() > magicLink.expiresAt) {
+    auditLog({ event: 'auth.login_verified', success: false, reason: 'expired', ip });
     return { success: false, error: 'Link has expired' };
   }
 
@@ -148,6 +171,8 @@ export async function verifyMagicLink(
 
   // Create session
   const session = await createSession(prisma, magicLink.userId, config);
+
+  auditLog({ event: 'auth.login_verified', success: true, userId: magicLink.userId, ip });
 
   return {
     success: true,

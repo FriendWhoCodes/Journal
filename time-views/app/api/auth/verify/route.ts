@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 import { prisma } from '@/lib/prisma';
 import { authConfig } from '@/lib/auth';
-import { verifyMagicLink, setSessionCookie, verifyRateLimiter } from '@mow/auth';
+import { verifyMagicLink, setSessionCookie, verifyRateLimiter, auditLog } from '@mow/auth';
 
 export async function POST(request: NextRequest) {
   try {
@@ -12,6 +12,7 @@ export async function POST(request: NextRequest) {
 
     const rateCheck = verifyRateLimiter.check(ip);
     if (!rateCheck.allowed) {
+      auditLog({ event: 'auth.rate_limited', ip, endpoint: 'verify' });
       return NextResponse.json(
         { error: 'Too many requests. Please try again later.' },
         {
@@ -31,7 +32,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Verify magic link
-    const result = await verifyMagicLink(prisma, token, authConfig);
+    const result = await verifyMagicLink(prisma, token, authConfig, ip);
 
     if (!result.success || !result.session) {
       return NextResponse.json(

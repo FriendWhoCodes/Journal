@@ -4,6 +4,7 @@ import type { ReadonlyRequestCookies } from 'next/dist/server/web/spec-extension
 import { DEFAULT_AUTH_CONFIG, type AuthConfig, type AuthSession, type AuthUser } from './types';
 import { hashToken } from './crypto';
 import { cleanupExpiredAuthRecords } from './cleanup';
+import { auditLog } from './audit';
 
 export function generateSessionToken(): string {
   return randomBytes(32).toString('hex');
@@ -26,6 +27,8 @@ export async function createSession(
       expiresAt,
     },
   });
+
+  auditLog({ event: 'auth.session_created', userId });
 
   // Return with raw token (not hash) for cookie setting
   return { ...session, token };
@@ -68,6 +71,7 @@ export async function deleteSession(
   await (prisma as any).authSession.deleteMany({
     where: { tokenHash: hashToken(token) },
   });
+  auditLog({ event: 'auth.session_deleted' });
 }
 
 export async function deleteAllUserSessions(

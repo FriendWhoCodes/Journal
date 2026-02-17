@@ -22,3 +22,6 @@ export {
 export { hashToken } from './crypto';
 
 export { cleanupExpiredAuthRecords } from './cleanup';
+
+// Audit Logging
+export { auditLog } from './audit';
