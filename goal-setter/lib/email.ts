@@ -1,3 +1,12 @@
+function escapeHtml(str: string): string {
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#x27;');
+}
+
 interface BlueprintPriority {
   name: string;
   why?: string;
@@ -31,7 +40,7 @@ export async function sendBlueprintSummaryEmail(
       .filter(g => g.what?.trim())
       .map(g => `
         <li style="color: #374151; font-size: 14px; line-height: 1.6; margin-bottom: 4px;">
-          ${g.what}${g.byWhen ? ` <span style="color: #9ca3af;">— ${g.byWhen}</span>` : ''}
+          ${escapeHtml(g.what)}${g.byWhen ? ` <span style="color: #9ca3af;">— ${escapeHtml(g.byWhen)}</span>` : ''}
         </li>
       `)
       .join('');
@@ -39,9 +48,9 @@ export async function sendBlueprintSummaryEmail(
     return `
       <div style="margin-bottom: 20px; padding-left: 16px; border-left: 3px solid #4f46e5;">
         <div style="font-size: 16px; font-weight: 600; color: #1f2937; margin-bottom: 4px;">
-          ${i + 1}. ${p.name}
+          ${i + 1}. ${escapeHtml(p.name)}
         </div>
-        ${p.why ? `<div style="font-size: 13px; color: #6b7280; font-style: italic; margin-bottom: 8px;">"${p.why}"</div>` : ''}
+        ${p.why ? `<div style="font-size: 13px; color: #6b7280; font-style: italic; margin-bottom: 8px;">"${escapeHtml(p.why)}"</div>` : ''}
         ${goalsHtml ? `<ul style="margin: 0; padding-left: 20px;">${goalsHtml}</ul>` : ''}
       </div>
     `;
@@ -54,7 +63,7 @@ export async function sendBlueprintSummaryEmail(
         I Am Someone Who...
       </div>
       <div style="font-size: 16px; color: #1f2937; font-style: italic; line-height: 1.6;">
-        "${identityStatement}"
+        "${escapeHtml(identityStatement)}"
       </div>
     </div>
   ` : '';
@@ -80,7 +89,7 @@ export async function sendBlueprintSummaryEmail(
             </p>
 
             <p style="color: #4a4a4a; font-size: 16px; line-height: 1.6; margin-bottom: 24px;">
-              Hi ${userName || 'there'},
+              Hi ${escapeHtml(userName || 'there')},
             </p>
             <p style="color: #4a4a4a; font-size: 16px; line-height: 1.6; margin-bottom: 24px;">
               Congratulations on finalizing your ${year} Blueprint! Here's a summary of what you've committed to.
@@ -154,7 +163,7 @@ export async function sendWisdomFeedbackEmail(
             Your Wisdom Feedback is Ready
           </h1>
           <p style="color: #4a4a4a; font-size: 16px; line-height: 1.6; margin-bottom: 24px;">
-            Hi ${userName || 'there'},
+            Hi ${escapeHtml(userName || 'there')},
           </p>
           <p style="color: #4a4a4a; font-size: 16px; line-height: 1.6; margin-bottom: 24px;">
             The Man of Wisdom has reviewed your 2026 Blueprint and prepared personalized

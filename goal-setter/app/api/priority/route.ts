@@ -127,6 +127,43 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Input length validation
+    if (priorities.length > 10) {
+      return NextResponse.json({ error: 'Too many priorities (max 10)' }, { status: 400 });
+    }
+    for (const p of priorities) {
+      if (typeof p.name === 'string' && p.name.length > 500) {
+        return NextResponse.json({ error: 'Priority name too long (max 500 chars)' }, { status: 400 });
+      }
+      if (typeof p.why === 'string' && p.why.length > 500) {
+        return NextResponse.json({ error: 'Priority "why" too long (max 500 chars)' }, { status: 400 });
+      }
+      if (Array.isArray(p.goals)) {
+        if (p.goals.length > 20) {
+          return NextResponse.json({ error: 'Too many goals per priority (max 20)' }, { status: 400 });
+        }
+        for (const g of p.goals) {
+          if (typeof g.what === 'string' && g.what.length > 2000) {
+            return NextResponse.json({ error: 'Goal description too long (max 2000 chars)' }, { status: 400 });
+          }
+          if (typeof g.byWhen === 'string' && g.byWhen.length > 500) {
+            return NextResponse.json({ error: 'Goal deadline too long (max 500 chars)' }, { status: 400 });
+          }
+        }
+      }
+    }
+    const id = identity as Record<string, unknown>;
+    for (const key of ['iAmSomeoneWho', 'identityStatement']) {
+      if (typeof id[key] === 'string' && (id[key] as string).length > 2000) {
+        return NextResponse.json({ error: 'Identity field too long (max 2000 chars)' }, { status: 400 });
+      }
+    }
+    for (const key of ['habitsToBuild', 'habitsToEliminate']) {
+      if (Array.isArray(id[key]) && (id[key] as string[]).length > 20) {
+        return NextResponse.json({ error: 'Too many habits (max 20)' }, { status: 400 });
+      }
+    }
+
     // Check for existing submission
     try {
       const existing = await prisma.priorityModeSubmission.findUnique({
@@ -140,8 +177,64 @@ export async function POST(request: NextRequest) {
 
       let submission;
 
-      if (existing) {
-        // Update existing submission
+      // For manual wisdom finalization, check slot availability BEFORE saving (inside a transaction)
+      if (finalize && wisdomMode && wisdomType === 'manual') {
+        try {
+          submission = await prisma.$transaction(async (tx: any) => {
+            const now = new Date();
+            const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+            const monthEnd = new Date(now.getFullYear(), now.getMonth() + 1, 1);
+
+            const usedSlots = await tx.priorityModeSubmission.count({
+              where: {
+                wisdomType: 'manual',
+                wisdomMode: true,
+                finalizedAt: { gte: monthStart, lt: monthEnd },
+                userId: { not: authUser.id },
+              },
+            });
+
+            if (usedSlots >= 10) {
+              throw new Error('SLOT_LIMIT_REACHED');
+            }
+
+            if (existing) {
+              return tx.priorityModeSubmission.update({
+                where: { id: existing.id },
+                data: {
+                  priorities,
+                  identity,
+                  wisdomMode: true,
+                  wisdomType: 'manual',
+                  finalizedAt: new Date(),
+                  editCount: existing.finalizedAt ? existing.editCount + 1 : existing.editCount,
+                },
+              });
+            } else {
+              return tx.priorityModeSubmission.create({
+                data: {
+                  userId: authUser.id,
+                  priorities,
+                  identity,
+                  year,
+                  wisdomMode: true,
+                  wisdomType: 'manual',
+                  finalizedAt: new Date(),
+                },
+              });
+            }
+          });
+        } catch (txError: any) {
+          if (txError?.message === 'SLOT_LIMIT_REACHED') {
+            return NextResponse.json(
+              { error: 'All personal wisdom slots for this month are taken. Please try again next month or choose AI Wisdom.' },
+              { status: 409 }
+            );
+          }
+          throw txError;
+        }
+      } else if (existing) {
+        // Update existing submission (non-manual-wisdom or non-finalize)
         const updateData: any = {
           priorities,
           identity,
@@ -149,11 +242,9 @@ export async function POST(request: NextRequest) {
           wisdomType: wisdomType || null,
         };
 
-        // If finalizing, set the timestamp
         if (finalize && !existing.finalizedAt) {
           updateData.finalizedAt = new Date();
         } else if (finalize && existing.finalizedAt) {
-          // Re-finalizing (editing after finalize)
           updateData.editCount = existing.editCount + 1;
           updateData.finalizedAt = new Date();
         }
@@ -175,28 +266,6 @@ export async function POST(request: NextRequest) {
             finalizedAt: finalize ? new Date() : null,
           },
         });
-      }
-
-      // Create WisdomFeedback record if finalizing a wisdom mode submission
-      if (finalize && submission.wisdomMode && wisdomType === 'manual') {
-        // Check slot availability for manual wisdom
-        const now = new Date();
-        const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
-        const monthEnd = new Date(now.getFullYear(), now.getMonth() + 1, 1);
-        const usedSlots = await prisma.priorityModeSubmission.count({
-          where: {
-            wisdomType: 'manual',
-            wisdomMode: true,
-            finalizedAt: { gte: monthStart, lt: monthEnd },
-            id: { not: submission.id }, // exclude current submission
-          },
-        });
-        if (usedSlots >= 10) {
-          return NextResponse.json(
-            { error: 'All personal wisdom slots for this month are taken. Please try again next month or choose AI Wisdom.' },
-            { status: 409 }
-          );
-        }
       }
 
       if (finalize && submission.wisdomMode) {

@@ -40,6 +40,13 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    if (typeof notes === 'string' && notes.length > 5000) {
+      return NextResponse.json(
+        { error: 'Notes too long (max 5000 chars)' },
+        { status: 400 }
+      );
+    }
+
     // Upsert entry
     const entry = await prisma.timeViewsEntry.upsert({
       where: {

@@ -18,3 +18,7 @@ export {
   withAuth,
   type AuthMiddlewareConfig,
 } from './middleware';
+
+export { hashToken } from './crypto';
+
+export { cleanupExpiredAuthRecords } from './cleanup';
