@@ -1,0 +1,3 @@
+Contact: mailto:security@manofwisdom.co
+Expires: 2027-02-17T00:00:00.000Z
+Preferred-Languages: en

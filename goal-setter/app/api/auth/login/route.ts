@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/db';
 import { authConfig } from '@/lib/auth';
-import { createMagicLink, sendMagicLinkEmail, loginRateLimiter } from '@mow/auth';
+import { createMagicLink, sendMagicLinkEmail, loginRateLimiter, auditLog } from '@mow/auth';
 
 export async function POST(request: NextRequest) {
   try {
@@ -11,6 +11,7 @@ export async function POST(request: NextRequest) {
 
     const rateCheck = loginRateLimiter.check(ip);
     if (!rateCheck.allowed) {
+      auditLog({ event: 'auth.rate_limited', ip, endpoint: 'login' });
       return NextResponse.json(
         { error: 'Too many requests. Please try again later.' },
         {
@@ -39,7 +40,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Create magic link
-    const { token } = await createMagicLink(prisma, email, authConfig);
+    const { token } = await createMagicLink(prisma, email, authConfig, undefined, ip);
 
     // Send email - require explicit URL in production
     const baseUrl = authConfig.baseUrl || process.env.NEXT_PUBLIC_APP_URL;

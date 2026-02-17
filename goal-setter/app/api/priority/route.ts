@@ -70,7 +70,7 @@ export async function GET(request: NextRequest) {
       if (dbError?.code === 'P2021' || dbError?.message?.includes('does not exist')) {
         console.warn('PriorityModeSubmission table does not exist. Run migrations.');
         return NextResponse.json(
-          { exists: false, data: null, warning: 'Database table not yet created' },
+          { exists: false, data: null },
           { status: 200 }
         );
       }
@@ -417,11 +417,7 @@ export async function POST(request: NextRequest) {
       if (dbError?.code === 'P2021' || dbError?.message?.includes('does not exist')) {
         console.warn('PriorityModeSubmission table does not exist. Run migrations.');
         return NextResponse.json(
-          {
-            success: false,
-            error: 'Database table not yet created. Please run migrations.',
-            warning: 'Database migration required'
-          },
+          { success: false, error: 'Service temporarily unavailable' },
           { status: 503 }
         );
       }

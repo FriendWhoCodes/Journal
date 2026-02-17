@@ -73,3 +73,7 @@ export { hashToken } from './crypto';
 
 // Cleanup
 export { cleanupExpiredAuthRecords } from './cleanup';
+
+// Audit Logging
+export { auditLog } from './audit';
+export type { AuditEvent, AuditPayload } from './audit';
