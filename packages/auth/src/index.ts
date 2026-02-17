@@ -67,3 +67,9 @@ export { validateOrigin } from './csrf';
 // Security Headers
 export { getSecurityHeaders } from './security-headers';
 export type { SecurityHeadersConfig } from './security-headers';
+
+// Crypto
+export { hashToken } from './crypto';
+
+// Cleanup
+export { cleanupExpiredAuthRecords } from './cleanup';

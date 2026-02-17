@@ -1,7 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { z } from 'zod';
 import { prisma } from '@/lib/db';
 import { requireAdmin } from '@/lib/admin';
 import { sendWisdomFeedbackEmail } from '@/lib/email';
+
+const feedbackSchema = z.object({
+  priorityAnalysis: z.string().max(10000).optional(),
+  goalFeedback: z.string().max(10000).optional(),
+  suggestions: z.string().max(10000).optional(),
+  identityInsights: z.string().max(10000).optional(),
+  overallWisdom: z.string().max(10000).optional(),
+  markReviewed: z.boolean().optional(),
+});
 
 // GET - Fetch feedback and submission data for review
 export async function GET(
@@ -46,7 +56,14 @@ export async function PUT(
     await requireAdmin();
     const { submissionId } = await params;
     const body = await request.json();
-    const { priorityAnalysis, goalFeedback, suggestions, identityInsights, overallWisdom, markReviewed } = body;
+    const parsed = feedbackSchema.safeParse(body);
+    if (!parsed.success) {
+      return NextResponse.json(
+        { error: 'Invalid input', details: parsed.error.flatten() },
+        { status: 400 }
+      );
+    }
+    const { priorityAnalysis, goalFeedback, suggestions, identityInsights, overallWisdom, markReviewed } = parsed.data;
 
     // Find or create feedback
     let feedback = await prisma.wisdomFeedback.findUnique({

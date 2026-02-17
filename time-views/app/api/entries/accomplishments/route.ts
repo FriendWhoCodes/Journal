@@ -34,6 +34,13 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    if (typeof content !== 'string' || content.length > 5000) {
+      return NextResponse.json(
+        { error: 'Content must be a string under 5000 chars' },
+        { status: 400 }
+      );
+    }
+
     // Get or create entry
     let entry = await prisma.timeViewsEntry.findUnique({
       where: {
@@ -95,6 +102,13 @@ export async function PATCH(request: NextRequest) {
     if (!id) {
       return NextResponse.json(
         { error: 'Accomplishment ID is required' },
+        { status: 400 }
+      );
+    }
+
+    if (content !== undefined && (typeof content !== 'string' || content.length > 5000)) {
+      return NextResponse.json(
+        { error: 'Content must be a string under 5000 chars' },
         { status: 400 }
       );
     }

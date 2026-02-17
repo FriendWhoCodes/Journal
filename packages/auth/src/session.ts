@@ -2,6 +2,8 @@ import { randomBytes } from 'crypto';
 import type { PrismaClient } from '@prisma/client';
 import type { ReadonlyRequestCookies } from 'next/dist/server/web/spec-extension/adapters/request-cookies';
 import { DEFAULT_AUTH_CONFIG, type AuthConfig, type AuthSession, type AuthUser } from './types';
+import { hashToken } from './crypto';
+import { cleanupExpiredAuthRecords } from './cleanup';
 
 export function generateSessionToken(): string {
   return randomBytes(32).toString('hex');
@@ -20,12 +22,13 @@ export async function createSession(
   const session = await (prisma as any).authSession.create({
     data: {
       userId,
-      token,
+      tokenHash: hashToken(token),
       expiresAt,
     },
   });
 
-  return session;
+  // Return with raw token (not hash) for cookie setting
+  return { ...session, token };
 }
 
 export async function getSessionByToken(
@@ -33,7 +36,7 @@ export async function getSessionByToken(
   token: string
 ): Promise<(AuthSession & { user: AuthUser }) | null> {
   const session = await (prisma as any).authSession.findUnique({
-    where: { token },
+    where: { tokenHash: hashToken(token) },
     include: { user: true },
   });
 
@@ -50,6 +53,11 @@ export async function getSessionByToken(
     return null;
   }
 
+  // 1% chance: clean up expired sessions and magic links
+  if (Math.random() < 0.01) {
+    cleanupExpiredAuthRecords(prisma).catch(() => {});
+  }
+
   return session;
 }
 
@@ -58,7 +66,7 @@ export async function deleteSession(
   token: string
 ): Promise<void> {
   await (prisma as any).authSession.deleteMany({
-    where: { token },
+    where: { tokenHash: hashToken(token) },
   });
 }
 

@@ -2,6 +2,7 @@ import { randomBytes } from 'crypto';
 import type { PrismaClient } from '@prisma/client';
 import { DEFAULT_AUTH_CONFIG, type AuthConfig, type SendMagicLinkResult, type VerifyMagicLinkResult } from './types';
 import { createSession } from './session';
+import { hashToken } from './crypto';
 
 export function generateToken(): string {
   return randomBytes(32).toString('hex');
@@ -94,11 +95,11 @@ export async function createMagicLink(
   const token = generateToken();
   const expiresAt = new Date(Date.now() + magicLinkExpiryMinutes * 60 * 1000);
 
-  // Create magic link record
+  // Create magic link record (store hash, not raw token)
   await (prisma as any).authMagicLink.create({
     data: {
       userId: user.id,
-      token,
+      tokenHash: hashToken(token),
       expiresAt,
     },
   });
@@ -111,9 +112,9 @@ export async function verifyMagicLink(
   token: string,
   config: AuthConfig = {}
 ): Promise<VerifyMagicLinkResult> {
-  // Find magic link
+  // Find magic link by hash
   const magicLink = await (prisma as any).authMagicLink.findUnique({
-    where: { token },
+    where: { tokenHash: hashToken(token) },
     include: { user: true },
   });
 
