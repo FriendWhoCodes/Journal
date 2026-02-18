@@ -11,6 +11,6 @@ export const middleware = createAuthMiddleware({
 
 export const config = {
   matcher: [
-    '/((?!_next/static|_next/image|favicon.ico|apple-touch-icon.png|.*\\.svg$).*)',
+    '/((?!_next/static|_next/image|favicon.ico|apple-touch-icon.png|\\.well-known|.*\\.svg$).*)',
   ],
 };
