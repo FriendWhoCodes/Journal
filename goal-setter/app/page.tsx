@@ -27,8 +27,8 @@ export default function Home() {
   };
 
   const [manualSlots, setManualSlots] = useState<number | null>(null);
-  const [priorityModeAccess, setPriorityModeAccess] = useState(false);
-  const [personalWisdomAccess, setPersonalWisdomAccess] = useState(false);
+  const [priorityModeAccess, setPriorityModeAccess] = useState<boolean | null>(null);
+  const [personalWisdomAccess, setPersonalWisdomAccess] = useState<boolean | null>(null);
 
   // Fetch available manual wisdom slots
   useEffect(() => {
@@ -63,6 +63,7 @@ export default function Home() {
   }, [user]);
 
   const handlePriorityModeClick = useCallback(() => {
+    if (priorityModeAccess === null) return; // still loading
     if (priorityModeAccess) {
       router.push('/priority');
     } else {
@@ -71,12 +72,13 @@ export default function Home() {
   }, [priorityModeAccess, router, openGumroadCheckout]);
 
   const handlePersonalWisdomClick = useCallback(() => {
-    if (manualSoldOut) return;
+    if (personalWisdomAccess === null) return; // still loading
     if (personalWisdomAccess) {
       router.push('/priority?wisdom=true&type=manual');
-    } else {
-      openGumroadCheckout(GUMROAD_PERSONAL_WISDOM_URL);
+      return;
     }
+    if (manualSoldOut) return;
+    openGumroadCheckout(GUMROAD_PERSONAL_WISDOM_URL);
   }, [personalWisdomAccess, manualSoldOut, router, openGumroadCheckout]);
 
   return (
@@ -246,7 +248,7 @@ export default function Home() {
               </ul>
 
               <button className="w-full bg-indigo-600 text-white py-4 rounded-xl font-semibold text-lg hover:bg-indigo-700 transition-colors">
-                {priorityModeAccess ? 'Start Priority Planning →' : 'Purchase Priority Mode →'}
+                {priorityModeAccess === null ? 'Loading...' : priorityModeAccess ? 'Start Priority Planning →' : 'Purchase Priority Mode →'}
               </button>
               {priorityModeAccess && (
                 <p className="text-center text-sm mt-3 font-medium text-indigo-700">Purchased</p>
@@ -362,7 +364,7 @@ export default function Home() {
                 </button>
               ) : (
                 <button className="w-full bg-amber-600 text-white py-4 rounded-xl font-semibold text-lg hover:bg-amber-700 transition-colors">
-                  {personalWisdomAccess ? 'Start with Personal Wisdom →' : 'Purchase Personal Wisdom →'}
+                  {personalWisdomAccess === null ? 'Loading...' : personalWisdomAccess ? 'Start with Personal Wisdom →' : 'Purchase Personal Wisdom →'}
                 </button>
               )}
               {personalWisdomAccess && (

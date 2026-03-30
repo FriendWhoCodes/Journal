@@ -365,9 +365,9 @@ Existing DB models (`Payment`, `UserProduct`) and utilities (`checkProductAccess
 
 | Product | Price | Type |
 |---------|-------|------|
-| Priority Mode (base) | TBD | One-time or subscription |
-| Priority + AI Wisdom | $29.99/mo | Subscription |
-| Priority + Personal Wisdom | $99/mo (10 slots) | Subscription |
+| Priority Mode — Annual Blueprint | $9.99 | One-time |
+| Priority + AI Wisdom | $29.99 | One-time (Coming Soon) |
+| Priority + Personal Wisdom | $99 (10 slots/mo) | One-time |
 
 ---
 

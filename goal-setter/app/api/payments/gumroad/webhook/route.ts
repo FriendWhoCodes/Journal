@@ -68,30 +68,45 @@ export async function POST(request: NextRequest) {
     // Convert price string (e.g. "29.99") to cents
     const amountCents = Math.round(parseFloat(price || '0') * 100);
 
-    // Create Payment record
-    await prisma.payment.create({
-      data: {
-        userId: user.id,
-        product,
-        amount: amountCents,
-        currency: currency.toUpperCase(),
-        provider: 'gumroad',
-        providerPaymentId: saleId,
-        providerOrderId: productPermalink,
-        status: 'completed',
-        completedAt: new Date(),
-        metadata: {
-          email,
-          isTest,
-          productPermalink,
-          rawPrice: price,
-          ...(customUserId && { customUserId }),
+    // Atomic transaction: create payment + grant access together
+    await prisma.$transaction(async (tx: any) => {
+      await tx.payment.create({
+        data: {
+          userId: user!.id,
+          product,
+          amount: amountCents,
+          currency: currency.toUpperCase(),
+          provider: 'gumroad',
+          providerPaymentId: saleId,
+          providerOrderId: productPermalink,
+          status: 'completed',
+          completedAt: new Date(),
+          metadata: {
+            email,
+            isTest,
+            productPermalink,
+            rawPrice: price,
+            ...(customUserId && { customUserId }),
+          },
         },
-      },
-    });
+      });
 
-    // Grant product access
-    await grantProductAccess(user.id, product, 'purchased');
+      // Grant product access
+      await tx.userProduct.upsert({
+        where: { userId_product: { userId: user!.id, product } },
+        update: {},
+        create: { userId: user!.id, product, accessType: 'purchased' },
+      });
+
+      // Wisdom products also grant base priority_mode access
+      if (product === 'priority_ai_wisdom' || product === 'priority_personal_wisdom') {
+        await tx.userProduct.upsert({
+          where: { userId_product: { userId: user!.id, product: 'priority_mode' } },
+          update: {},
+          create: { userId: user!.id, product: 'priority_mode', accessType: 'purchased' },
+        });
+      }
+    });
 
     auditLog({
       event: 'payment.completed',
@@ -107,8 +122,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ ok: true });
   } catch (error) {
     console.error('Gumroad webhook error:', error);
-    // Return 200 to prevent Gumroad retries on internal errors
-    // The error is logged for investigation
-    return NextResponse.json({ ok: true, message: 'Error logged' });
+    // Return 500 so Gumroad retries (up to 3 hours)
+    return NextResponse.json({ error: 'Internal error' }, { status: 500 });
   }
 }

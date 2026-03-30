@@ -30,13 +30,12 @@ export default function PurchaseSuccessPage() {
   const [checking, setChecking] = useState(true);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Try to determine product from URL or default to AI wisdom
+  // Try to determine product from URL
   const permalink = searchParams.get('product_permalink');
-  const productInfo = (permalink && PERMALINK_TO_PRODUCT[permalink])
-    || Object.values(PERMALINK_TO_PRODUCT)[0];
+  const productInfo = permalink ? PERMALINK_TO_PRODUCT[permalink] : null;
 
   useEffect(() => {
-    if (!user) return;
+    if (!user || !productInfo) return;
 
     const checkAccess = async () => {
       try {
@@ -66,15 +65,36 @@ export default function PurchaseSuccessPage() {
       if (intervalRef.current) clearInterval(intervalRef.current);
       clearTimeout(timeout);
     };
-  }, [user, productInfo.product]);
+  }, [user, productInfo?.product]);
 
   const handleContinue = () => {
-    if (productInfo.wisdomType) {
+    if (productInfo?.wisdomType) {
       router.push(`/priority?wisdom=true&type=${productInfo.wisdomType}`);
     } else {
       router.push('/priority');
     }
   };
+
+  if (!productInfo) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-white to-indigo-50 flex items-center justify-center px-4">
+        <div className="max-w-md w-full text-center">
+          <div className="bg-white rounded-2xl shadow-xl p-8">
+            <h1 className="text-2xl font-bold text-gray-900 mb-2">Purchase Received</h1>
+            <p className="text-gray-600 mb-6">
+              Your purchase was successful. Head to the homepage to get started.
+            </p>
+            <button
+              onClick={() => router.push('/')}
+              className="w-full bg-indigo-600 text-white py-3 rounded-xl font-semibold hover:bg-indigo-700 transition-colors"
+            >
+              Go to Homepage
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-white to-indigo-50 flex items-center justify-center px-4">

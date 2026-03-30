@@ -13,6 +13,7 @@ import { motion } from 'framer-motion';
 import { useState } from 'react';
 
 const GUMROAD_PRIORITY_MODE_URL = process.env.NEXT_PUBLIC_GUMROAD_PRIORITY_MODE_URL || '';
+const GUMROAD_AI_WISDOM_URL = process.env.NEXT_PUBLIC_GUMROAD_AI_WISDOM_URL || '';
 const GUMROAD_PERSONAL_WISDOM_URL = process.env.NEXT_PUBLIC_GUMROAD_PERSONAL_WISDOM_URL || '';
 
 // Helper for backward compat: handle both string and string[] identity fields
@@ -86,7 +87,9 @@ export default function ReviewPage() {
 
   const handlePurchase = () => {
     let url = GUMROAD_PRIORITY_MODE_URL;
-    if (requiredProduct === 'priority_personal_wisdom') {
+    if (requiredProduct === 'priority_ai_wisdom') {
+      url = GUMROAD_AI_WISDOM_URL;
+    } else if (requiredProduct === 'priority_personal_wisdom') {
       url = GUMROAD_PERSONAL_WISDOM_URL;
     }
     if (!url) return;
