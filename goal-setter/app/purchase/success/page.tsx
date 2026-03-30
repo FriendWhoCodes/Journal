@@ -35,7 +35,10 @@ export default function PurchaseSuccessPage() {
   const productInfo = permalink ? PERMALINK_TO_PRODUCT[permalink] : null;
 
   useEffect(() => {
-    if (!user || !productInfo) return;
+    if (!user || !productInfo) {
+      setChecking(false);
+      return;
+    }
 
     const checkAccess = async () => {
       try {

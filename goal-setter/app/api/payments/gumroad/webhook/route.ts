@@ -22,6 +22,11 @@ export async function POST(request: NextRequest) {
     const isTest = formData.get('test') === 'true';
     const customUserId = formData.get('user_id') as string | null;
 
+    // Validate required fields
+    if (!sellerId || !saleId || !email || !productPermalink) {
+      return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
+    }
+
     // Verify seller_id
     if (!process.env.GUMROAD_SELLER_ID || sellerId !== process.env.GUMROAD_SELLER_ID) {
       auditLog({ event: 'payment.webhook_rejected', reason: 'invalid_seller', sellerId });

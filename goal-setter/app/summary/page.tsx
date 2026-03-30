@@ -12,6 +12,7 @@ export default function Summary() {
   const router = useRouter();
   const { name, mode, quickModeData, deepModeData } = useGoalSetter();
   const { isAuthenticated } = useAuth();
+  const currentYear = new Date().getFullYear();
   const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
@@ -70,7 +71,7 @@ export default function Summary() {
       const url = URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = url;
-      link.download = `${name.replace(/\s+/g, '_')}_${new Date().getFullYear()}_Goals.pdf`;
+      link.download = `${name.replace(/\s+/g, '_')}_${currentYear}_Goals.pdf`;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -112,7 +113,7 @@ export default function Summary() {
         {/* Header */}
         <div className="text-center mb-12">
           <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-4">
-            Your {new Date().getFullYear()} Blueprint
+            Your {currentYear} Blueprint
           </h1>
           <p className="text-xl text-gray-600">
             Here&apos;s everything you want to achieve this year, {name}!
@@ -190,7 +191,7 @@ export default function Summary() {
               {/* Theme */}
               <section className="mb-10">
                 <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center">
-                  <span className="text-3xl mr-3">💡</span> THEME FOR {new Date().getFullYear()}
+                  <span className="text-3xl mr-3">💡</span> THEME FOR {currentYear}
                 </h2>
                 <div className="bg-gradient-to-r from-slate-50 to-amber-50 p-6 rounded-xl">
                   <p className="text-2xl font-semibold text-center text-slate-900">
@@ -265,7 +266,7 @@ export default function Summary() {
               {/* Theme */}
               <section className="mb-10">
                 <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center">
-                  <span className="text-3xl mr-3">💡</span> THEME FOR {new Date().getFullYear()}
+                  <span className="text-3xl mr-3">💡</span> THEME FOR {currentYear}
                 </h2>
                 <div className="bg-gradient-to-r from-slate-50 to-amber-50 p-6 rounded-xl">
                   <p className="text-2xl font-semibold text-center text-slate-900">
@@ -485,7 +486,7 @@ export default function Summary() {
               </li>
               <li className="flex items-start">
                 <span className="text-emerald-300 mr-3 text-xl flex-shrink-0">✓</span>
-                <span>Start tracking, build habits, and achieve your {new Date().getFullYear()} vision</span>
+                <span>Start tracking, build habits, and achieve your {currentYear} vision</span>
               </li>
               <li className="flex items-start">
                 <span className="text-emerald-300 mr-3 text-xl flex-shrink-0">✓</span>

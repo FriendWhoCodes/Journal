@@ -346,7 +346,7 @@ Not directly usable. Access it indirectly through Lemon Squeezy instead.
 - Route by geography: India → Razorpay, International → MoR platform
 
 ### Implementation Flow (Once Provider Chosen)
-```
+```text
 User clicks "Upgrade to Priority Mode"
   → Redirect to MoR checkout (hosted or overlay)
   → MoR handles payment + tax collection
