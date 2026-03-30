@@ -8,8 +8,12 @@ import {
   isPriorityValid,
   isGoalValid,
 } from '@/lib/types/priority';
+import { useAuth } from '@mow/auth';
 import { motion } from 'framer-motion';
 import { useState } from 'react';
+
+const GUMROAD_PRIORITY_MODE_URL = process.env.NEXT_PUBLIC_GUMROAD_PRIORITY_MODE_URL || '';
+const GUMROAD_PERSONAL_WISDOM_URL = process.env.NEXT_PUBLIC_GUMROAD_PERSONAL_WISDOM_URL || '';
 
 // Helper for backward compat: handle both string and string[] identity fields
 function toArray(val: unknown): string[] {
@@ -20,9 +24,12 @@ function toArray(val: unknown): string[] {
 
 export default function ReviewPage() {
   const router = useRouter();
+  const { user } = useAuth();
   const { data, setCurrentStep, finalize, isLoaded } = usePriorityMode();
 
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [paymentRequired, setPaymentRequired] = useState(false);
+  const [requiredProduct, setRequiredProduct] = useState<string | null>(null);
 
   const currentStep = PRIORITY_MODE_STEPS.REVIEW;
   const progressPercentage = Math.round((currentStep / TOTAL_PRIORITY_MODE_STEPS) * 100);
@@ -35,6 +42,7 @@ export default function ReviewPage() {
 
   const handleFinalize = async () => {
     setIsSubmitting(true);
+    setPaymentRequired(false);
 
     try {
       // Save to database
@@ -51,6 +59,14 @@ export default function ReviewPage() {
         }),
       });
 
+      if (response.status === 402) {
+        const errorData = await response.json();
+        setPaymentRequired(true);
+        setRequiredProduct(errorData.product || null);
+        setIsSubmitting(false);
+        return;
+      }
+
       if (!response.ok) {
         throw new Error('Failed to save');
       }
@@ -66,6 +82,19 @@ export default function ReviewPage() {
       alert('There was an error saving your blueprint. Please try again.');
       setIsSubmitting(false);
     }
+  };
+
+  const handlePurchase = () => {
+    let url = GUMROAD_PRIORITY_MODE_URL;
+    if (requiredProduct === 'priority_personal_wisdom') {
+      url = GUMROAD_PERSONAL_WISDOM_URL;
+    }
+    if (!url) return;
+    const separator = url.includes('?') ? '&' : '?';
+    const params = user
+      ? `${separator}email=${encodeURIComponent(user.email)}&user_id=${encodeURIComponent(user.id)}`
+      : '';
+    window.open(url + params, '_blank');
   };
 
   const handleEdit = (section: string) => {
@@ -313,6 +342,45 @@ export default function ReviewPage() {
               )}
           </div>
         </motion.div>
+
+        {/* Payment Required Banner */}
+        {paymentRequired && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="bg-amber-50 border border-amber-300 rounded-2xl p-6 mb-6"
+          >
+            <h3 className="text-lg font-bold text-amber-900 mb-2">
+              Purchase Required
+            </h3>
+            <p className="text-amber-800 mb-4">
+              {requiredProduct === 'priority_mode'
+                ? 'To finalize your blueprint, please purchase Priority Mode first.'
+                : `To receive ${requiredProduct === 'priority_personal_wisdom' ? 'Personal Wisdom' : 'AI Wisdom'} feedback on your blueprint, please complete your purchase first.`}
+            </p>
+            <div className="flex flex-col sm:flex-row gap-3">
+              <button
+                onClick={handlePurchase}
+                className="px-6 py-3 bg-amber-600 text-white rounded-xl font-semibold hover:bg-amber-700 transition-colors"
+              >
+                {requiredProduct === 'priority_mode'
+                  ? 'Purchase Priority Mode ($9.99)'
+                  : requiredProduct === 'priority_personal_wisdom'
+                    ? 'Purchase Personal Wisdom ($99)'
+                    : 'Purchase AI Wisdom ($29.99)'}
+              </button>
+              <button
+                onClick={() => {
+                  setPaymentRequired(false);
+                  handleFinalize();
+                }}
+                className="px-6 py-3 bg-white text-amber-700 border border-amber-300 rounded-xl font-semibold hover:bg-amber-50 transition-colors"
+              >
+                I&apos;ve Already Purchased — Retry
+              </button>
+            </div>
+          </motion.div>
+        )}
 
         {/* Finalize Section */}
         <motion.div

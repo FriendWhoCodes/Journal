@@ -90,9 +90,9 @@ model Payment {
   product           String   // priority_mode, priority_ai_wisdom, priority_personal_wisdom
   amount            Int      // Amount in smallest currency unit (paise/cents)
   currency          String   @default("INR") @db.VarChar(3)
-  provider          String   // razorpay, stripe
-  providerPaymentId String?  @map("provider_payment_id") // Razorpay payment_id or Stripe payment_intent
-  providerOrderId   String?  @map("provider_order_id")   // Razorpay order_id or Stripe checkout session
+  provider          String   // razorpay, stripe, gumroad
+  providerPaymentId String?  @map("provider_payment_id") // Razorpay payment_id, Stripe payment_intent, or Gumroad sale_id
+  providerOrderId   String?  @map("provider_order_id")   // Razorpay order_id, Stripe checkout session, or Gumroad product_permalink
   status            String   @default("pending") // pending, completed, failed, refunded
   metadata          Json?    @db.JsonB // Provider-specific data (signature, receipt, etc.)
   completedAt       DateTime? @map("completed_at")

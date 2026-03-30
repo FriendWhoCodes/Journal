@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 import { GoalSetterProvider } from "@/lib/context/GoalSetterContext";
 import { AuthProvider } from "@mow/auth/components";
@@ -58,6 +59,7 @@ export default async function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen flex flex-col`}
       >
+        <Script src="https://gumroad.com/js/gumroad.js" strategy="lazyOnload" />
         <AuthProvider initialUser={user}>
           <GoalSetterProvider>
             <main className="flex-grow">
