@@ -100,8 +100,8 @@ export default function FeedbackPage() {
           </h1>
           <p className="text-lg text-gray-600 max-w-xl mx-auto">
             {wisdomType === 'ai'
-              ? 'Your 2026 Blueprint has been analyzed and these insights have been prepared for you.'
-              : 'The Man of Wisdom has reviewed your 2026 Blueprint and prepared these insights for you.'}
+              ? 'Your Blueprint has been analyzed and these insights have been prepared for you.'
+              : 'The Man of Wisdom has reviewed your Blueprint and prepared these insights for you.'}
           </p>
         </motion.div>
 

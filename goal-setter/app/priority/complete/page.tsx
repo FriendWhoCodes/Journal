@@ -157,7 +157,7 @@ export default function CompletePage() {
             🎉
           </motion.div>
           <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-            Your 2026 Blueprint is Ready!
+            Your Blueprint is Ready!
           </h1>
           <p className="text-xl text-gray-600 max-w-xl mx-auto">
             You&apos;ve completed the most important hour of your year.

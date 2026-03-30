@@ -176,7 +176,7 @@ export default function DeepMode() {
           {/* Header */}
           <div className="text-center mb-6">
             <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">
-              Your 2026 Goals & Habits
+              Your This Year Goals & Habits
             </h1>
             <p className="text-base text-gray-600">
               Let's start with your top goals and the habits that will help you achieve them
@@ -188,7 +188,7 @@ export default function DeepMode() {
             {/* Top 3 Goals */}
             <div className="mb-6">
               <h2 className="text-xl font-bold text-gray-900 mb-3">
-                🎯 Your Top 3 Goals for 2026
+                🎯 Your Top 3 Goals for This Year
               </h2>
               <div className="space-y-3">
                 <input
@@ -324,7 +324,7 @@ export default function DeepMode() {
             {/* Theme */}
             <div className="mb-6">
               <h2 className="text-xl font-bold text-gray-900 mb-3">
-                💡 Your Theme for 2026
+                💡 Your Theme for This Year
               </h2>
               <input
                 type="text"
@@ -472,7 +472,7 @@ export default function DeepMode() {
               Fun
             </h1>
             <p className="text-lg text-gray-600">
-              Almost done! What do you want to experience in 2026?
+              Almost done! What do you want to experience in This Year?
             </p>
           </div>
 
@@ -481,7 +481,7 @@ export default function DeepMode() {
             {/* Places to Visit */}
             <div className="mb-8">
               <label className="block text-xl font-bold text-gray-900 mb-4">
-                🌍 Places I want to visit in 2026
+                🌍 Places I want to visit in This Year
               </label>
               <textarea
                 value={placesToVisit}
@@ -494,7 +494,7 @@ export default function DeepMode() {
             {/* Books to Read */}
             <div className="mb-8">
               <label className="block text-xl font-bold text-gray-900 mb-4">
-                📚 Books I want to read in 2026
+                📚 Books I want to read in This Year
               </label>
               <textarea
                 value={booksToRead}
@@ -507,7 +507,7 @@ export default function DeepMode() {
             {/* Movies/Series to Watch */}
             <div className="mb-8">
               <label className="block text-xl font-bold text-gray-900 mb-4">
-                🎬 Movies/Series I want to watch in 2026
+                🎬 Movies/Series I want to watch in This Year
               </label>
               <textarea
                 value={moviesToWatch}
@@ -520,7 +520,7 @@ export default function DeepMode() {
             {/* Experiences to Have */}
             <div className="mb-8">
               <label className="block text-xl font-bold text-gray-900 mb-4">
-                ✨ Experiences I want to create in 2026
+                ✨ Experiences I want to create in This Year
               </label>
               <textarea
                 value={experiencesToHave}

@@ -15,7 +15,7 @@ export async function GET(request: NextRequest) {
     }
 
     const searchParams = request.nextUrl.searchParams;
-    const year = parseInt(searchParams.get('year') || '2026', 10);
+    const year = parseInt(searchParams.get('year') || String(new Date().getFullYear()), 10);
 
     const submission = await prisma.priorityModeSubmission.findUnique({
       where: {

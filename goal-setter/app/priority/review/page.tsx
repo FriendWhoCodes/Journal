@@ -55,7 +55,7 @@ export default function ReviewPage() {
           wisdomMode: data.wisdomMode,
           wisdomType: data.wisdomType,
           finalize: true,
-          year: 2026,
+          year: new Date().getFullYear(),
         }),
       });
 
@@ -154,7 +154,7 @@ export default function ReviewPage() {
           className="text-center mb-8"
         >
           <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3">
-            Your 2026 Blueprint
+            Your Blueprint
           </h1>
           <p className="text-lg text-gray-600 max-w-xl mx-auto">
             Review everything you&apos;ve created. Click any section to make changes.
@@ -405,7 +405,7 @@ export default function ReviewPage() {
                   : 'bg-white text-indigo-600 hover:bg-indigo-50 shadow-lg transform hover:scale-105'
               }`}
             >
-              {isSubmitting ? 'Finalizing...' : 'Finalize My 2026 Blueprint ✨'}
+              {isSubmitting ? 'Finalizing...' : 'Finalize My Blueprint ✨'}
             </button>
 
             <p className="text-indigo-200 text-sm">

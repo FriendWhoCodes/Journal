@@ -20,7 +20,7 @@ export async function GET(request: NextRequest) {
     // Get year from query params (default to current year)
     const searchParams = request.nextUrl.searchParams;
     const yearParam = searchParams.get('year');
-    const year = yearParam ? parseInt(yearParam, 10) : 2026;
+    const year = yearParam ? parseInt(yearParam, 10) : new Date().getFullYear();
 
     if (isNaN(year)) {
       return NextResponse.json(
@@ -98,7 +98,7 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { priorities, identity, wisdomMode, wisdomType, finalize, year: yearInput = 2026 } = body;
+    const { priorities, identity, wisdomMode, wisdomType, finalize, year: yearInput = new Date().getFullYear() } = body;
 
     // Payment gate: require product access on finalization
     if (finalize) {

@@ -18,8 +18,9 @@ const MONTHS = [
   'July', 'August', 'September', 'October', 'November', 'December',
 ];
 
+const CURRENT_YEAR = new Date().getFullYear();
 const DEADLINE_OPTIONS = [
-  ...MONTHS.map(month => ({ value: `${month} 2026`, label: `${month} 2026` })),
+  ...MONTHS.map(month => ({ value: `${month} ${CURRENT_YEAR}`, label: `${month} ${CURRENT_YEAR}` })),
   { value: 'Ongoing', label: 'Ongoing (No specific deadline)' },
 ];
 
@@ -273,7 +274,7 @@ export default function GoalsPage() {
           <div className="text-sm text-indigo-800 space-y-1">
             <p><strong>Priority:</strong> Family Health</p>
             <p><strong>Goal:</strong> Ensure wife recovers fully postpartum</p>
-            <p><strong>By When:</strong> March 2026</p>
+            <p><strong>By When:</strong> March {CURRENT_YEAR}</p>
             <p><strong>Success:</strong> She&apos;s back to full energy, cleared by doctor, feeling confident</p>
           </div>
         </div>

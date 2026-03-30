@@ -88,7 +88,7 @@ export default function Home() {
             Welcome, {displayName}!
           </h1>
           <p className="text-xl text-gray-700 max-w-2xl mx-auto">
-            Let&apos;s plan your 2026. Choose your goal-setting journey:
+            Choose your goal-setting journey:
           </p>
         </div>
 
@@ -125,7 +125,7 @@ export default function Home() {
               <ul className="space-y-3 mb-8">
                 <li className="flex items-start">
                   <span className="text-amber-600 mr-2 text-xl">•</span>
-                  <span className="text-gray-700">Set your top 3 goals for 2026</span>
+                  <span className="text-gray-700">Set your top 3 goals for the year</span>
                 </li>
                 <li className="flex items-start">
                   <span className="text-amber-600 mr-2 text-xl">•</span>

@@ -18,15 +18,15 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://goals.manofwisdom.co"),
-  title: "Man of Wisdom - Set Your 2026 Goals",
-  description: "Plan your 2026 in 5 minutes and unlock your free journal",
+  title: "Man of Wisdom - Set Your Goals & Priorities",
+  description: "Define your priorities, set meaningful goals, and build your life blueprint",
   icons: {
     icon: "/favicon.ico",
     apple: "/apple-touch-icon.png",
   },
   openGraph: {
-    title: "Set Your 2026 Goals in 5 Minutes",
-    description: "Plan your year and get 1 month FREE access to Man of Wisdom Digital Journal",
+    title: "Set Your Goals & Priorities",
+    description: "Define your priorities, set meaningful goals, and build your life blueprint",
     url: "https://goals.manofwisdom.co",
     siteName: "Man of Wisdom",
     images: [
@@ -34,15 +34,15 @@ export const metadata: Metadata = {
         url: "https://goals.manofwisdom.co/og-image.png",
         width: 1200,
         height: 630,
-        alt: "Set Your 2026 Goals - Man of Wisdom Goal Setter",
+        alt: "Set Your Goals - Man of Wisdom Goal Setter",
       },
     ],
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Set Your 2026 Goals in 5 Minutes",
-    description: "Plan your year and get 1 month FREE access to Man of Wisdom Digital Journal",
+    title: "Set Your Goals & Priorities",
+    description: "Define your priorities, set meaningful goals, and build your life blueprint",
     images: ["https://goals.manofwisdom.co/og-image.png"],
   },
 };
