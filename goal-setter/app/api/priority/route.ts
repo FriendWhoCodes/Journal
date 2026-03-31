@@ -214,7 +214,7 @@ export async function POST(request: NextRequest) {
               },
             });
 
-            if (usedSlots >= 10) {
+            if (usedSlots >= 5) {
               throw new Error('SLOT_LIMIT_REACHED');
             }
 
