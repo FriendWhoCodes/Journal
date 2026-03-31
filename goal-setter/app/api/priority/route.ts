@@ -20,7 +20,7 @@ export async function GET(request: NextRequest) {
     // Get year from query params (default to current year)
     const searchParams = request.nextUrl.searchParams;
     const yearParam = searchParams.get('year');
-    const year = yearParam ? parseInt(yearParam, 10) : 2026;
+    const year = yearParam ? parseInt(yearParam, 10) : new Date().getFullYear();
 
     if (isNaN(year)) {
       return NextResponse.json(
@@ -97,12 +97,32 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // For now, allow access without payment check (will add payment gate later)
-    // TODO: Check if user has purchased priority_mode product
-    // await checkProductAccess(authUser.id, 'priority_mode');
-
     const body = await request.json();
-    const { priorities, identity, wisdomMode, wisdomType, finalize, year: yearInput = 2026 } = body;
+    const { priorities, identity, wisdomMode, wisdomType, finalize, year: yearInput = new Date().getFullYear() } = body;
+
+    // Payment gate: require product access on finalization
+    if (finalize) {
+      // Check base priority_mode access first
+      const priorityAccess = await checkProductAccess(authUser.id, 'priority_mode');
+      if (!priorityAccess) {
+        return NextResponse.json(
+          { error: 'PAYMENT_REQUIRED', product: 'priority_mode' },
+          { status: 402 }
+        );
+      }
+
+      // For wisdom modes, also check the wisdom-specific product
+      if (wisdomMode && wisdomType) {
+        const wisdomProduct = wisdomType === 'ai' ? 'priority_ai_wisdom' : 'priority_personal_wisdom';
+        const wisdomAccess = await checkProductAccess(authUser.id, wisdomProduct);
+        if (!wisdomAccess) {
+          return NextResponse.json(
+            { error: 'PAYMENT_REQUIRED', product: wisdomProduct },
+            { status: 402 }
+          );
+        }
+      }
+    }
 
     // Validate year
     const year = typeof yearInput === 'number' ? yearInput : parseInt(yearInput, 10);

@@ -105,7 +105,7 @@ export default function QuickMode() {
           {/* Header */}
           <div className="text-center mb-8">
             <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-3">
-              Core Goals for 2026
+              Core Goals for This Year
             </h1>
             <p className="text-lg text-gray-600">
               Hey {name}, let&apos;s define what matters most to you this year
@@ -117,7 +117,7 @@ export default function QuickMode() {
             {/* Top 3 Goals */}
             <div className="mb-8">
               <label className="block text-xl font-bold text-gray-900 mb-4">
-                🎯 What are the top 3 things you want to achieve in 2026?
+                🎯 What are the top 3 things you want to achieve in This Year?
               </label>
               <div className="space-y-4">
                 <input
@@ -253,7 +253,7 @@ export default function QuickMode() {
             {/* Main Theme */}
             <div className="mb-8">
               <label className="block text-xl font-bold text-gray-900 mb-4">
-                💡 What&apos;s the main idea or theme you want to embody in 2026?
+                💡 What&apos;s the main idea or theme you want to embody in This Year?
               </label>
               <input
                 type="text"
@@ -304,7 +304,7 @@ export default function QuickMode() {
             Fun
           </h1>
           <p className="text-lg text-gray-600">
-            Life isn&apos;t just about work - what do you want to experience in 2026?
+            Life isn&apos;t just about work - what do you want to experience in This Year?
           </p>
         </div>
 
@@ -313,7 +313,7 @@ export default function QuickMode() {
           {/* Places to Visit */}
           <div className="mb-8">
             <label className="block text-xl font-bold text-gray-900 mb-4">
-              🌍 Places I want to visit in 2026
+              🌍 Places I want to visit in This Year
             </label>
             <textarea
               value={placesToVisit}
@@ -326,7 +326,7 @@ export default function QuickMode() {
           {/* Books to Read */}
           <div className="mb-8">
             <label className="block text-xl font-bold text-gray-900 mb-4">
-              📚 Books I want to read in 2026
+              📚 Books I want to read in This Year
             </label>
             <textarea
               value={booksToRead}
@@ -339,7 +339,7 @@ export default function QuickMode() {
           {/* Movies/Series to Watch */}
           <div className="mb-8">
             <label className="block text-xl font-bold text-gray-900 mb-4">
-              🎬 Movies/Series I want to watch in 2026
+              🎬 Movies/Series I want to watch in This Year
             </label>
             <textarea
               value={moviesToWatch}
@@ -352,7 +352,7 @@ export default function QuickMode() {
           {/* Experiences to Have */}
           <div className="mb-8">
             <label className="block text-xl font-bold text-gray-900 mb-4">
-              ✨ Experiences I want to create in 2026
+              ✨ Experiences I want to create in This Year
             </label>
             <textarea
               value={experiencesToHave}
@@ -374,7 +374,7 @@ export default function QuickMode() {
               type="submit"
               className="flex-1 bg-gradient-to-r from-slate-700 to-amber-600 text-white py-4 rounded-xl font-semibold text-lg hover:from-slate-800 hover:to-amber-700 transition-all shadow-lg"
             >
-              See My 2026 Blueprint →
+              See My This Year Blueprint →
             </button>
           </div>
         </form>

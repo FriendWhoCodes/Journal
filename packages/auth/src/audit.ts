@@ -3,7 +3,9 @@ export type AuditEvent =
   | 'auth.login_verified'
   | 'auth.session_created'
   | 'auth.session_deleted'
-  | 'auth.rate_limited';
+  | 'auth.rate_limited'
+  | 'payment.webhook_rejected'
+  | 'payment.completed';
 
 export interface AuditPayload {
   event: AuditEvent;

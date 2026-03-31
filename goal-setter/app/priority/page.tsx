@@ -149,11 +149,11 @@ export default function PriorityOnboarding() {
 
           <div className="space-y-4">
             {[
-              { step: 1, title: 'Define Your Priorities', desc: 'What matters most to you in 2026?', icon: '🎯' },
+              { step: 1, title: 'Define Your Priorities', desc: `What matters most to you in ${new Date().getFullYear()}?`, icon: '🎯' },
               { step: 2, title: 'Set Goals for Each Priority', desc: 'Turn priorities into concrete, time-bound goals', icon: '📝' },
               { step: 3, title: 'Break Down into Milestones', desc: 'Quarterly/monthly steps to achieve your goals (optional)', icon: '📅' },
               { step: 4, title: 'Define Who You Need to Become', desc: 'The identity shift that makes success inevitable', icon: '🦋' },
-              { step: 5, title: 'Review & Finalize', desc: 'See your complete 2026 blueprint', icon: '✨' },
+              { step: 5, title: 'Review & Finalize', desc: `See your complete ${new Date().getFullYear()} blueprint`, icon: '✨' },
             ].map((item, index) => (
               <motion.div
                 key={item.step}
@@ -187,7 +187,7 @@ export default function PriorityOnboarding() {
 
           <div className="grid md:grid-cols-2 gap-4">
             {[
-              { title: 'Comprehensive PDF', desc: 'Your complete 2026 blueprint, beautifully formatted' },
+              { title: 'Comprehensive PDF', desc: `Your complete ${new Date().getFullYear()} blueprint, beautifully formatted` },
               { title: 'Printable Infographic', desc: 'One-page visual summary of your priorities' },
               { title: 'Phone Wallpaper', desc: 'Your priorities visible every day' },
               { title: 'Desktop Wallpaper', desc: 'Keep your goals in sight while you work' },
@@ -259,7 +259,7 @@ export default function PriorityOnboarding() {
               onClick={handleStart}
               className="px-12 py-5 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl font-bold text-xl hover:opacity-90 transition-all shadow-xl transform hover:scale-105"
             >
-              Begin Your 2026 Blueprint →
+              Begin Your {new Date().getFullYear()} Blueprint →
             </button>
           )}
         </motion.div>

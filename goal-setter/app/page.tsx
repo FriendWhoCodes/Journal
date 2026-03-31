@@ -1,9 +1,12 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { useGoalSetter } from '@/lib/context/GoalSetterContext';
 import { useAuth } from '@mow/auth';
+
+const GUMROAD_PRIORITY_MODE_URL = process.env.NEXT_PUBLIC_GUMROAD_PRIORITY_MODE_URL || '';
+const GUMROAD_PERSONAL_WISDOM_URL = process.env.NEXT_PUBLIC_GUMROAD_PERSONAL_WISDOM_URL || '';
 
 export default function Home() {
   const router = useRouter();
@@ -24,6 +27,8 @@ export default function Home() {
   };
 
   const [manualSlots, setManualSlots] = useState<number | null>(null);
+  const [priorityModeAccess, setPriorityModeAccess] = useState<boolean | null>(null);
+  const [personalWisdomAccess, setPersonalWisdomAccess] = useState<boolean | null>(null);
 
   // Fetch available manual wisdom slots
   useEffect(() => {
@@ -33,8 +38,48 @@ export default function Home() {
       .catch(() => setManualSlots(null));
   }, []);
 
+  // Fetch product access status
+  useEffect(() => {
+    if (!user) return;
+    Promise.all([
+      fetch('/api/payments/access?product=priority_mode').then(r => r.json()),
+      fetch('/api/payments/access?product=priority_personal_wisdom').then(r => r.json()),
+    ]).then(([priority, personal]) => {
+      setPriorityModeAccess(priority.hasAccess === true);
+      setPersonalWisdomAccess(personal.hasAccess === true);
+    }).catch(() => {});
+  }, [user]);
+
   const displayName = user?.name || 'there';
   const manualSoldOut = manualSlots === 0;
+
+  const openGumroadCheckout = useCallback((url: string) => {
+    if (!url) return;
+    const separator = url.includes('?') ? '&' : '?';
+    const params = user
+      ? `${separator}email=${encodeURIComponent(user.email)}&user_id=${encodeURIComponent(user.id)}`
+      : '';
+    window.open(url + params, '_blank');
+  }, [user]);
+
+  const handlePriorityModeClick = useCallback(() => {
+    if (priorityModeAccess === null) return; // still loading
+    if (priorityModeAccess) {
+      router.push('/priority');
+    } else {
+      openGumroadCheckout(GUMROAD_PRIORITY_MODE_URL);
+    }
+  }, [priorityModeAccess, router, openGumroadCheckout]);
+
+  const handlePersonalWisdomClick = useCallback(() => {
+    if (personalWisdomAccess === null) return; // still loading
+    if (personalWisdomAccess) {
+      router.push('/priority?wisdom=true&type=manual');
+      return;
+    }
+    if (manualSoldOut) return;
+    openGumroadCheckout(GUMROAD_PERSONAL_WISDOM_URL);
+  }, [personalWisdomAccess, manualSoldOut, router, openGumroadCheckout]);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-amber-50">
@@ -45,7 +90,7 @@ export default function Home() {
             Welcome, {displayName}!
           </h1>
           <p className="text-xl text-gray-700 max-w-2xl mx-auto">
-            Let&apos;s plan your 2026. Choose your goal-setting journey:
+            Choose your goal-setting journey:
           </p>
         </div>
 
@@ -82,7 +127,7 @@ export default function Home() {
               <ul className="space-y-3 mb-8">
                 <li className="flex items-start">
                   <span className="text-amber-600 mr-2 text-xl">•</span>
-                  <span className="text-gray-700">Set your top 3 goals for 2026</span>
+                  <span className="text-gray-700">Set your top 3 goals for the year</span>
                 </li>
                 <li className="flex items-start">
                   <span className="text-amber-600 mr-2 text-xl">•</span>
@@ -159,10 +204,10 @@ export default function Home() {
             Premium
           </h3>
           <div className="grid md:grid-cols-3 gap-8">
-            {/* Priority Mode */}
+            {/* Priority Mode ($9.99) */}
             <div
-              onClick={() => router.push('/priority')}
-              onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); router.push('/priority'); } }}
+              onClick={handlePriorityModeClick}
+              onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handlePriorityModeClick(); } }}
               role="button"
               tabIndex={0}
               className="bg-white rounded-2xl shadow-lg p-8 cursor-pointer transform transition-all duration-300 hover:scale-105 hover:shadow-2xl border-2 border-transparent hover:border-indigo-500"
@@ -203,18 +248,23 @@ export default function Home() {
               </ul>
 
               <button className="w-full bg-indigo-600 text-white py-4 rounded-xl font-semibold text-lg hover:bg-indigo-700 transition-colors">
-                Start Priority Planning →
+                {priorityModeAccess === null ? 'Loading...' : priorityModeAccess ? 'Start Priority Planning →' : 'Purchase Priority Mode →'}
               </button>
+              {priorityModeAccess && (
+                <p className="text-center text-sm mt-3 font-medium text-indigo-700">Purchased</p>
+              )}
             </div>
 
-            {/* Priority + AI Wisdom ($29.99) */}
+            {/* Priority + AI Wisdom ($29.99) — Coming Soon */}
             <div
-              onClick={() => router.push('/priority?wisdom=true&type=ai')}
-              onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); router.push('/priority?wisdom=true&type=ai'); } }}
-              role="button"
-              tabIndex={0}
-              className="bg-white rounded-2xl shadow-lg p-8 cursor-pointer transform transition-all duration-300 hover:scale-105 hover:shadow-2xl border-2 border-transparent hover:border-emerald-500"
+              className="bg-white rounded-2xl shadow-lg p-8 relative opacity-75 cursor-default"
             >
+              <div className="absolute -top-3 left-1/2 -translate-x-1/2">
+                <span className="bg-emerald-500 text-white px-4 py-1 rounded-full text-xs font-bold uppercase tracking-wide">
+                  Coming Soon
+                </span>
+              </div>
+
               <div className="mb-6">
                 <h2 className="text-2xl font-bold text-slate-800 mb-3">Priority + AI Wisdom</h2>
                 <div className="flex items-center gap-2">
@@ -250,17 +300,17 @@ export default function Home() {
                 </li>
               </ul>
 
-              <button className="w-full bg-emerald-600 text-white py-4 rounded-xl font-semibold text-lg hover:bg-emerald-700 transition-colors">
-                Start with AI Wisdom →
+              <button disabled className="w-full bg-gray-400 text-white py-4 rounded-xl font-semibold text-lg cursor-not-allowed">
+                Coming Soon
               </button>
             </div>
 
             {/* Priority + Man of Wisdom ($99) */}
             <div
-              onClick={() => { if (!manualSoldOut) router.push('/priority?wisdom=true&type=manual'); }}
-              onKeyDown={(e) => { if (!manualSoldOut && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); router.push('/priority?wisdom=true&type=manual'); } }}
+              onClick={handlePersonalWisdomClick}
+              onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handlePersonalWisdomClick(); } }}
               role="button"
-              tabIndex={manualSoldOut ? -1 : 0}
+              tabIndex={manualSoldOut && !personalWisdomAccess ? -1 : 0}
               className={`bg-white rounded-2xl shadow-lg p-8 relative ${
                 manualSoldOut
                   ? 'opacity-75 cursor-not-allowed'
@@ -308,14 +358,17 @@ export default function Home() {
                 </li>
               </ul>
 
-              {manualSoldOut ? (
+              {manualSoldOut && !personalWisdomAccess ? (
                 <button disabled className="w-full bg-gray-400 text-white py-4 rounded-xl font-semibold text-lg cursor-not-allowed">
                   Sold Out This Month
                 </button>
               ) : (
                 <button className="w-full bg-amber-600 text-white py-4 rounded-xl font-semibold text-lg hover:bg-amber-700 transition-colors">
-                  Start with Personal Wisdom →
+                  {personalWisdomAccess === null ? 'Loading...' : personalWisdomAccess ? 'Start with Personal Wisdom →' : 'Purchase Personal Wisdom →'}
                 </button>
+              )}
+              {personalWisdomAccess && (
+                <p className="text-center text-sm mt-3 font-medium text-amber-700">Purchased</p>
               )}
 
               {manualSlots !== null && (
