@@ -47,7 +47,7 @@ Last Updated: February 9, 2026
 
 ### Priority + Personal Wisdom ($99) - PARTIALLY COMPLETE
 - [x] Landing page card with slot counter
-- [x] 10 monthly slot cap (real-time, server-enforced)
+- [x] 5 monthly slot cap (real-time, server-enforced)
 - [x] Admin panel (/admin) — list submissions
 - [x] Admin review page — side-by-side blueprint + feedback form
 - [x] 5 structured feedback sections
