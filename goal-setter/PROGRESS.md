@@ -43,17 +43,17 @@ Last Updated: February 9, 2026
 - [x] Feedback display page (/priority/feedback)
 - [x] Instant feedback on finalization
 - [ ] **Plug in real AI API key** (placeholder only)
-- [ ] **Payment gate** (bypassed for now)
+- [x] **Payment gate** (enforced via Gumroad webhook)
 
 ### Priority + Personal Wisdom ($99) - PARTIALLY COMPLETE
 - [x] Landing page card with slot counter
-- [x] 10 monthly slot cap (real-time, server-enforced)
+- [x] 5 monthly slot cap (real-time, server-enforced)
 - [x] Admin panel (/admin) — list submissions
 - [x] Admin review page — side-by-side blueprint + feedback form
 - [x] 5 structured feedback sections
 - [x] Email notification on review completion (via Resend)
 - [x] User feedback page (/priority/feedback)
-- [ ] **Payment gate** (bypassed for now)
+- [x] **Payment gate** (enforced via Gumroad webhook)
 
 ---
 
@@ -72,15 +72,14 @@ All features should work end-to-end before adding the payment wall.
 | 1.5 | Wisdom notification email | Done (pre-existing) | Admin "Mark Reviewed & Notify" triggers email via sendWisdomFeedbackEmail() |
 | 1.6 | Real AI API key | Not started | Configure Anthropic API key, test AI feedback quality |
 
-### Phase 2: Payment Gateway
+### Phase 2: Payment Gateway (Gumroad)
 
 | # | Task | Status | Notes |
 |---|------|--------|-------|
-| 2.1 | Payment table in DB | Not started | Payment model: id, userId, product, amount, currency, provider, status |
-| 2.2 | Razorpay integration | Not started | India-first: UPI, cards, net banking. Create order → checkout → webhook |
-| 2.3 | Payment gate on Priority Mode | Not started | Check UserProduct access before allowing Priority Mode |
+| 2.1 | Payment table in DB | Done | Payment model with Gumroad provider support |
+| 2.2 | Gumroad webhook integration | Done | Webhook receives sale → creates Payment + grants UserProduct access |
+| 2.3 | Payment gate on Priority Mode | Done | Backend returns 402, frontend shows purchase UI with Gumroad checkout |
 | 2.4 | Wisdom tier upsell flow | Not started | In-app purchase during Priority Mode for AI ($29.99) or Personal ($99) |
-| 2.5 | Stripe integration (later) | Not started | For global users. Same webhook → UserProduct pattern as Razorpay |
 
 ### Phase 3: Launch & Polish
 
@@ -99,19 +98,18 @@ All features should work end-to-end before adding the payment wall.
 |---------|-------|-------------|
 | Quick Mode | Free | free |
 | Deep Mode | Free | free |
-| Priority Mode | TBD | purchased (lifetime for the year) |
+| Priority Mode | $9.99 | purchased (lifetime for the year) |
 | Priority + AI Wisdom | $29.99 | purchased |
-| Priority + Personal Wisdom | $99 | purchased (10 slots/month) |
+| Priority + Personal Wisdom | $99 | purchased (5 slots/month) |
 
 ---
 
 ## Payment Strategy
 
-**India launch:** Razorpay (UPI, cards, net banking, 2% + GST)
-**Global expansion:** Add Stripe (cards, Apple Pay, 2.9% + 30c)
+**Provider:** Gumroad (handles global payments, cards, PayPal)
 
-Both providers write to the same `Payment` table and create `UserProduct` records.
-The app checks `UserProduct` — it doesn't care which provider was used.
+Gumroad webhook writes to the `Payment` table and creates `UserProduct` records.
+The app checks `UserProduct` for access — decoupled from the payment provider.
 
 ---
 
