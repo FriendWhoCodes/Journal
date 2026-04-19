@@ -46,7 +46,7 @@ const IDENTITY_QUESTIONS = [
     key: 'iAmSomeoneWho' as const,
     type: 'text' as const,
     title: 'Complete this statement: "I am someone who..."',
-    description: 'This is your identity statement. Who are you becoming in 2026?',
+    description: `This is your identity statement. Who are you becoming in ${new Date().getFullYear()}?`,
     placeholder: 'I am someone who prioritizes my family\'s health above all else, who does deep work instead of busy work, who treats time as the most precious resource...',
     icon: '✨',
   },

@@ -12,9 +12,10 @@ interface Props {
   name: string;
   priorities: Priority[];
   identity: Identity;
+  year?: number;
 }
 
-export function DesktopWallpaperTemplate({ name, priorities, identity }: Props) {
+export function DesktopWallpaperTemplate({ name, priorities, identity, year = new Date().getFullYear() }: Props) {
   const validPriorities = priorities.filter(isPriorityValid).slice(0, 5);
   const habitsBuild = toArray(identity.habitsToBuild).slice(0, 4);
   const habitsBreak = toArray(identity.habitsToEliminate).slice(0, 4);
@@ -55,7 +56,7 @@ export function DesktopWallpaperTemplate({ name, priorities, identity }: Props) 
             textTransform: 'uppercase' as const,
           }}
         >
-          2026 Blueprint
+          {year} Blueprint
         </div>
       </div>
 

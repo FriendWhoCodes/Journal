@@ -166,7 +166,7 @@ export async function sendWisdomFeedbackEmail(
             Hi ${escapeHtml(userName || 'there')},
           </p>
           <p style="color: #4a4a4a; font-size: 16px; line-height: 1.6; margin-bottom: 24px;">
-            The Man of Wisdom has reviewed your 2026 Blueprint and prepared personalized
+            The Man of Wisdom has reviewed your ${new Date().getFullYear()} Blueprint and prepared personalized
             feedback for you. This includes analysis of your priorities, goal feedback,
             suggestions, and wisdom to guide your year.
           </p>

@@ -82,7 +82,7 @@ export default function PrioritiesPage() {
             Define Your Priorities
           </h1>
           <p className="text-lg text-gray-600 max-w-xl mx-auto">
-            What matters most to you in 2026? List your priorities in order of importance.
+            What matters most to you in {new Date().getFullYear()}? List your priorities in order of importance.
             You can drag to reorder them.
           </p>
         </motion.div>

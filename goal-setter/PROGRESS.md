@@ -119,9 +119,10 @@ The app checks `UserProduct` — it doesn't care which provider was used.
 
 | Issue | Severity | Notes |
 |-------|----------|-------|
-| GoalSetterUser legacy split | Low | Quick/Deep use GoalSetterUser (Int id), Priority uses AuthUser directly. Works but two identity paths. |
+| GoalSetterUser legacy split | Medium | Quick/Deep use GoalSetterUser (Int id), Priority uses AuthUser directly. Requires DB migration to consolidate — GoalSetterSubmission FK is Int, AuthUser PK is CUID. Needs dedicated migration PR. |
 | Middleware deprecation warning | Low | Next.js 16 warns about middleware → proxy migration |
-| Hardcoded year "2026" | Low | Should be configurable for 2027+ |
+| ~~Hardcoded year "2026"~~ | ~~Low~~ | Fixed — all references now use dynamic `new Date().getFullYear()` |
+| ~~XSS regex blocklist~~ | ~~Medium~~ | Fixed — switched to tag-stripping allowlist approach |
 
 ---
 

@@ -181,7 +181,7 @@ model PriorityModeSubmission {
   identity Json @db.JsonB
 
   // Year this blueprint is for
-  year Int @default(2026)
+  year Int @default(dbgenerated("EXTRACT(YEAR FROM NOW())::INT"))
 
   // Wisdom mode flag
   wisdomMode Boolean @default(false) @map("wisdom_mode")
