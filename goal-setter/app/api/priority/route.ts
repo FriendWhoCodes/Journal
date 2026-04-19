@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/db';
-import { getCurrentUser, checkProductAccess, grantProductAccess } from '@/lib/auth';
+import { getCurrentUser, checkProductAccess } from '@/lib/auth';
 import { PriorityModeData, Priority, Identity, WisdomType } from '@/lib/types/priority';
 import { generateAIFeedback } from '@/lib/ai-feedback';
 import { sendBlueprintSummaryEmail } from '@/lib/email';
