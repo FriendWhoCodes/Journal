@@ -203,9 +203,10 @@ function toArray(val: unknown): string[] {
 interface PriorityPDFProps {
   name: string;
   data: PriorityModeData;
+  year?: number;
 }
 
-export const PriorityPDF = ({ name, data }: PriorityPDFProps) => {
+export const PriorityPDF = ({ name, data, year = new Date().getFullYear() }: PriorityPDFProps) => {
   const validPriorities = data.priorities.filter(isPriorityValid);
 
   return (
@@ -214,7 +215,7 @@ export const PriorityPDF = ({ name, data }: PriorityPDFProps) => {
       <Page size="A4" style={styles.page}>
         {/* Header */}
         <View style={styles.header}>
-          <Text style={styles.title}>MY 2026 BLUEPRINT</Text>
+          <Text style={styles.title}>MY {year} BLUEPRINT</Text>
           <Text style={styles.subtitle}>{name} - Priority Mode</Text>
           <Text style={styles.subtitle}>
             {validPriorities.length} Priorities •{' '}
@@ -234,7 +235,7 @@ export const PriorityPDF = ({ name, data }: PriorityPDFProps) => {
 
         {/* Priorities Summary */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>MY PRIORITIES FOR 2026</Text>
+          <Text style={styles.sectionTitle}>MY PRIORITIES FOR {year}</Text>
           {validPriorities.slice(0, 5).map((priority, index) => (
             <View key={priority.id} style={styles.priorityCard}>
               <View style={styles.priorityHeader}>
@@ -290,7 +291,7 @@ export const PriorityPDF = ({ name, data }: PriorityPDFProps) => {
         <Page size="A4" style={styles.page}>
           <View style={styles.header}>
             <Text style={styles.title}>IDENTITY TRANSFORMATION</Text>
-            <Text style={styles.subtitle}>Who I need to become in 2026</Text>
+            <Text style={styles.subtitle}>Who I need to become in {year}</Text>
           </View>
 
           <View style={styles.identityGrid}>

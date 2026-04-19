@@ -45,6 +45,7 @@ export default function CompletePage() {
   );
 
   const userName = user?.name || 'Goal Setter';
+  const currentYear = new Date().getFullYear();
 
   const handleDownloadPdf = async () => {
     setDownloadingPdf(true);
@@ -53,7 +54,7 @@ export default function CompletePage() {
       const url = URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = url;
-      link.download = `2026-Blueprint-${userName.replace(/\s+/g, '-')}.pdf`;
+      link.download = `${currentYear}-Blueprint-${userName.replace(/\s+/g, '-')}.pdf`;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -77,7 +78,7 @@ export default function CompletePage() {
         />,
         1080,
         1350,
-        `2026-Blueprint-Infographic-${userName.replace(/\s+/g, '-')}.png`,
+        `${currentYear}-Blueprint-Infographic-${userName.replace(/\s+/g, '-')}.png`,
       );
     } catch (error) {
       console.error('Infographic generation error:', error);
@@ -100,14 +101,14 @@ export default function CompletePage() {
           <PhoneWallpaperTemplate {...props} />,
           1080,
           1920,
-          `2026-Priorities-Phone-${userName.replace(/\s+/g, '-')}.png`,
+          `${currentYear}-Priorities-Phone-${userName.replace(/\s+/g, '-')}.png`,
         );
       } else {
         await generateAndDownloadGraphic(
           <DesktopWallpaperTemplate {...props} />,
           1920,
           1080,
-          `2026-Priorities-Desktop-${userName.replace(/\s+/g, '-')}.png`,
+          `${currentYear}-Priorities-Desktop-${userName.replace(/\s+/g, '-')}.png`,
         );
       }
     } catch (error) {
@@ -229,7 +230,7 @@ export default function CompletePage() {
             <div className="text-gray-600">Goals</div>
           </div>
           <div className="bg-white rounded-xl p-5 text-center shadow-lg">
-            <div className="text-4xl font-bold text-emerald-600">2026</div>
+            <div className="text-4xl font-bold text-emerald-600">{currentYear}</div>
             <div className="text-gray-600">Your Year</div>
           </div>
         </motion.div>

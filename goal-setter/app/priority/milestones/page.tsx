@@ -250,7 +250,7 @@ export default function MilestonesPage() {
                               return (
                                 <div key={month} className="bg-gray-50 rounded-xl p-4">
                                   <div className="flex items-center gap-2 mb-3">
-                                    <span className="text-sm font-semibold text-gray-700">{month} 2026</span>
+                                    <span className="text-sm font-semibold text-gray-700">{month} {new Date().getFullYear()}</span>
                                   </div>
                                   <input
                                     type="text"
@@ -268,7 +268,7 @@ export default function MilestonesPage() {
                             return (
                               <div key={month} className="bg-gray-50 rounded-xl p-4">
                                 <div className="flex items-center justify-between mb-3">
-                                  <span className="text-sm font-semibold text-gray-700">{month} 2026</span>
+                                  <span className="text-sm font-semibold text-gray-700">{month} {new Date().getFullYear()}</span>
                                   <button
                                     onClick={() => removeMilestone(goal.priorityId, goal.id, milestone.id)}
                                     className="text-gray-400 hover:text-red-500 text-xs"

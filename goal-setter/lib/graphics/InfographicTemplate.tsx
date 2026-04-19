@@ -12,9 +12,10 @@ interface Props {
   name: string;
   priorities: Priority[];
   identity: Identity;
+  year?: number;
 }
 
-export function InfographicTemplate({ name, priorities, identity }: Props) {
+export function InfographicTemplate({ name, priorities, identity, year = new Date().getFullYear() }: Props) {
   const validPriorities = priorities.filter(isPriorityValid);
   const displayPriorities = validPriorities.slice(0, 7);
   const remainingCount = validPriorities.length - displayPriorities.length;
@@ -55,7 +56,7 @@ export function InfographicTemplate({ name, priorities, identity }: Props) {
             marginBottom: 8,
           }}
         >
-          My 2026 Blueprint
+          My {year} Blueprint
         </div>
         <div
           style={{

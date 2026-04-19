@@ -144,9 +144,10 @@ interface GoalsPDFProps {
   mode: 'quick' | 'deep';
   quickModeData?: Partial<QuickModeData>;
   deepModeData?: Partial<DeepModeData>;
+  year?: number;
 }
 
-export const GoalsPDF = ({ name, mode, quickModeData, deepModeData }: GoalsPDFProps) => {
+export const GoalsPDF = ({ name, mode, quickModeData, deepModeData, year = new Date().getFullYear() }: GoalsPDFProps) => {
   const data = mode === 'quick' ? quickModeData : deepModeData;
   const placesArray = data?.placesToVisit?.split('\n').filter(p => p.trim()) || [];
   const booksArray = data?.booksToRead?.split('\n').filter(b => b.trim()) || [];
@@ -157,8 +158,8 @@ export const GoalsPDF = ({ name, mode, quickModeData, deepModeData }: GoalsPDFPr
       <Page size="A4" style={styles.page}>
         {/* Header */}
         <View style={styles.header}>
-          <Text style={styles.title}>MY 2026 BLUEPRINT</Text>
-          <Text style={styles.subtitle}>{name} - Goals for 2026</Text>
+          <Text style={styles.title}>MY {year} BLUEPRINT</Text>
+          <Text style={styles.subtitle}>{name} - Goals for {year}</Text>
           <Text style={styles.subtitle}>Mode: {mode === 'quick' ? 'Quick Setup' : 'Deep Planning'}</Text>
         </View>
 
@@ -195,7 +196,7 @@ export const GoalsPDF = ({ name, mode, quickModeData, deepModeData }: GoalsPDFPr
 
             {/* Theme */}
             <View style={styles.section}>
-              <Text style={styles.sectionTitle}>MY THEME FOR 2026</Text>
+              <Text style={styles.sectionTitle}>MY THEME FOR {year}</Text>
               <View style={styles.themeBox}>
                 <Text style={styles.themeText}>&quot;{quickModeData.mainTheme}&quot;</Text>
               </View>
@@ -276,7 +277,7 @@ export const GoalsPDF = ({ name, mode, quickModeData, deepModeData }: GoalsPDFPr
         {/* Footer */}
         <View style={styles.footer}>
           <Text>Created with Man of Wisdom Goal Setter</Text>
-          <Text>Track your goals with the Man of Wisdom Journal starting January 1, 2026</Text>
+          <Text>Track your goals with the Man of Wisdom Journal starting January 1, {year}</Text>
         </View>
       </Page>
     </Document>

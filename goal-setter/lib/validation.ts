@@ -5,17 +5,14 @@
 
 /**
  * Sanitize string input to prevent XSS
- * Removes HTML tags and dangerous characters
+ * Strips ALL HTML tags (allowlist approach) rather than blocking specific ones.
  */
 export function sanitizeString(input: string | null | undefined): string {
   if (!input) return '';
 
   return input
     .trim()
-    .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '') // Remove <script> tags
-    .replace(/<iframe\b[^<]*(?:(?!<\/iframe>)<[^<]*)*<\/iframe>/gi, '') // Remove <iframe> tags
-    .replace(/javascript:/gi, '') // Remove javascript: protocol
-    .replace(/on\w+\s*=/gi, '') // Remove inline event handlers (onclick, onload, etc.)
+    .replace(/<[^>]*>/g, '') // Strip all HTML tags
     .substring(0, 5000); // Limit length to prevent DOS
 }
 

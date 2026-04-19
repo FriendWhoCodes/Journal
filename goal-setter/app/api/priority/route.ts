@@ -298,7 +298,8 @@ export async function POST(request: NextRequest) {
             // AI mode: generate feedback immediately
             const aiFeedback = await generateAIFeedback(
               priorities as Priority[],
-              identity as Identity
+              identity as Identity,
+              year
             );
             await prisma.wisdomFeedback.create({
               data: {

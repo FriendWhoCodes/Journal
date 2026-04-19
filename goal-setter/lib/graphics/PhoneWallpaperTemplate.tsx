@@ -5,9 +5,10 @@ interface Props {
   name: string;
   priorities: Priority[];
   identity: Identity;
+  year?: number;
 }
 
-export function PhoneWallpaperTemplate({ name, priorities, identity }: Props) {
+export function PhoneWallpaperTemplate({ name, priorities, identity, year = new Date().getFullYear() }: Props) {
   const validPriorities = priorities.filter(isPriorityValid).slice(0, 5);
 
   return (
@@ -48,7 +49,7 @@ export function PhoneWallpaperTemplate({ name, priorities, identity }: Props) {
             textTransform: 'uppercase' as const,
           }}
         >
-          2026 Priorities
+          {year} Priorities
         </div>
       </div>
 
