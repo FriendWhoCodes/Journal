@@ -109,6 +109,7 @@ export async function POST(request: NextRequest) {
     // Prepare sanitized submission data
     const submissionData: any = {
       userId: user.id,
+      authUserId: authUser.id,
       mode,
       goal1: goal1Validation.sanitized || null,
       goal2: goal2Validation.sanitized || null,

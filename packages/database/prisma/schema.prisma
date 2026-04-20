@@ -29,6 +29,7 @@ model AuthUser {
   products                 UserProduct[]
   payments                 Payment[]
   goalSetterUser           GoalSetterUser?
+  goalSetterSubmissions    GoalSetterSubmission[]
   timeViewsEntries         TimeViewsEntry[]
   priorityModeSubmissions  PriorityModeSubmission[]
 
@@ -133,6 +134,10 @@ model GoalSetterSubmission {
   userId Int    @map("user_id")
   mode   String @db.VarChar(10) // 'quick' | 'deep'
 
+  // Direct link to AuthUser (consolidation — replaces GoalSetterUser indirection)
+  authUserId String? @map("auth_user_id")
+  authUser   AuthUser? @relation(fields: [authUserId], references: [id], onDelete: SetNull)
+
   // Top 3 Goals (both modes)
   goal1 String? @map("goal_1") @db.Text
   goal2 String? @map("goal_2") @db.Text
@@ -158,9 +163,11 @@ model GoalSetterSubmission {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 
+  // Legacy FK — kept for existing data, new submissions also set authUserId
   user GoalSetterUser @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
+  @@index([authUserId])
   @@index([createdAt])
   @@map("goal_setter_submissions")
 }
