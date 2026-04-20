@@ -55,9 +55,9 @@ export {
 
 // Rate Limiting
 export {
-  RateLimiter,
-  loginRateLimiter,
-  verifyRateLimiter,
+  checkLoginRateLimit,
+  checkVerifyRateLimit,
+  cleanupRateLimits,
 } from './rate-limit';
 export type { RateLimitConfig, RateLimitResult } from './rate-limit';
 
@@ -75,5 +75,5 @@ export { hashToken } from './crypto';
 export { cleanupExpiredAuthRecords } from './cleanup';
 
 // Audit Logging
-export { auditLog } from './audit';
+export { auditLog, initAuditLog } from './audit';
 export type { AuditEvent, AuditPayload } from './audit';

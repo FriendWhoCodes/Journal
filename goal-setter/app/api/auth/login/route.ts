@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/db';
 import { authConfig } from '@/lib/auth';
-import { createMagicLink, sendMagicLinkEmail, loginRateLimiter, auditLog } from '@mow/auth';
+import { createMagicLink, sendMagicLinkEmail, checkLoginRateLimit, auditLog } from '@mow/auth';
 
 export async function POST(request: NextRequest) {
   try {
@@ -9,7 +9,7 @@ export async function POST(request: NextRequest) {
       || request.headers.get('x-real-ip')
       || 'unknown';
 
-    const rateCheck = loginRateLimiter.check(ip);
+    const rateCheck = await checkLoginRateLimit(prisma, ip);
     if (!rateCheck.allowed) {
       auditLog({ event: 'auth.rate_limited', ip, endpoint: 'login' });
       return NextResponse.json(

@@ -36,7 +36,7 @@ export interface AuthConfig {
 export const DEFAULT_AUTH_CONFIG: Required<AuthConfig> = {
   cookieName: 'mow_session',
   cookieDomain: '.manofwisdom.co',
-  sessionExpiryDays: 30,
+  sessionExpiryDays: 7,
   magicLinkExpiryMinutes: 15,
   baseUrl: '',
 };

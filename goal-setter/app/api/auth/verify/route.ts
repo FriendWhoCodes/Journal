@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 import { prisma } from '@/lib/db';
 import { authConfig } from '@/lib/auth';
-import { verifyMagicLink, setSessionCookie, verifyRateLimiter, auditLog } from '@mow/auth';
+import { verifyMagicLink, setSessionCookie, checkVerifyRateLimit, auditLog } from '@mow/auth';
 
 export async function POST(request: NextRequest) {
   try {
@@ -10,7 +10,7 @@ export async function POST(request: NextRequest) {
       || request.headers.get('x-real-ip')
       || 'unknown';
 
-    const rateCheck = verifyRateLimiter.check(ip);
+    const rateCheck = await checkVerifyRateLimit(prisma, ip);
     if (!rateCheck.allowed) {
       auditLog({ event: 'auth.rate_limited', ip, endpoint: 'verify' });
       return NextResponse.json(

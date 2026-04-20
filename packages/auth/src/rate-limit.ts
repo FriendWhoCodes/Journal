@@ -1,3 +1,5 @@
+import type { PrismaClient } from '@prisma/client';
+
 export interface RateLimitResult {
   allowed: boolean;
   retryAfterMs?: number;
@@ -6,55 +8,72 @@ export interface RateLimitResult {
 export interface RateLimitConfig {
   maxRequests: number;
   windowMs: number;
-  maxEntries?: number;
 }
 
-export class RateLimiter {
-  private map = new Map<string, { count: number; resetAt: number }>();
-  private config: Required<RateLimitConfig>;
+const LOGIN_CONFIG: RateLimitConfig = { maxRequests: 5, windowMs: 15 * 60 * 1000 };
+const VERIFY_CONFIG: RateLimitConfig = { maxRequests: 10, windowMs: 15 * 60 * 1000 };
 
-  constructor(config: RateLimitConfig) {
-    this.config = {
-      maxEntries: 10000,
-      ...config,
-    };
-  }
+async function checkRateLimit(
+  prisma: PrismaClient,
+  key: string,
+  endpoint: string,
+  config: RateLimitConfig,
+): Promise<RateLimitResult> {
+  const now = new Date();
+  const windowEnd = new Date(now.getTime() + config.windowMs);
 
-  check(key: string): RateLimitResult {
-    const now = Date.now();
+  try {
+    const record = await (prisma as any).authRateLimit.findUnique({
+      where: { key_endpoint: { key, endpoint } },
+    });
 
-    // Cleanup if too many entries
-    if (this.map.size > this.config.maxEntries) {
-      for (const [k, v] of this.map) {
-        if (v.resetAt < now) this.map.delete(k);
-      }
-    }
-
-    const record = this.map.get(key);
-
-    if (!record || record.resetAt < now) {
-      this.map.set(key, { count: 1, resetAt: now + this.config.windowMs });
+    // No record or window expired — start a new window
+    if (!record || record.windowEnd < now) {
+      await (prisma as any).authRateLimit.upsert({
+        where: { key_endpoint: { key, endpoint } },
+        update: { count: 1, windowEnd },
+        create: { key, endpoint, count: 1, windowEnd },
+      });
       return { allowed: true };
     }
 
-    if (record.count >= this.config.maxRequests) {
-      return { allowed: false, retryAfterMs: record.resetAt - now };
+    // Within window but under limit
+    if (record.count < config.maxRequests) {
+      await (prisma as any).authRateLimit.update({
+        where: { key_endpoint: { key, endpoint } },
+        data: { count: record.count + 1 },
+      });
+      return { allowed: true };
     }
 
-    record.count++;
+    // Over limit
+    return {
+      allowed: false,
+      retryAfterMs: record.windowEnd.getTime() - now.getTime(),
+    };
+  } catch {
+    // If DB fails, allow the request (fail-open) rather than locking out users
     return { allowed: true };
   }
 }
 
-// Pre-configured instances for auth endpoints
-// 5 login requests per IP per 15 minutes
-export const loginRateLimiter = new RateLimiter({
-  maxRequests: 5,
-  windowMs: 15 * 60 * 1000,
-});
+export async function checkLoginRateLimit(
+  prisma: PrismaClient,
+  key: string,
+): Promise<RateLimitResult> {
+  return checkRateLimit(prisma, key, 'login', LOGIN_CONFIG);
+}
 
-// 10 verify requests per IP per 15 minutes
-export const verifyRateLimiter = new RateLimiter({
-  maxRequests: 10,
-  windowMs: 15 * 60 * 1000,
-});
+export async function checkVerifyRateLimit(
+  prisma: PrismaClient,
+  key: string,
+): Promise<RateLimitResult> {
+  return checkRateLimit(prisma, key, 'verify', VERIFY_CONFIG);
+}
+
+// Cleanup expired rate limit records (call periodically)
+export async function cleanupRateLimits(prisma: PrismaClient): Promise<void> {
+  await (prisma as any).authRateLimit.deleteMany({
+    where: { windowEnd: { lt: new Date() } },
+  });
+}

@@ -80,6 +80,33 @@ model AuthMagicLink {
   @@map("auth_magic_links")
 }
 
+model AuthRateLimit {
+  id        String   @id @default(cuid())
+  key       String   // IP or identifier
+  endpoint  String   // "login", "verify"
+  count     Int      @default(1)
+  windowEnd DateTime @map("window_end")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@unique([key, endpoint])
+  @@index([windowEnd])
+  @@map("auth_rate_limits")
+}
+
+model AuthAuditLog {
+  id        String   @id @default(cuid())
+  event     String
+  userId    String?  @map("user_id")
+  ip        String?
+  metadata  Json?    @db.JsonB
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([event])
+  @@index([userId])
+  @@index([createdAt])
+  @@map("auth_audit_logs")
+}
+
 // ============================================
 // PAYMENT TABLES
 // ============================================

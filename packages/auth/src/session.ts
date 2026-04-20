@@ -83,6 +83,10 @@ export async function deleteAllUserSessions(
   });
 }
 
+function resolvedCookieName(baseName: string): string {
+  return process.env.NODE_ENV === 'production' ? `__Secure-${baseName}` : baseName;
+}
+
 export function setSessionCookie(
   cookies: ReadonlyRequestCookies | { set: (name: string, value: string, options: any) => void },
   token: string,
@@ -93,7 +97,7 @@ export function setSessionCookie(
   const maxAge = sessionExpiryDays * 24 * 60 * 60;
   const isProduction = process.env.NODE_ENV === 'production';
 
-  (cookies as any).set(cookieName, token, {
+  (cookies as any).set(resolvedCookieName(cookieName), token, {
     httpOnly: true,
     secure: isProduction,
     sameSite: 'lax',
@@ -110,7 +114,7 @@ export function deleteSessionCookie(
   const { cookieName, cookieDomain } = { ...DEFAULT_AUTH_CONFIG, ...config };
   const isProduction = process.env.NODE_ENV === 'production';
 
-  (cookies as any).set(cookieName, '', {
+  (cookies as any).set(resolvedCookieName(cookieName), '', {
     httpOnly: true,
     secure: isProduction,
     sameSite: 'lax',
@@ -125,6 +129,9 @@ export function getSessionTokenFromCookies(
   config: AuthConfig = {}
 ): string | null {
   const { cookieName } = { ...DEFAULT_AUTH_CONFIG, ...config };
-  const cookie = (cookies as any).get(cookieName);
-  return cookie?.value || null;
+  // Try prefixed name first (production), fall back to plain name (dev or migration)
+  const prefixed = (cookies as any).get(resolvedCookieName(cookieName));
+  if (prefixed?.value) return prefixed.value;
+  const plain = (cookies as any).get(cookieName);
+  return plain?.value || null;
 }
