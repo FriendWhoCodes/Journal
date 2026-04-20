@@ -48,8 +48,11 @@ export function createAuthMiddleware(config: AuthMiddlewareConfig = {}) {
       return NextResponse.next();
     }
 
-    // Check for session cookie
-    const sessionToken = request.cookies.get(cookieName!)?.value;
+    // Check for session cookie (try __Secure- prefixed first, then plain)
+    const isProduction = process.env.NODE_ENV === 'production';
+    const prefixedName = isProduction ? `__Secure-${cookieName}` : cookieName!;
+    const sessionToken = request.cookies.get(prefixedName)?.value
+      || request.cookies.get(cookieName!)?.value;
 
     if (!sessionToken) {
       const loginUrl = new URL(loginPath!, request.url);
@@ -62,6 +65,7 @@ export function createAuthMiddleware(config: AuthMiddlewareConfig = {}) {
       const loginUrl = new URL(loginPath!, request.url);
       loginUrl.searchParams.set('redirect', pathname);
       const response = NextResponse.redirect(loginUrl);
+      response.cookies.delete(prefixedName);
       response.cookies.delete(cookieName!);
       return response;
     }
@@ -72,7 +76,9 @@ export function createAuthMiddleware(config: AuthMiddlewareConfig = {}) {
 
 export function withAuth(handler: (request: NextRequest) => Promise<Response> | Response) {
   return async function(request: NextRequest) {
-    const sessionToken = request.cookies.get(DEFAULT_AUTH_CONFIG.cookieName)?.value;
+    const prodName = `__Secure-${DEFAULT_AUTH_CONFIG.cookieName}`;
+    const sessionToken = request.cookies.get(prodName)?.value
+      || request.cookies.get(DEFAULT_AUTH_CONFIG.cookieName)?.value;
 
     if (!sessionToken) {
       return NextResponse.json(

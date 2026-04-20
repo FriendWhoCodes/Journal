@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client';
+import { initAuditLog } from '@mow/auth';
 
 // PrismaClient singleton to avoid multiple instances in development
 // This prevents "too many clients" errors during hot reload
@@ -14,3 +15,6 @@ export const prisma =
   });
 
 if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma;
+
+// Initialize audit logging with the Prisma client
+initAuditLog(prisma);
