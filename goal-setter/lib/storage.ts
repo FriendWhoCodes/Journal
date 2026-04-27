@@ -22,8 +22,12 @@ export const storage = {
 
   load: (): StorageData => {
     if (typeof window !== 'undefined') {
-      const data = localStorage.getItem(STORAGE_KEY);
-      return data ? JSON.parse(data) : {};
+      try {
+        const data = localStorage.getItem(STORAGE_KEY);
+        return data ? JSON.parse(data) : {};
+      } catch {
+        return {};
+      }
     }
     return {};
   },

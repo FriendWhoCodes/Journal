@@ -41,6 +41,23 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Unknown product' }, { status: 400 });
     }
 
+    // Verify sale is real by calling Gumroad API (prevents webhook spoofing)
+    const gumroadAccessToken = process.env.GUMROAD_ACCESS_TOKEN;
+    if (gumroadAccessToken) {
+      try {
+        const verifyRes = await fetch(`https://api.gumroad.com/v2/sales/${saleId}`, {
+          headers: { Authorization: `Bearer ${gumroadAccessToken}` },
+        });
+        if (!verifyRes.ok) {
+          auditLog({ event: 'payment.webhook_rejected', reason: 'sale_verification_failed', saleId, status: verifyRes.status });
+          return NextResponse.json({ error: 'Sale verification failed' }, { status: 403 });
+        }
+      } catch (verifyError) {
+        // If Gumroad API is down, log and proceed (fail-open to avoid losing sales)
+        console.error('Gumroad sale verification failed, proceeding:', verifyError);
+      }
+    }
+
     // Deduplicate by sale_id
     const existing = await prisma.payment.findFirst({
       where: { provider: 'gumroad', providerPaymentId: saleId },
@@ -70,8 +87,18 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ ok: true, message: 'User not found, logged for reconciliation' });
     }
 
-    // Convert price string (e.g. "29.99") to cents
+    // Convert price string (e.g. "29.99") to cents and validate minimum price
     const amountCents = Math.round(parseFloat(price || '0') * 100);
+    const MIN_PRICE_CENTS: Record<string, number> = {
+      priority_mode: 999,            // $9.99
+      priority_ai_wisdom: 2999,      // $29.99
+      priority_personal_wisdom: 9900, // $99.00
+    };
+    const minPrice = MIN_PRICE_CENTS[product] || 0;
+    if (!isTest && amountCents < minPrice) {
+      auditLog({ event: 'payment.webhook_rejected', reason: 'price_below_minimum', product, amountCents, minPrice, saleId });
+      return NextResponse.json({ error: 'Invalid payment amount' }, { status: 400 });
+    }
 
     // Atomic transaction: create payment + grant access together
     await prisma.$transaction(async (tx: any) => {
