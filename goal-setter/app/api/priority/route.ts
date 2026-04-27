@@ -4,6 +4,7 @@ import { getCurrentUser, checkProductAccess } from '@/lib/auth';
 import { PriorityModeData, Priority, Identity, WisdomType } from '@/lib/types/priority';
 import { generateAIFeedback } from '@/lib/ai-feedback';
 import { sendBlueprintSummaryEmail } from '@/lib/email';
+import { sanitizeJson } from '@/lib/validation';
 
 // GET - Load existing Priority Mode submission
 export async function GET(request: NextRequest) {
@@ -22,7 +23,7 @@ export async function GET(request: NextRequest) {
     const yearParam = searchParams.get('year');
     const year = yearParam ? parseInt(yearParam, 10) : new Date().getFullYear();
 
-    if (isNaN(year)) {
+    if (isNaN(year) || year < 2000 || year > 2100) {
       return NextResponse.json(
         { error: 'Invalid year parameter' },
         { status: 400 }
@@ -99,6 +100,11 @@ export async function POST(request: NextRequest) {
 
     const body = await request.json();
     const { priorities, identity, wisdomMode, wisdomType, finalize, year: yearInput = new Date().getFullYear() } = body;
+
+    // Validate wisdomType if provided
+    if (wisdomType && !['ai', 'manual'].includes(wisdomType)) {
+      return NextResponse.json({ error: 'Invalid wisdomType' }, { status: 400 });
+    }
 
     // Payment gate: require product access on finalization
     if (finalize) {
@@ -184,6 +190,10 @@ export async function POST(request: NextRequest) {
       }
     }
 
+    // Sanitize all string values in priorities and identity before storing
+    const sanitizedPriorities = sanitizeJson(priorities);
+    const sanitizedIdentity = sanitizeJson(identity);
+
     // Check for existing submission
     try {
       const existing = await prisma.priorityModeSubmission.findUnique({
@@ -205,16 +215,20 @@ export async function POST(request: NextRequest) {
             const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
             const monthEnd = new Date(now.getFullYear(), now.getMonth() + 1, 1);
 
+            // Count all manual wisdom slots used this month
             const usedSlots = await tx.priorityModeSubmission.count({
               where: {
                 wisdomType: 'manual',
                 wisdomMode: true,
                 finalizedAt: { gte: monthStart, lt: monthEnd },
-                userId: { not: authUser.id },
               },
             });
 
-            if (usedSlots >= 5) {
+            // Allow re-finalization if user already has a slot, otherwise check limit
+            const userHasExistingSlot = existing?.wisdomType === 'manual' && existing?.finalizedAt &&
+              existing.finalizedAt >= monthStart && existing.finalizedAt < monthEnd;
+
+            if (usedSlots >= 5 && !userHasExistingSlot) {
               throw new Error('SLOT_LIMIT_REACHED');
             }
 
@@ -222,8 +236,8 @@ export async function POST(request: NextRequest) {
               return tx.priorityModeSubmission.update({
                 where: { id: existing.id },
                 data: {
-                  priorities,
-                  identity,
+                  priorities: sanitizedPriorities,
+                  identity: sanitizedIdentity,
                   wisdomMode: true,
                   wisdomType: 'manual',
                   finalizedAt: new Date(),
@@ -234,8 +248,8 @@ export async function POST(request: NextRequest) {
               return tx.priorityModeSubmission.create({
                 data: {
                   userId: authUser.id,
-                  priorities,
-                  identity,
+                  priorities: sanitizedPriorities,
+                  identity: sanitizedIdentity,
                   year,
                   wisdomMode: true,
                   wisdomType: 'manual',
@@ -256,8 +270,8 @@ export async function POST(request: NextRequest) {
       } else if (existing) {
         // Update existing submission (non-manual-wisdom or non-finalize)
         const updateData: any = {
-          priorities,
-          identity,
+          priorities: sanitizedPriorities,
+          identity: sanitizedIdentity,
           wisdomMode: !!wisdomMode,
           wisdomType: wisdomType || null,
         };
@@ -278,8 +292,8 @@ export async function POST(request: NextRequest) {
         submission = await prisma.priorityModeSubmission.create({
           data: {
             userId: authUser.id,
-            priorities,
-            identity,
+            priorities: sanitizedPriorities,
+            identity: sanitizedIdentity,
             year,
             wisdomMode: !!wisdomMode,
             wisdomType: wisdomType || null,

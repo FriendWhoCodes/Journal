@@ -143,23 +143,23 @@ export async function verifyMagicLink(
     return { success: false, error: 'Invalid or expired link' };
   }
 
-  // Check if already used
-  if (magicLink.usedAt) {
-    auditLog({ event: 'auth.login_verified', success: false, reason: 'already_used', ip });
-    return { success: false, error: 'Link has already been used' };
-  }
-
   // Check expiration
   if (new Date() > magicLink.expiresAt) {
     auditLog({ event: 'auth.login_verified', success: false, reason: 'expired', ip });
     return { success: false, error: 'Link has expired' };
   }
 
-  // Mark as used
-  await (prisma as any).authMagicLink.update({
-    where: { id: magicLink.id },
+  // Atomically mark as used — prevents race condition where two concurrent
+  // requests both pass the usedAt check before either marks it used
+  const markUsed = await (prisma as any).authMagicLink.updateMany({
+    where: { id: magicLink.id, usedAt: null },
     data: { usedAt: new Date() },
   });
+
+  if (markUsed.count === 0) {
+    auditLog({ event: 'auth.login_verified', success: false, reason: 'already_used', ip });
+    return { success: false, error: 'Link has already been used' };
+  }
 
   // Update emailVerified if not already set
   if (!magicLink.user.emailVerified) {

@@ -17,6 +17,22 @@ export function sanitizeString(input: string | null | undefined): string {
 }
 
 /**
+ * Recursively sanitize all string values in a JSON-serializable object.
+ */
+export function sanitizeJson<T>(obj: T): T {
+  if (typeof obj === 'string') return sanitizeString(obj) as T;
+  if (Array.isArray(obj)) return obj.map(sanitizeJson) as T;
+  if (obj && typeof obj === 'object') {
+    const result: Record<string, unknown> = {};
+    for (const [key, value] of Object.entries(obj)) {
+      result[key] = sanitizeJson(value);
+    }
+    return result as T;
+  }
+  return obj;
+}
+
+/**
  * Validate and sanitize email
  */
 export function validateEmail(email: string): { valid: boolean; sanitized: string; error?: string } {

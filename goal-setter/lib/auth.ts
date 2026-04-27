@@ -41,9 +41,14 @@ export async function requireAuth(): Promise<AuthUser> {
  * Check if a user has access to a product. Read-only, never creates records.
  */
 export async function checkProductAccess(userId: string, product: string) {
-  return prisma.userProduct.findUnique({
+  return prisma.userProduct.findFirst({
     where: {
-      userId_product: { userId, product },
+      userId,
+      product,
+      OR: [
+        { expiresAt: null },        // lifetime/free access
+        { expiresAt: { gt: new Date() } }, // not expired
+      ],
     },
   });
 }

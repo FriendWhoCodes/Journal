@@ -208,6 +208,7 @@ model PriorityModeSubmission {
   @@unique([userId, year])
   @@index([userId])
   @@index([year])
+  @@index([wisdomType, wisdomMode, finalizedAt])
   @@map("priority_mode_submissions")
 }
 

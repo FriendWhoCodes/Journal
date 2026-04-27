@@ -12,6 +12,11 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: 'Missing product parameter' }, { status: 400 });
   }
 
+  const VALID_PRODUCTS = ['priority_mode', 'priority_ai_wisdom', 'priority_personal_wisdom', 'goal_setter'];
+  if (!VALID_PRODUCTS.includes(product)) {
+    return NextResponse.json({ error: 'Invalid product' }, { status: 400 });
+  }
+
   const access = await checkProductAccess(user.id, product);
 
   return NextResponse.json({
